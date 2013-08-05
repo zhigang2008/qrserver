@@ -1,0 +1,21 @@
+<seelog>
+    <outputs formatid="common">
+        <console/>
+        <file path="file.log"/>
+        <!--
+        <network address="192.168.0.2" port="8123"/>
+        <filter levels="critical">
+            <file path="critical.log" formatid="critical"/>
+            <smtp formatid="criticalemail" senderaddress="noreply-notification-service@none.org" sendername="Automatic notification service" hostname="mail.none.org" hostport="587" username="nns" password="123">
+                <recipient address="john-smith@none.com"/>
+                <recipient address="hans-meier@none.com"/>
+            </smtp>
+        </filter>
+        -->
+    </outputs>
+    <formats>
+        <format id="common" format="[%LEV] %Msg"/>
+        <format id="critical" format="%Time %Date %RelFile %Func %Msg"/>
+        <format id="criticalemail" format="Critical error on our server!\n    %Time %Date %RelFile %Func %Msg \nSent by Seelog"/>
+    </formats>
+</seelog>
