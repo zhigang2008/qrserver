@@ -7,6 +7,7 @@ import (
 	"io"
 	"net"
 	"os"
+	"strconv"
 )
 
 const (
@@ -23,7 +24,8 @@ func Server(conf ServerConfig) {
 	err := CheckConfig(conf)
 	checkError(err)
 
-	tcpAddr, err := net.ResolveTCPAddr(conf.Type, ":"+string(conf.Port))
+	tcpAddr, err := net.ResolveTCPAddr("tcp4", ":"+strconv.Itoa(conf.Port))
+	checkError(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
 	checkError(err)
 
@@ -45,7 +47,7 @@ func Receiver(conn net.Conn) (err error) {
 		n, err1 := conn.Read(buf)
 		switch err1 {
 		case nil:
-			fmt.Println("read length:" + string(n))
+			fmt.Println("read length:" + strconv.Itoa(n))
 			fmt.Println(buf)
 
 		case io.EOF: //当对方断开连接时触发该方法
