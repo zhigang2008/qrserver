@@ -13,6 +13,7 @@ func main() {
 	defer log.Flush()
 	fmt.Println("Server Start !")
 	log.Info("Hello World!")
-	server.Start()
 
+	conf := server.ReadConfigFromFile()
+	server.Server(conf)
 }
