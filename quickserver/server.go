@@ -4,14 +4,14 @@ package quickserver
 import (
 	"fmt"
 	log "github.com/cihub/seelog"
+	"io"
 	"net"
 	"os"
-	"time"
 )
 
-const{
+const (
 	RECV_BUF_LEN = 1024
-}
+)
 
 func Start() {
 	conf := ReadConfigFromFile()
@@ -38,41 +38,16 @@ func Server(conf ServerConfig) {
 }
 
 func Receiver(conn net.Conn) (err error) {
-	
+
 	buf := make([]byte, RECV_BUF_LEN)
 	defer conn.Close()
 	for {
 		n, err1 := conn.Read(buf)
 		switch err1 {
 		case nil:
-			//n, _ := conn.Write(buf[0:n])
-			var out LspMsg
-			//Decode(b, &out)
-			var outout LspMsgBig
-			if err := Decode(buf, &outout); err != nil {
-				fmt.Println("decode fail: " + err.Error())
-			}
-			fmt.Println("outout is ", outout)
-			fmt.Println("Byte2Int32 is ", BytesToInt32(buf[0:4]))
-			fmt.Println("length is ", buf[0:n])
-			fmt.Println("length is ", buf[0:4])
-			fmt.Println("length is ", BytesToInt8(buf[1:4]))
-			out.seq = BytesToInt32(buf[0:4])
-			out.protocol = BytesToInt32(buf[4:8])
-			out.length = BytesToInt32(buf[8:12])
-			out.times = BytesToInt64(buf[12:20])
-			out.lens = BytesToInt32(buf[20:24])
-			out.lsp = BytesToInt32(buf[24:28])
-			bytes := out.bytes[0:20]
-			copy(bytes, buf[28:n])
-			//out.bytes = &(buf[28:n])
-			fmt.Println(out.bytes)
-			/*
-			   for j := 0; j < 20; j++ {
-			       out.bytes[j] = buf[j+28]
-			   }
-			*/
-			fmt.Println("length is ", out)
+			fmt.Println("read length:" + string(n))
+			fmt.Println(buf)
+
 		case io.EOF: //当对方断开连接时触发该方法
 			fmt.Printf("Warning: End of data: %s \n", err1)
 			err = err1
