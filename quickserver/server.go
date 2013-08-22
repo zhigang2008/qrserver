@@ -1,4 +1,7 @@
-// server.go
+/*
+用来创建接收数据的服务
+通过配置文件设置相关参数,启动服务,接收数据,然后将数据解析后放入存储中
+*/
 package quickserver
 
 import (
