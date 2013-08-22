@@ -12,8 +12,8 @@ const (
 	defaultHost = ""
 	defaultPort = 7777
 	defaultType = "tcp4"
-	TCP         = "tcp"
-	UDP         = "udp"
+	TCP4        = "tcp4"
+	TCP6        = "tcp6"
 )
 
 type ServerConfig struct {
@@ -47,11 +47,11 @@ func ReadConfigFromFile() ServerConfig {
 
 func CheckConfig(conf ServerConfig) (err error) {
 	if conf.Port < 1 || conf.Port > 65535 {
-		err = fmt.Errorf("transType.Port must be in (1 ~ 65535")
+		err = fmt.Errorf("Port must be in (1 ~ 65535")
 		return
 	}
-	if !(conf.Type == TCP || conf.Type == UDP) {
-		err = fmt.Errorf("transType.Type only be 'tcp' or 'udp' ")
+	if !(conf.Type == TCP4 || conf.Type == TCP6) {
+		err = fmt.Errorf("TCP Type only be 'tcp4' or 'tcp6' ")
 		return
 	}
 	return

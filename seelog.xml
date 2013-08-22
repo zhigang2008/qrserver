@@ -1,7 +1,7 @@
 <seelog>
     <outputs formatid="common">
         <console/>
-        <file path="file.log"/>
+        <file path="./file.log"/>
         <!--
         <network address="192.168.0.2" port="8123"/>
         <filter levels="critical">
