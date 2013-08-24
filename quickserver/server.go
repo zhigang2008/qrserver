@@ -17,18 +17,20 @@ const (
 	RECV_BUF_LEN = 1024
 )
 
-func Start() {
-	conf := ReadConfigFromFile()
-	Server(conf)
+var tcpType string = "tcp4"
+var serverHost = ""
+var serverPost = "7777"
+
+func InitServer(conf ServerConfig) {
+	serverHost = conf.Host
+	serverPost = strconv.Itoa(conf.Port)
+	tcpType = conf.Type
 }
 
 //启动Server
-func Server(conf ServerConfig) {
+func Start() {
 
-	err := CheckConfig(conf)
-	checkError(err)
-
-	tcpAddr, err := net.ResolveTCPAddr(conf.Type, conf.Host+":"+strconv.Itoa(conf.Port))
+	tcpAddr, err := net.ResolveTCPAddr(tcpType, serverHost+":"+serverPost)
 	checkError(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
 	checkError(err)
@@ -56,6 +58,7 @@ func Receiver(conn net.Conn) (err error) {
 		case nil:
 			log.Info("From " + remoteHost + " read data length:" + strconv.Itoa(n))
 			log.Info(buf)
+			DataProcess(buf)
 
 		case io.EOF: //当对方断开连接时触发该方法
 			log.Warnf("远程终端[%s]已断开连接: %s \n", remoteHost, err1)
