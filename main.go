@@ -12,19 +12,25 @@ import (
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	defer log.Flush()
-	//defer server.DataClose()
 
-	fmt.Println("Server Start !")
-	log.Info("Hello World!")
+	fmt.Println("Server starting ......")
+	log.Info("Server starting ......")
 
-	conf, err := server.ReadConfigFromFile()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Fatal error : %s", err.Error())
-		log.Errorf("[创建服务失败]: %s", err.Error())
+	conf, err0 := server.ReadConfigFromFile()
+	if err0 != nil {
+		//fmt.Printf("配置文件读取失败 : %s\n", err0.Error())
+		log.Errorf("[配置文件读取失败]: %s", err0.Error())
+		log.Flush()
 		os.Exit(1)
 	}
-	server.InitDatabase(conf)
-	//	server.DataProcess2()
-	server.InitServer(conf)
-	server.Start()
+
+	err := server.InitAndStart(conf)
+	if err != nil {
+		//fmt.Printf("服务启动失败 : %s\n", err.Error())
+		log.Errorf("[服务启动失败]: %s", err.Error())
+		log.Flush()
+		os.Exit(1)
+	}
+
+	log.Info("服务启动正常")
 }

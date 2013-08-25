@@ -5,12 +5,13 @@
 package quickserver
 
 import (
-	"fmt"
+	//"fmt"
 	log "github.com/cihub/seelog"
 	"io"
 	"net"
-	"os"
+	//"runtime"
 	"strconv"
+	"time"
 )
 
 const (
@@ -24,37 +25,63 @@ type Server struct {
 	dataManager *DataManager
 }
 
-func InitServer(conf ServerConfig) *Server {
+func InitAndStart(conf ServerConfig) (err error) {
 	server := &Server{
 		serverHost: conf.Host,
 		serverPost: strconv.Itoa(conf.Port),
 		tcpType:    conf.Type,
 	}
-	return server
+	server.dataManager, err = InitDatabase(conf.Database)
+	if err != nil {
+		return
+	}
+	return server.start()
 
 }
 
 //启动Server
-func (server *Server) Start() {
-	fmt.Printf("\n调用参数%s %s %s:", serverHost, serverPost, tcpType)
-	tcpAddr, err := net.ResolveTCPAddr(tcpType, serverHost+":"+serverPost)
-	checkError(err)
+func (server *Server) start() (err error) {
+
+	tcpAddr, err := net.ResolveTCPAddr(server.tcpType, server.serverHost+":"+server.serverPost)
+	if err != nil {
+		log.Errorf("无法解析监听地址:%s", err.Error())
+		return
+	}
 	listener, err := net.ListenTCP("tcp", tcpAddr)
-	checkError(err)
+	if err != nil {
+		log.Errorf("监听失败:%s", err.Error())
+		return
+	}
+
+	var tempDelay time.Duration
 
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
+			if ne, ok := err.(net.Error); ok && ne.Temporary() {
+				if tempDelay == 0 {
+					tempDelay = 5 * time.Millisecond
+				} else {
+					tempDelay *= 2
+				}
+				if max := 1 * time.Second; tempDelay > max {
+					tempDelay = max
+				}
+				log.Errorf("Server :Accept error: %v; retrying in %v", err, tempDelay)
+				time.Sleep(tempDelay)
+				continue
+			}
 			log.Warn("接受请求失败:" + err.Error())
 			continue
 		}
-		go Receiver(conn)
+		tempDelay = 0
+		go Receiver(server, conn)
 	}
+
 }
 
 //接收数据
-func Receiver(conn net.Conn) (err error) {
-
+func Receiver(server *Server, conn net.Conn) (err error) {
 	buf := make([]byte, RECV_BUF_LEN)
 	remoteHost := conn.RemoteAddr().String()
 	log.Infof("终端建立连接:[%s]", remoteHost)
@@ -65,7 +92,7 @@ func Receiver(conn net.Conn) (err error) {
 		case nil:
 			log.Info("From " + remoteHost + " read data length:" + strconv.Itoa(n))
 			log.Info(buf)
-			DataProcess(buf)
+			DataProcess(buf, server.dataManager)
 
 		case io.EOF: //当对方断开连接时触发该方法
 			log.Warnf("远程终端[%s]已断开连接: %s \n", remoteHost, err1)
@@ -77,14 +104,11 @@ func Receiver(conn net.Conn) (err error) {
 			return
 		}
 	}
-	return
+	return nil
 }
 
-//检查异常
-func checkError(err error) {
-	if err != nil {
-		//fmt.Fprintf(os.Stderr, "Fatal error : %s", err.Error())
-		log.Errorf("[创建服务失败]: %s", err.Error())
-		os.Exit(1)
-	}
+//停止服务
+func (server *Server) Stop() {
+	server.dataManager.DataClose()
+	log.Warn("Server Stop")
 }

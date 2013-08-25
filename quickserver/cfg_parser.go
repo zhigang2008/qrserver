@@ -21,15 +21,20 @@ type ServerConfig struct {
 	Host     string
 	Port     int
 	Type     string
-	Database DataServer
+	Database DataServerConfig
 }
 
-type DataServer struct {
-	XMLName xml.Name `xml:"DataServer"`
-	Host    string
-	Port    int
+//数据库配置文件
+type DataServerConfig struct {
+	XMLName          xml.Name `xml:"DataServer"`
+	Host             string
+	Port             int
+	DataBaseName     string
+	DataCollection   string
+	DeviceCollection string
 }
 
+//读取配置文件,并进行校验
 func ReadConfigFromFile() (ServerConfig, error) {
 	var result ServerConfig
 	result.Host = defaultHost
@@ -56,7 +61,7 @@ func ReadConfigFromFile() (ServerConfig, error) {
 /*检查读取到的配置文件*/
 func CheckConfig(conf ServerConfig) (err error) {
 	if conf.Port < 1 || conf.Port > 65535 {
-		err = fmt.Errorf("Port must be in (1 ~ 65535")
+		err = fmt.Errorf("Server Port must be in (1 ~ 65535)")
 		return
 	}
 	if !(conf.Type == TCP4 || conf.Type == TCP6) {
