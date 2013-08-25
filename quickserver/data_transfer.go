@@ -10,7 +10,7 @@ func DataProcess(content []byte) (err error) {
 	data := new(DataAlert)
 	log.Infof("cont:%s", string(content[0:]))
 	data.SeqNo = string(content[0:1])
-	//DataSave(data)
+	DataSave2()
 	return
 }
 

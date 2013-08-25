@@ -24,7 +24,7 @@ func main() {
 		os.Exit(1)
 	}
 	server.InitDatabase(conf)
-	server.DataProcess2()
-	//server.InitServer(conf)
-	//server.Start()
+	//	server.DataProcess2()
+	server.InitServer(conf)
+	server.Start()
 }

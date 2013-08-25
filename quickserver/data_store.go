@@ -15,12 +15,6 @@ const (
 	defaultDeviceCollection = "device"
 )
 
-var (
-	session        *mgo.Session
-	databaseName   = defaultDatabase
-	dataCollection = defaultDataCollection
-)
-
 //报警信息
 type DataAlert struct {
 	SeqNo         string
@@ -38,20 +32,36 @@ type DataAlert struct {
 	Length        float32
 }
 
+type DataManager struct {
+	session          *mgo.Session
+	databaseName     string
+	dataCollection   string
+	deviceCollection string
+}
+
 //初始化数据库连接
-func InitDatabase(conf ServerConfig) {
-	session, err := mgo.Dial(conf.Database.Host + ":" + strconv.Itoa(conf.Database.Port))
+func InitDatabase(conf ServerConfig) *DataManager {
+
+	session1, err := mgo.Dial(conf.Database.Host + ":" + strconv.Itoa(conf.Database.Port))
 	if err != nil {
 		log.Criticalf("不能创建数据库连接:%s", err.Error())
 		panic(err)
 	}
-	session.SetMode(mgo.Monotonic, true)
+	session1.SetMode(mgo.Monotonic, true)
 	fmt.Println("创建了数据连接:")
+	dataManager := &DataManager{
+		session:          session1,
+		databaseName:     defaultDatabase,
+		dataCollection:   defaultDataCollection,
+		deviceCollection: defaultDeviceCollection,
+	}
+	fmt.Printf("datamanager %v", dataManager)
+	return dataManager
 }
 
 //保存报警信息
-func DataSave(data *DataAlert) (err error) {
-	c := session.DB(databaseName).C(dataCollection)
+func (dm *DataManager) DataSave(data *DataAlert) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
 	err = c.Insert(data)
 	if err != nil {
 		panic(err)
@@ -60,9 +70,13 @@ func DataSave(data *DataAlert) (err error) {
 	fmt.Println("数据保存成功")
 	return nil
 }
+func (dm *DataManager) DataSave2() (err error) {
+	fmt.Printf("\n调用session=%v", dm.session)
+	return nil
+}
 
 //关闭数据库连接
-func DataClose() {
-	session.Close()
+func (dm *DataManager) DataClose() {
+	dm.session.Close()
 
 }

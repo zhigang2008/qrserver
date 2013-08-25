@@ -5,7 +5,7 @@
 package quickserver
 
 import (
-	//	"fmt"
+	"fmt"
 	log "github.com/cihub/seelog"
 	"io"
 	"net"
@@ -17,19 +17,26 @@ const (
 	RECV_BUF_LEN = 1024
 )
 
-var tcpType string = "tcp4"
-var serverHost = ""
-var serverPost = "7777"
+type Server struct {
+	tcpType     string
+	serverHost  string
+	serverPost  string
+	dataManager *DataManager
+}
 
-func InitServer(conf ServerConfig) {
-	serverHost = conf.Host
-	serverPost = strconv.Itoa(conf.Port)
-	tcpType = conf.Type
+func InitServer(conf ServerConfig) *Server {
+	server := &Server{
+		serverHost: conf.Host,
+		serverPost: strconv.Itoa(conf.Port),
+		tcpType:    conf.Type,
+	}
+	return server
+
 }
 
 //启动Server
-func Start() {
-
+func (server *Server) Start() {
+	fmt.Printf("\n调用参数%s %s %s:", serverHost, serverPost, tcpType)
 	tcpAddr, err := net.ResolveTCPAddr(tcpType, serverHost+":"+serverPost)
 	checkError(err)
 	listener, err := net.ListenTCP("tcp", tcpAddr)
@@ -50,8 +57,8 @@ func Receiver(conn net.Conn) (err error) {
 
 	buf := make([]byte, RECV_BUF_LEN)
 	remoteHost := conn.RemoteAddr().String()
-
-	defer conn.Close()
+	log.Infof("终端建立连接:[%s]", remoteHost)
+	//defer conn.Close()
 	for {
 		n, err1 := conn.Read(buf)
 		switch err1 {
