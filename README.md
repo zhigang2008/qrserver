@@ -1,4 +1,0 @@
-qrserver
-========
-
-quick report server
