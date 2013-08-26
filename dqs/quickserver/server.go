@@ -17,7 +17,7 @@ import (
 const (
 	RECV_BUF_LEN = 1024
 )
-
+//服务器对象结构
 type Server struct {
 	tcpType     string
 	serverHost  string
@@ -25,6 +25,7 @@ type Server struct {
 	dataManager *DataManager
 }
 
+//服务器初始化并启动监听
 func InitAndStart(conf ServerConfig) (err error) {
 	server := &Server{
 		serverHost: conf.Host,
@@ -80,7 +81,7 @@ func (server *Server) start() (err error) {
 
 }
 
-//接收数据
+//接收数据处理数据
 func Receiver(server *Server, conn net.Conn) (err error) {
 	buf := make([]byte, RECV_BUF_LEN)
 	remoteHost := conn.RemoteAddr().String()

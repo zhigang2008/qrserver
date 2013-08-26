@@ -10,28 +10,12 @@ import (
 )
 
 const (
-	defaultDatabase         = "dqs"
-	defaultDataCollection   = "data"
-	defaultDeviceCollection = "device"
+	defaultDatabase         = "dqs"    //默认数据库名称
+	defaultDataCollection   = "data"   //默认数据Collection
+	defaultDeviceCollection = "device" //默认设备Collection
 )
 
-//报警信息
-type DataAlert struct {
-	SeqNo         string
-	SensorId      string
-	Longitude     float32
-	Latitude      float32
-	SiteType      byte
-	ObserveObject byte
-	Direction     byte
-	RegionCode    string
-	InitTime      string
-	Period        float32
-	PGA           float32
-	SI            float32
-	Length        float32
-}
-
+//数据库连接服务
 type DataManager struct {
 	session          *mgo.Session
 	databaseName     string
