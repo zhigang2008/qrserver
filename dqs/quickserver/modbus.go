@@ -4,6 +4,7 @@ const (
 	O_ConfRead    = 'g'
 	O_ConfSet     = 's'
 	I_Alert       = 'a'
+	I_AlertUp     = 'A'
 	O_Record      = 'r'
 	I_RecordAlert = 'a'
 	I_RecordData  = 'r'
@@ -12,11 +13,11 @@ const (
 
 //modbus 协议结构
 type ModBus struct {
-	Addr       int32  //地址
+	Addr       byte   //地址
 	FunCode    byte   //功能码
-	Datalength int32  //数据长度
-	Data       string //数据
-	CRC        string //CRC校验
+	Datalength uint16 //数据长度
+	Data       []byte //数据
+	CRC        uint16 //CRC校验
 }
 
 //传感器参数结构

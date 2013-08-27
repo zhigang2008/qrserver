@@ -17,6 +17,7 @@ import (
 const (
 	RECV_BUF_LEN = 1024
 )
+
 //服务器对象结构
 type Server struct {
 	tcpType     string
@@ -54,6 +55,8 @@ func (server *Server) start() (err error) {
 		return
 	}
 
+	defer listener.Close()
+
 	var tempDelay time.Duration
 
 	for {
@@ -75,18 +78,22 @@ func (server *Server) start() (err error) {
 			log.Warn("接受请求失败:" + err.Error())
 			continue
 		}
+
 		tempDelay = 0
+
 		go Receiver(server, conn)
 	}
 
 }
 
 //接收数据处理数据
-func Receiver(server *Server, conn net.Conn) (err error) {
+func Receiver(server *Server, conn net.Conn) {
+	defer conn.Close()
+
 	buf := make([]byte, RECV_BUF_LEN)
 	remoteHost := conn.RemoteAddr().String()
 	log.Infof("终端建立连接:[%s]", remoteHost)
-	//defer conn.Close()
+
 	for {
 		n, err1 := conn.Read(buf)
 		switch err1 {
@@ -97,15 +104,13 @@ func Receiver(server *Server, conn net.Conn) (err error) {
 
 		case io.EOF: //当对方断开连接时触发该方法
 			log.Warnf("远程终端[%s]已断开连接: %s \n", remoteHost, err1)
-			err = err1
 			return
 		default: //当对方断开连接时触发该方法
 			log.Warnf("1远程终端[%s]已断开连接: %s \n", remoteHost, err1)
-			err = err1
 			return
 		}
 	}
-	return nil
+
 }
 
 //停止服务
