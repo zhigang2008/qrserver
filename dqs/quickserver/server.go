@@ -94,13 +94,17 @@ func Receiver(server *Server, conn net.Conn) {
 	remoteHost := conn.RemoteAddr().String()
 	log.Infof("终端建立连接:[%s]", remoteHost)
 
+	//获取一个数据处理器
+	dataProcessor := NewDataProcessor()
+	defer dataProcessor.FreeDll()
+
 	for {
 		n, err1 := conn.Read(buf)
 		switch err1 {
 		case nil:
 			log.Info("From " + remoteHost + " read data length:" + strconv.Itoa(n))
 			log.Info(buf)
-			DataProcess(buf, server.dataManager)
+			dataProcessor.DataProcess(buf, server.dataManager)
 
 		case io.EOF: //当对方断开连接时触发该方法
 			log.Warnf("远程终端[%s]已断开连接: %s \n", remoteHost, err1)
