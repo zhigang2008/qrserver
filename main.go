@@ -1,31 +1,14 @@
-package quickserver
+package main
 
 import (
-	"time"
+	//"bytes"
+	//"encoding/binary"
+	"fmt"
+	//log "github.com/cihub/seelog"
+	"syscall"
+	//"time"
+	"unsafe"
 )
-
-const (
-	I_Register    = 'z'
-	O_ConfRead    = 'g'
-	O_ConfSet     = 's'
-	I_Alert       = 'a'
-	I_AlertUp     = 'A'
-	O_Record      = 'r'
-	I_RecordAlert = 'a'
-	I_RecordData  = 'r'
-	I_Status      = 'g'
-)
-
-/*
-//modbus 协议结构
-type ModBus struct {
-	Addr       byte    //地址
-	FunCode    byte    //功能码
-	Datalength [2]byte //数据长度
-	Data       []byte  //数据
-	CRC        [2]byte //CRC校验
-}
-*/
 
 //传感器参数结构
 type SensorParameter struct {
@@ -65,28 +48,28 @@ type SensorParameter struct {
 	IO2 byte //IO输出2
 }
 
-//报警信息
-type DataAlert struct {
-	SeqNo         string
-	SensorId      string
-	Longitude     float32
-	Latitude      float32
-	SiteType      byte
-	ObserveObject byte
-	Direction     byte
-	RegionCode    string
-	InitTime      string
-	Period        float32
-	PGA           float32
-	SI            float32
-	Length        float32
-}
+func main() {
+	fmt.Println("begin....")
+	p := SensorParameter{}
+	p.SensorID = "SI30001001"
+	p.SiteName = "1234567890"
+	p.Latitude = 1.1
+	p.Longitude = 1.1
+	p.SiteType = 1
+	p.ObserveObject = 1
+	p.Accelerometer = 1
+	p.Direction = 1
 
-//设备信息
-type DeviceInfo struct {
-	SensorId     string
-	RegisterTime time.Time
-	OffTime      time.Time
-	Online       bool
-	SetParams    SensorParameter
+	dll := syscall.MustLoadDLL("socket1.dll")
+	proc := dll.MustFindProc("GenerateReadParam")
+	sid := []byte("SI30001001s")
+	ret := make([]byte, 1024)
+	ok, _, _ := proc.Call(
+		uintptr(unsafe.Pointer(&sid[0])),
+		uintptr(unsafe.Pointer(&ret[0])))
+	if ok != 0 {
+		fmt.Println(ok)
+	}
+	fmt.Println(string(ret))
+
 }
