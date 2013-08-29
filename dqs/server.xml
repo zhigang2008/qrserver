@@ -9,7 +9,7 @@
 <!--数据库配置-->
 <DataServer>
 <!--数据库地址,默认本机-->
-<Host>127.0.0.10</Host>
+<Host>127.0.0.1</Host>
 <!--数据库服务端口,默认为27017-->
 <Port>27017</Port>
 <DataBaseName>dqs</DataBaseName>

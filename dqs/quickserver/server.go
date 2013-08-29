@@ -18,6 +18,10 @@ const (
 	RECV_BUF_LEN = 1024
 )
 
+var (
+	ClientNum int = 0
+)
+
 //服务器对象结构
 type Server struct {
 	tcpType     string
@@ -59,6 +63,7 @@ func (server *Server) start() (err error) {
 
 	var tempDelay time.Duration
 
+	//不断监听
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
@@ -94,25 +99,38 @@ func Receiver(server *Server, conn net.Conn) {
 	remoteHost := conn.RemoteAddr().String()
 	log.Infof("终端建立连接:[%s]", remoteHost)
 
+	ClientNum++
+	log.Infof("当前建立连接的设备:%d", ClientNum)
+
 	//获取一个数据处理器
-	dataProcessor := NewDataProcessor()
+	dataProcessor := NewDataProcessor(server.dataManager)
 	defer dataProcessor.FreeDLL()
 
 	for {
 		n, err1 := conn.Read(buf)
 		switch err1 {
 		case nil:
-			log.Info("From " + remoteHost + " read data length:" + strconv.Itoa(n))
-			log.Info(buf)
-			dataProcessor.DataProcess(buf, server.dataManager)
+			log.Infof("From [%s] read data length:%d ", remoteHost, n)
+			if n < 11 {
+				log.Infof("无效数据:数据长度过短")
+				continue
+			}
+			log.Info(string(buf[0:n]))
+			dataProcessor.DataProcess(buf[0:n])
 
 		case io.EOF: //当对方断开连接时触发该方法
+
 			log.Warnf("远程终端[%s]已断开连接: %s \n", remoteHost, err1)
+			ClientNum--
+			log.Infof("当前建立连接的设备:%d", ClientNum)
 			return
-		default: //当对方断开连接时触发该方法
-			log.Warnf("1远程终端[%s]已断开连接: %s \n", remoteHost, err1)
+		default: //断开连接
+			log.Warnf("远程终端[%s]读取失败: %s \n", remoteHost, err1)
+			ClientNum--
+			log.Infof("当前建立连接的设备:%d", ClientNum)
 			return
 		}
+
 	}
 
 }

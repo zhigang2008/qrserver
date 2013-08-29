@@ -1,6 +1,11 @@
 package quickserver
 
+import (
+	"time"
+)
+
 const (
+	I_Register    = 'z'
 	O_ConfRead    = 'g'
 	O_ConfSet     = 's'
 	I_Alert       = 'a'
@@ -73,4 +78,12 @@ type DataAlert struct {
 	PGA           float32
 	SI            float32
 	Length        float32
+}
+
+//设备信息
+type DeviceInfo struct {
+	SensorId     string
+	RegisterTime time.Time
+	OffTime      time.Time
+	Online       bool
 }

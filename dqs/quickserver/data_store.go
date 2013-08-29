@@ -1,12 +1,12 @@
 package quickserver
 
 import (
-	"fmt"
+	//	"fmt"
 	log "github.com/cihub/seelog"
 	"labix.org/v2/mgo"
 	"strconv"
 
-//	"labix.org/v2/mgo/bson"
+	"labix.org/v2/mgo/bson"
 )
 
 const (
@@ -59,10 +59,22 @@ func (dm *DataManager) DataSave(data *DataAlert) (err error) {
 	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
 	err = c.Insert(data)
 	if err != nil {
-		panic(err)
+
 		return err
 	}
-	fmt.Println("数据保存成功")
+	return nil
+}
+
+//设备注册
+func (dm *DataManager) DeviceRegister(device *DeviceInfo) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
+
+	changeInfo, err0 := c.Upsert(&bson.M{"sensorid": device.SensorId}, &device)
+	if err0 != nil {
+		log.Infof("updated:%de", changeInfo.Updated)
+		return err0
+	}
+
 	return nil
 }
 
