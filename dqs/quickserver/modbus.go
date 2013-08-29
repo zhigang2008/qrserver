@@ -13,11 +13,11 @@ const (
 
 //modbus 协议结构
 type ModBus struct {
-	Addr       byte   //地址
-	FunCode    byte   //功能码
-	Datalength uint16 //数据长度
-	Data       []byte //数据
-	CRC        uint16 //CRC校验
+	Addr       byte    //地址
+	FunCode    byte    //功能码
+	Datalength [2]byte //数据长度
+	Data       []byte  //数据
+	CRC        [2]byte //CRC校验
 }
 
 //传感器参数结构

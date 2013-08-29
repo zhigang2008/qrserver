@@ -96,7 +96,7 @@ func Receiver(server *Server, conn net.Conn) {
 
 	//获取一个数据处理器
 	dataProcessor := NewDataProcessor()
-	defer dataProcessor.FreeDll()
+	defer dataProcessor.FreeDLL()
 
 	for {
 		n, err1 := conn.Read(buf)

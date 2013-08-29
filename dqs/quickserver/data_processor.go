@@ -1,6 +1,8 @@
 package quickserver
 
 import (
+	//"bytes"
+	//"encoding/binary"
 	"fmt"
 	log "github.com/cihub/seelog"
 	"syscall"
@@ -24,13 +26,14 @@ func NewDataProcessor() *DataProcessor {
 }
 
 //释放Dll资源
-func (dp *DataProcessor) FreeDll() {
-	dp.FreeDll()
+func (dp *DataProcessor) FreeDLL() {
+	dp.dll.Release()
 }
 
 //读取参数设置
 //TODO
 func (dp *DataProcessor) GenerateReadParam(strParam string) []byte {
+
 	var ret []byte
 	dp.p_GenerateReadParam.Call()
 	return ret
@@ -40,10 +43,20 @@ func (dp *DataProcessor) GenerateReadParam(strParam string) []byte {
 func (dp *DataProcessor) DataProcess(content []byte, datamgr *DataManager) (err error) {
 	log.Info("Begin process data")
 
-	fmt.Printf("设备:%d\n", content[0])
-	fmt.Printf("功能:%c\n", content[1])
+	/*
+		contbuf := bytes.NewBuffer(content)
+		var modbus ModBus
+		err0 := binary.Read(contbuf, binary.BigEndian, &modbus)
+		if err0 != nil {
+			fmt.Printf("转换错误 %s\n", err0.Error())
+		}
+
+		fmt.Printf("读取到的modbus数据 %x\n", modbus)
+	*/
+	fmt.Printf("设备:%s\n", content[0:10])
+	fmt.Printf("功能:%c\n", content[10])
 	//判断接收的数据类型
-	datatype := content[1]
+	datatype := content[10]
 
 	switch datatype {
 	case I_Alert, I_AlertUp:
@@ -60,7 +73,7 @@ func (dp *DataProcessor) DataProcess(content []byte, datamgr *DataManager) (err 
 
 func (dp *DataProcessor) ProcessAlert(content *[]byte, datamgr *DataManager) (err error) {
 	data := new(DataAlert)
-	data.SeqNo = string((*content)[0])
+	data.SeqNo = string((*content)[0:10])
 	datamgr.DataSave(data)
 	return
 }
