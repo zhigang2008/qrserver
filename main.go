@@ -11,20 +11,21 @@ import (
 )
 
 //传感器参数结构
-type SensorParameter struct {
+type RetData struct {
 	//--基本参数--
-	SensorID      string  //传感器编号
-	SiteName      string  //站点名称
-	Longitude     float32 //台站经度
-	Latitude      float32 //台站纬度
-	SiteType      byte    //场地类型
-	ObserveObject byte    //观测对象
-	Accelerometer byte    //加速度计型号
-	Direction     byte    //安装方向
-	RangeType     byte    //量程选择
-	RegionCode    string  //行政区划代码
-	Custom1       string  //预留
-	Custom2       string  //预留
+	SensorID      [11]byte //传感器编号
+	SiteName      [11]byte //站点名称
+	Longitude     float32  //台站经度
+	Latitude      float32  //台站纬度
+	SiteType      int      //场地类型
+	ObserveObject byte     //观测对象
+	Accelerometer byte     //加速度计型号
+	Direction     byte     //安装方向
+	RangeType     int      //量程选择
+	Period        float32  //采样周期
+	RegionCode    [7]byte  //行政区划代码
+	Custom1       [9]byte  //预留
+	Custom2       [9]byte  //预留
 	//--触发参数--
 	PGATrigger          byte    //PGA触发
 	PGATrgThreshold     float32 //PGA阀值
@@ -50,26 +51,35 @@ type SensorParameter struct {
 
 func main() {
 	fmt.Println("begin....")
-	p := SensorParameter{}
-	p.SensorID = "SI30001001"
-	p.SiteName = "1234567890"
-	p.Latitude = 1.1
-	p.Longitude = 1.1
-	p.SiteType = 1
-	p.ObserveObject = 1
-	p.Accelerometer = 1
-	p.Direction = 1
+	/*
+		p := SensorParameter{}
+		p.SensorID = "SI30001001"
+		p.SiteName = "1234567890"
+		p.Latitude = 1.1
+		p.Longitude = 1.1
+		p.SiteType = 1
+		p.ObserveObject = 1
+		p.Accelerometer = 1
+		p.Direction = 1
+	*/
 
-	dll := syscall.MustLoadDLL("socket1.dll")
-	proc := dll.MustFindProc("GenerateReadParam")
-	sid := []byte("SI30001001s")
-	ret := make([]byte, 1024)
+	var ret RetData = RetData{}
+
+	dll := syscall.MustLoadDLL("Socket1.dll")
+	proc := dll.MustFindProc("parseReadSetParam")
+	sid := []byte("SI30002345g005FSI30002345haidian00010584628032435441101100002000510802000000000000000010220000000032000000000000001045000000006700000000000000010030f6")
 	ok, _, _ := proc.Call(
 		uintptr(unsafe.Pointer(&sid[0])),
-		uintptr(unsafe.Pointer(&ret[0])))
-	if ok != 0 {
+		uintptr(unsafe.Pointer(&ret)))
+	if ok != 1 {
 		fmt.Println(ok)
-	}
-	fmt.Println(string(ret))
 
+	}
+	fmt.Printf("%s\n", string(ret.SiteName[:]))
+	fmt.Printf("%s\n", string(ret.SensorID[:]))
+	fmt.Printf("%f\n", ret.Longitude)
+	fmt.Printf("%f\n", ret.Latitude)
+	fmt.Printf("%d\n", ret.ObserveObject)
+	fmt.Printf("%f\n", ret.Period)
+	fmt.Printf("%x\n", ret.RegionCode[:])
 }
