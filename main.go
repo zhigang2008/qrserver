@@ -18,35 +18,35 @@ type RetData struct {
 	Longitude     float32  //台站经度
 	Latitude      float32  //台站纬度
 	SiteType      int      //场地类型
-	ObserveObject byte     //观测对象
-	Accelerometer byte     //加速度计型号
-	Direction     byte     //安装方向
+	ObserveObject int      //观测对象
+	Accelerometer int      //加速度计型号
+	Direction     int      //安装方向
 	RangeType     int      //量程选择
 	Period        float32  //采样周期
 	RegionCode    [7]byte  //行政区划代码
 	Custom1       [9]byte  //预留
 	Custom2       [9]byte  //预留
 	//--触发参数--
-	PGATrigger          byte    //PGA触发
+	PGATrigger          int     //PGA触发
 	PGATrgThreshold     float32 //PGA阀值
-	SITrigger           byte    //SI触发
+	SITrigger           int     //SI触发
 	SITrgThreshold      float32 //SI阀值
-	CombTrigger         byte    //组合触发
-	ReserveTrigger      byte    //预留触发
+	CombTrigger         int     //组合触发
+	ReserveTrigger      int     //预留触发
 	ReserveTrgThreshold float32 //预留阀值
 	//--报警参数--
-	PGAAlert              byte    //PGA报警
+	PGAAlert              int     //PGA报警
 	PGAAlertThreshold     float32 //PGA报警阀值
-	SIAlert               byte    //SI报警
+	SIAlert               int     //SI报警
 	SIAlertThreshold      float32 //SI报警阀值
-	CombAlert             byte    //组合报警
-	ReserveAlert          byte    //预留报警
+	CombAlert             int     //组合报警
+	ReserveAlert          int     //预留报警
 	ReserveAlertThreshold float32 //预留报警阀值
 	//--输出参数--
-	DA1 byte //DA输出1
-	DA2 byte //DA输出2
-	IO1 byte //IO输出1
-	IO2 byte //IO输出2
+	DA1 int //DA输出1
+	DA2 int //DA输出2
+	IO1 int //IO输出1
+	IO2 int //IO输出2
 }
 
 func main() {
@@ -75,11 +75,16 @@ func main() {
 		fmt.Println(ok)
 
 	}
-	fmt.Printf("%s\n", string(ret.SiteName[:]))
-	fmt.Printf("%s\n", string(ret.SensorID[:]))
+	fmt.Printf("%s\n", string(ret.SiteName[:10]))
+	fmt.Printf("%s\n", string(ret.SensorID[:10]))
 	fmt.Printf("%f\n", ret.Longitude)
 	fmt.Printf("%f\n", ret.Latitude)
+	fmt.Printf("%d\n", ret.SiteType)
+	fmt.Printf("%d\n", ret.Accelerometer)
 	fmt.Printf("%d\n", ret.ObserveObject)
 	fmt.Printf("%f\n", ret.Period)
-	fmt.Printf("%x\n", ret.RegionCode[:])
+	fmt.Printf("%s\n", string(ret.RegionCode[:]))
+	fmt.Printf("%d\n", ret.DA2)
+	fmt.Printf("%d\n", ret.IO1)
+	fmt.Printf("%d\n", ret.IO2)
 }
