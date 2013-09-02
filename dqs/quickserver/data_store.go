@@ -98,12 +98,67 @@ func (dm *DataManager) UpdateDeviceStatus(status *SensorInfo) (err error) {
 func (dm *DataManager) DeviceRegister(device *DeviceInfo) (err error) {
 	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
 
-	changeInfo, err0 := c.Upsert(&bson.M{"sensorid": device.SensorId}, &device)
+	/*
+		changeInfo, err0 := c.Upsert(&bson.M{"sensorid": device.SensorId}, &device)
+		if err0 != nil {
+			log.Infof("数据库更新设备注册信息失败:%d", changeInfo.Updated)
+			return err0
+		}
+		return nil
+	*/
+
+	devicetemp := DeviceInfo{}
+	//先查找设备
+	err = c.Find(bson.M{"sensorid": device.SensorId}).One(&devicetemp)
+	if err != nil {
+		if err == mgo.ErrNotFound { //不存在,插入设备信息
+			err0 := c.Insert(device)
+			if err0 != nil {
+				return err0
+			}
+			return nil
+
+		} else {
+			return err
+		}
+	}
+
+	//更新设备信息
+	colQuerier := bson.M{"sensorid": device.SensorId}
+	change := bson.M{"$set": bson.M{"registertime": time.Now(), "online": true, "updatetime": time.Now()}}
+	err0 := c.Update(colQuerier, change)
 	if err0 != nil {
-		log.Infof("数据库更新设备注册信息失败:%d", changeInfo.Updated)
+		log.Infof("数据库更新设备参数失败:%s", err0.Error())
 		return err0
 	}
+
 	return nil
+}
+
+//查找设备信息
+func (dm *DataManager) DeviceList(n int) (*[]DeviceInfo, error) {
+	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
+
+	devices := []DeviceInfo{}
+	//先查找设备
+	err := c.Find(&bson.M{}).Limit(n).All(&devices)
+	if err != nil {
+		return nil, err
+	}
+	return &devices, nil
+}
+
+//查找报警信息
+func (dm *DataManager) AlarmList(n int) (*[]AlarmInfo, error) {
+	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
+
+	alarms := []AlarmInfo{}
+	//先查找设备
+	err := c.Find(&bson.M{}).Limit(n).All(&alarms)
+	if err != nil {
+		return nil, err
+	}
+	return &alarms, nil
 }
 
 //关闭数据库连接
