@@ -3,19 +3,25 @@ package quickserver
 import (
 	//"bytes"
 	//"encoding/binary"
+	"errors"
 	"fmt"
 	log "github.com/cihub/seelog"
 	"syscall"
 	"time"
+	"unsafe"
 )
 
 //数据处理器结构
 //包含调用的dll以及 其中的function句柄
 type DataProcessor struct {
-	dataManager         *DataManager
-	dll                 *syscall.DLL
-	p_sendStr           *syscall.Proc
-	p_GenerateReadParam *syscall.Proc
+	dataManager           *DataManager
+	dll                   *syscall.DLL
+	p_parseReadFlashParam *syscall.Proc
+	p_parseReadSetParam   *syscall.Proc
+	p_ParseDelParam       *syscall.Proc
+	p_ParseSetParam       *syscall.Proc
+	p_GenerateSetParam    *syscall.Proc
+	p_parseFlashData      *syscall.Proc
 }
 
 //初始化数据处理器
@@ -23,8 +29,13 @@ func NewDataProcessor(dm *DataManager) *DataProcessor {
 	var dp = new(DataProcessor)
 	dp.dataManager = dm
 	dp.dll = syscall.MustLoadDLL("socket1.dll")
-	dp.p_sendStr = dp.dll.MustFindProc("sendStr")
-	dp.p_GenerateReadParam = dp.dll.MustFindProc("GenerateReadParam")
+	dp.p_parseReadFlashParam = dp.dll.MustFindProc("parseReadFlashParam")
+	dp.p_parseReadSetParam = dp.dll.MustFindProc("parseReadSetParam")
+	dp.p_ParseDelParam = dp.dll.MustFindProc("ParseDelParam")
+	dp.p_ParseSetParam = dp.dll.MustFindProc("ParseSetParam")
+	dp.p_GenerateSetParam = dp.dll.MustFindProc("GenerateSetParam")
+	dp.p_parseFlashData = dp.dll.MustFindProc("parseFlashData")
+
 	return dp
 }
 
@@ -33,13 +44,17 @@ func (dp *DataProcessor) FreeDLL() {
 	dp.dll.Release()
 }
 
-//读取参数设置
-//TODO
-func (dp *DataProcessor) GenerateReadParam(strParam string) []byte {
+//DLL解析接收的突发数据
+func (dp *DataProcessor) parseReadFlashParam(rec []byte) (*FlashData, error) {
+	flashData := FlashData{}
 
-	var ret []byte
-	dp.p_GenerateReadParam.Call()
-	return ret
+	ok, _, _ := dp.p_parseReadFlashParam.Call(
+		uintptr(unsafe.Pointer(&rec[0])),
+		uintptr(unsafe.Pointer(&flashData)))
+	if ok != 1 {
+		return nil, errors.New("DLL解析突发数据失败")
+	}
+	return &flashData, nil
 }
 
 //解析数据
@@ -63,7 +78,7 @@ func (dp *DataProcessor) DataProcess(content []byte) (err error) {
 
 	switch datatype {
 	case 'a', 'A':
-		dp.ProcessAlert(&content)
+		dp.ProcessFlashData(content)
 	case 'z', 'Z':
 		dp.DeviceRegister(&content)
 	case 'g', 'G':
@@ -76,16 +91,27 @@ func (dp *DataProcessor) DataProcess(content []byte) (err error) {
 	return
 }
 
-func (dp *DataProcessor) ProcessAlert(content *[]byte) (err error) {
-	data := new(DataAlert)
-	data.SensorId = string((*content)[0:10])
-	err = dp.dataManager.DataSave(data)
+//处理突发数据
+func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
+	id := string(content[0:10])
+	//调用dll解析
+	data, err := dp.parseReadFlashParam(content)
 	if err != nil {
-		log.Warnf("报警信息处理失败:%s", err.Error())
+		log.Warnf("[%s]报警信息DLL解析失败:%s", id, err.Error())
+		return err
+	}
+	//数据转换
+	sData := FlashData2AlarmInfo(data)
+	err = dp.dataManager.FlashDataSave(sData)
+	if err != nil {
+		log.Warnf("[%s]报警信息处理失败:%s", id, err.Error())
+		return err
 	}
 	log.Infof("报警信息保存成功")
 	return
 }
+
+//设备注册
 func (dp *DataProcessor) DeviceRegister(content *[]byte) (err error) {
 	device := new(DeviceInfo)
 	device.SensorId = string((*content)[0:10])
@@ -94,6 +120,7 @@ func (dp *DataProcessor) DeviceRegister(content *[]byte) (err error) {
 	err = dp.dataManager.DeviceRegister(device)
 	if err != nil {
 		log.Warnf("设备注册失败:%s", err.Error())
+		return err
 	}
 	log.Infof("设备注册成功")
 	return

@@ -55,7 +55,7 @@ func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
 }
 
 //保存报警信息
-func (dm *DataManager) DataSave(data *DataAlert) (err error) {
+func (dm *DataManager) FlashDataSave(data *AlarmInfo) (err error) {
 	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
 	err = c.Insert(data)
 	if err != nil {

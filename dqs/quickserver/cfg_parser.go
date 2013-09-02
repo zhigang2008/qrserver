@@ -15,7 +15,7 @@ const (
 	TCP4        = "tcp4"
 	TCP6        = "tcp6"
 )
-
+//服务器配置信息结构
 type ServerConfig struct {
 	XMLName  xml.Name `xml:"Server"`
 	Host     string
