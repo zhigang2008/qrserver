@@ -16,4 +16,12 @@
 <DataCollection></DataCollection>
 <DeviceCollection></DeviceCollection>
 </DataServer>
+<!--web控制台,可以设置为[true|false].默认不开启false-->
+<HttpEnable>true</HttpEnable>
+<!--web控制台信息-->
+<HttpServer>
+<Host></Host>
+<!--服务端口-->
+<Port>80</Port>
+</HttpServer>
 </Server>

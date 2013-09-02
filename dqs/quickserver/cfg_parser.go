@@ -15,13 +15,16 @@ const (
 	TCP4        = "tcp4"
 	TCP6        = "tcp6"
 )
+
 //服务器配置信息结构
 type ServerConfig struct {
-	XMLName  xml.Name `xml:"Server"`
-	Host     string
-	Port     int
-	Type     string
-	Database DataServerConfig
+	XMLName    xml.Name `xml:"Server"`
+	Host       string
+	Port       int
+	Type       string
+	Database   DataServerConfig
+	HttpEnable bool
+	HttpServer HttpServerConfig
 }
 
 //数据库配置文件
@@ -32,6 +35,13 @@ type DataServerConfig struct {
 	DataBaseName     string
 	DataCollection   string
 	DeviceCollection string
+}
+
+//HTTP控制台
+type HttpServerConfig struct {
+	XMLName xml.Name `xml:"HttpServer"`
+	Host    string
+	Port    int
 }
 
 //读取配置文件,并进行校验
@@ -71,6 +81,11 @@ func CheckConfig(conf ServerConfig) (err error) {
 	if conf.Database.Host == "" {
 		err = fmt.Errorf("必须设置数据库地址")
 		return
+	}
+	if conf.HttpEnable == true {
+		if conf.HttpServer.Port < 1 || conf.HttpServer.Port > 65535 {
+			err = fmt.Errorf("启用了HttpServer,必须设置服务端口号在(1 ~ 65535)")
+		}
 	}
 	return
 }

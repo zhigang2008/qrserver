@@ -41,6 +41,12 @@ func InitAndStart(conf ServerConfig) (err error) {
 	if err != nil {
 		return
 	}
+	//是否启动HTTP console
+	if conf.HttpEnable == true {
+		//启用http server
+		StartHttp(conf.HttpServer)
+	}
+
 	return server.start()
 
 }
