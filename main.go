@@ -49,8 +49,27 @@ type RetData struct {
 	IO2 int //IO输出2
 }
 
+//突发数据
+type FlashData struct {
+	SeqNo         [11]byte //记录编号
+	SensorId      [11]byte //传感器编号
+	Longitude     float32  //经度
+	Latitude      float32  //纬度
+	SiteType      int      //场地类型
+	ObserveObject int      //观测对象
+	Direction     int      //安装方向
+	RegionCode    [7]byte  //行政区域编码
+	InitTime      [6]byte  //初始时刻
+	Period        float32  //采用周期
+	PGA           float32  //PGA值
+	SI            float32  //SI值
+	Length        float32  //记录长度
+}
+
 func main() {
 	fmt.Println("begin....")
+	fmt.Printf("%sssss\n", "SI30002345"+string(byte(0)))
+
 	/*
 		p := SensorParameter{}
 		p.SensorID = "SI30001001"
@@ -75,6 +94,7 @@ func main() {
 		fmt.Println(ok)
 
 	}
+
 	fmt.Printf("%s\n", string(ret.SiteName[:10]))
 	fmt.Printf("%s\n", string(ret.SensorID[:10]))
 	fmt.Printf("%f\n", ret.Longitude)
@@ -87,4 +107,18 @@ func main() {
 	fmt.Printf("%d\n", ret.DA2)
 	fmt.Printf("%d\n", ret.IO1)
 	fmt.Printf("%d\n", ret.IO2)
+
+	fmt.Println("========================")
+	var ret2 FlashData = FlashData{}
+	proc2 := dll.MustFindProc("parseReadFlashParam")
+	flashdata1 := []byte("SI30001051a003b1309010715SI3000105110375824030919431111326291309010715510000199904528266003049630000000ea46")
+	ok1, _, _ := proc2.Call(
+		uintptr(unsafe.Pointer(&flashdata1[0])),
+		uintptr(unsafe.Pointer(&ret2)))
+	if ok1 != 1 {
+		fmt.Println(ok1)
+
+	}
+	s := fmt.Sprintf("%x", ret2.InitTime)
+	fmt.Printf("%s\n", s)
 }

@@ -4,15 +4,20 @@ import (
 	//	"fmt"
 	log "github.com/cihub/seelog"
 	"labix.org/v2/mgo"
-	"strconv"
-
 	"labix.org/v2/mgo/bson"
+	"strconv"
+	"sync"
+	"time"
 )
 
 const (
 	defaultDatabase         = "dqs"    //默认数据库名称
 	defaultDataCollection   = "data"   //默认数据Collection
 	defaultDeviceCollection = "device" //默认设备Collection
+)
+
+var (
+	mux sync.Mutex
 )
 
 //数据库连接服务
@@ -25,6 +30,8 @@ type DataManager struct {
 
 //初始化数据库连接
 func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
+	mux.Lock()
+	defer mux.Unlock()
 
 	session1, err := mgo.Dial(conf.Host + ":" + strconv.Itoa(conf.Port))
 	if err != nil {
@@ -65,16 +72,37 @@ func (dm *DataManager) FlashDataSave(data *AlarmInfo) (err error) {
 	return nil
 }
 
+//更新设备状态及参数
+func (dm *DataManager) UpdateDeviceStatus(status *SensorInfo) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
+
+	device := DeviceInfo{}
+	//先查找设备
+	err = c.Find(bson.M{"sensorid": status.SensorId}).One(&device)
+	if err != nil {
+		return err
+	}
+	device.SetParams = *status
+	device.UpdateTime = time.Now()
+
+	//更新数据
+	err0 := c.Update(&bson.M{"sensorid": device.SensorId}, &device)
+	if err0 != nil {
+		log.Infof("数据库更新设备参数失败:%s", err0.Error())
+		return err0
+	}
+	return nil
+}
+
 //设备注册
 func (dm *DataManager) DeviceRegister(device *DeviceInfo) (err error) {
 	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
 
 	changeInfo, err0 := c.Upsert(&bson.M{"sensorid": device.SensorId}, &device)
 	if err0 != nil {
-		log.Infof("updated:%de", changeInfo.Updated)
+		log.Infof("数据库更新设备注册信息失败:%d", changeInfo.Updated)
 		return err0
 	}
-
 	return nil
 }
 

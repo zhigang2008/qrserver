@@ -57,6 +57,41 @@ func (dp *DataProcessor) parseReadFlashParam(rec []byte) (*FlashData, error) {
 	return &flashData, nil
 }
 
+//DLL解析接收的设置数据
+func (dp *DataProcessor) parseReadSetParam(rec []byte) (*RetData, error) {
+	retData := RetData{}
+
+	ok, _, _ := dp.p_parseReadSetParam.Call(
+		uintptr(unsafe.Pointer(&rec[0])),
+		uintptr(unsafe.Pointer(&retData)))
+	if ok != 1 {
+		return nil, errors.New("DLL解析设备的设置参数失败")
+	}
+	return &retData, nil
+}
+
+//DLL解析删除设备参数是否成功
+func (dp *DataProcessor) parseDelParam(rec []byte) bool {
+	ok, _, _ := dp.p_ParseDelParam.Call(
+		uintptr(unsafe.Pointer(&rec[0])))
+	if ok == 0 {
+		return true
+	} else {
+		return false
+	}
+}
+
+//DLL解析删除设备参数是否成功
+func (dp *DataProcessor) parseSetParam(rec []byte) bool {
+	ok, _, _ := dp.p_ParseSetParam.Call(
+		uintptr(unsafe.Pointer(&rec[0])))
+	if ok == 0 {
+		return true
+	} else {
+		return false
+	}
+}
+
 //解析数据
 func (dp *DataProcessor) DataProcess(content []byte) (err error) {
 	log.Info("Begin process data")
@@ -77,13 +112,13 @@ func (dp *DataProcessor) DataProcess(content []byte) (err error) {
 	datatype := content[10]
 
 	switch datatype {
-	case 'a', 'A':
+	case 'a', 'A': //突发数据
 		dp.ProcessFlashData(content)
-	case 'z', 'Z':
+	case 'z', 'Z': //设备注册
 		dp.DeviceRegister(&content)
-	case 'g', 'G':
-		fmt.Println("设置信息或者状态信息处理")
-	case 'r', 'R':
+	case 'g', 'G': //状态及参数设定
+		dp.ProcessStatusData(content)
+	case 'r', 'R': //地形波读取
 		fmt.Println("波形信息读取")
 	default:
 		fmt.Println("无效数据")
@@ -111,12 +146,33 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 	return
 }
 
+//处理状态数据
+func (dp *DataProcessor) ProcessStatusData(content []byte) (err error) {
+	id := string(content[0:10])
+	//调用dll解析
+	data, err := dp.parseReadSetParam(content)
+	if err != nil {
+		log.Warnf("[%s]状态信息DLL解析失败:%s", id, err.Error())
+		return err
+	}
+	//数据转换
+	sData := RetData2SensorInfo(data)
+	err = dp.dataManager.UpdateDeviceStatus(sData)
+	if err != nil {
+		log.Warnf("[%s]状态信息处理失败:%s", id, err.Error())
+		return err
+	}
+	log.Infof("设备状态及参数读取成功")
+	return
+}
+
 //设备注册
 func (dp *DataProcessor) DeviceRegister(content *[]byte) (err error) {
 	device := new(DeviceInfo)
 	device.SensorId = string((*content)[0:10])
 	device.Online = true
 	device.RegisterTime = time.Now()
+	device.UpdateTime = time.Now()
 	err = dp.dataManager.DeviceRegister(device)
 	if err != nil {
 		log.Warnf("设备注册失败:%s", err.Error())

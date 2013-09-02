@@ -151,6 +151,7 @@ type DeviceInfo struct {
 	RegisterTime time.Time
 	OffTime      time.Time
 	Online       bool
+	UpdateTime   time.Time
 	SetParams    SensorInfo
 }
 
