@@ -103,6 +103,8 @@ func Receiver(server *Server, conn net.Conn) {
 	defer conn.Close()
 
 	buf := make([]byte, RECV_BUF_LEN)
+	var deviceId string
+
 	remoteHost := conn.RemoteAddr().String()
 	log.Infof("终端建立连接:[%s]", remoteHost)
 
@@ -122,18 +124,24 @@ func Receiver(server *Server, conn net.Conn) {
 				log.Infof("无效数据:数据长度过短")
 				continue
 			}
+			deviceId = string(buf[0:10])
+
 			log.Info(string(buf[0:n]))
 			dataProcessor.DataProcess(buf[0:n])
 
 		case io.EOF: //当对方断开连接时触发该方法
-
 			log.Warnf("远程终端[%s]已断开连接: %s \n", remoteHost, err1)
 			ClientNum--
+			//设备下线
+			dataProcessor.DeviceOffline(deviceId)
+
 			log.Infof("当前建立连接的设备:%d", ClientNum)
 			return
 		default: //断开连接
 			log.Warnf("远程终端[%s]读取失败: %s \n", remoteHost, err1)
 			ClientNum--
+			//设备下线
+			dataProcessor.DeviceOffline(deviceId)
 			log.Infof("当前建立连接的设备:%d", ClientNum)
 			return
 		}

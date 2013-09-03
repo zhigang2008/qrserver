@@ -181,3 +181,12 @@ func (dp *DataProcessor) DeviceRegister(content *[]byte) (err error) {
 	log.Infof("设备注册成功")
 	return
 }
+
+//设备下线
+func (dp *DataProcessor) DeviceOffline(remote string) {
+	err := dp.dataManager.DeviceOffline(remote)
+	if err != nil {
+		log.Warnf("设备[%s]下线失败:%s", remote, err.Error())
+	}
+	log.Infof("设备[%s]下线", remote)
+}

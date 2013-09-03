@@ -135,13 +135,26 @@ func (dm *DataManager) DeviceRegister(device *DeviceInfo) (err error) {
 	return nil
 }
 
+//设备下线
+func (dm *DataManager) DeviceOffline(deviceid string) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
+	//更新设备信息
+	colQuerier := bson.M{"sensorid": deviceid}
+	change := bson.M{"$set": bson.M{"offlinetime": time.Now(), "online": false, "updatetime": time.Now()}}
+	err0 := c.Update(colQuerier, change)
+	if err0 != nil {
+		return err0
+	}
+	return nil
+}
+
 //查找设备信息
 func (dm *DataManager) DeviceList(n int) (*[]DeviceInfo, error) {
 	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
 
 	devices := []DeviceInfo{}
 	//先查找设备
-	err := c.Find(&bson.M{}).Limit(n).All(&devices)
+	err := c.Find(&bson.M{}).Sort("-registertime").Limit(n).All(&devices)
 	if err != nil {
 		return nil, err
 	}
@@ -153,8 +166,8 @@ func (dm *DataManager) AlarmList(n int) (*[]AlarmInfo, error) {
 	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
 
 	alarms := []AlarmInfo{}
-	//先查找设备
-	err := c.Find(&bson.M{}).Limit(n).All(&alarms)
+
+	err := c.Find(&bson.M{}).Sort("-createtime").Limit(n).All(&alarms)
 	if err != nil {
 		return nil, err
 	}

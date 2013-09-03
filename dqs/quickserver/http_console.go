@@ -25,11 +25,16 @@ func StartHttp(conf ServerConfig) {
 		log.Info("启动HttpSever...")
 		http.Handle("/css/", http.FileServer(http.Dir("web")))
 		http.Handle("/js/", http.FileServer(http.Dir("web")))
+		//日志查看
+		http.Handle("/logs/", http.StripPrefix("/logs/", http.FileServer(http.Dir("./logs"))))
 
 		http.HandleFunc("/device/", s.DeviceHandler)
 		http.HandleFunc("/alarm/", s.AlarmHandler)
+		//http.HandleFunc("/log/", s.LogViewHandler)
 		http.HandleFunc("/", s.IndexHandler)
+
 		http.ListenAndServe(conf.HttpServer.Host+":"+strconv.Itoa(conf.HttpServer.Port), nil)
+
 	}
 
 }

@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Server>
-<!--服务端监听地址,置空则监听该服务器上所有可用的IP地址-->
-<Host></Host>
-<!--监听端口,默认是7777-->
-<Port>7777</Port>
-<!--TCP类型,支持tcp4与tcp6-->
-<Type>tcp4</Type>
-<!--数据库配置-->
-<DataServer>
-<!--数据库地址,默认本机-->
-<Host>127.0.0.1</Host>
-<!--数据库服务端口,默认为27017-->
-<Port>27017</Port>
-<DataBaseName>dqs</DataBaseName>
-<DataCollection></DataCollection>
-<DeviceCollection></DeviceCollection>
-</DataServer>
-<!--web控制台,可以设置为[true|false].默认不开启false-->
-<HttpEnable>true</HttpEnable>
-<!--web控制台信息-->
-<HttpServer>
-<Host></Host>
-<!--服务端口-->
-<Port>80</Port>
-</HttpServer>
+	<!--服务端监听地址,置空则监听该服务器上所有可用的IP地址 -->
+	<Host></Host>
+	<!--监听端口,默认是7777 -->
+	<Port>7777</Port>
+	<!--TCP类型,支持tcp4与tcp6 -->
+	<Type>tcp4</Type>
+	<!--数据库配置 -->
+	<DataServer>
+		<!--数据库地址,默认本机 -->
+		<Host>127.0.0.1</Host>
+		<!--数据库服务端口,默认为27017 -->
+		<Port>27017</Port>
+		<!--数据库名称 -->
+		<DataBaseName>dqs</DataBaseName>
+		<!--数据库数据集名称,默认是data,可以不配置 -->
+		<DataCollection></DataCollection>
+		<!--数据库设备集名称,默认device,可以不配置 -->
+		<DeviceCollection></DeviceCollection>
+	</DataServer>
+	<!--web控制台,可以设置为[true|false].默认不开启false -->
+	<HttpEnable>true</HttpEnable>
+	<!--web控制台信息 -->
+	<HttpServer>
+		<!--服务IP,可以不配置,置空则使用服务器所有可用的IP地址 -->
+		<Host></Host>
+		<!--服务端口 -->
+		<Port>80</Port>
+	</HttpServer>
 </Server>

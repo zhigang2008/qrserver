@@ -1,8 +1,9 @@
 <seelog>
     <outputs formatid="common">
         <console/>
-        <!--<file path="file.log"/> -->
-		<rollingfile type="date" filename="logs/server.log" datepattern="2006.02.01" maxrolls="7" />
+        <!--<file path="file.log"/>-->
+		<rollingfile type="date" filename="logs/server.log" datepattern="2006.02.01"  />
+		
         <!--
         <network address="192.168.0.2" port="8123"/>
         <filter levels="critical">
@@ -15,7 +16,7 @@
         -->
     </outputs>
     <formats>
-        <format id="common" format="[%LEV] %Msg"/>
+        <format id="common" format="%Date %Time [%LEV] %Msg %n"/>
         <format id="critical" format="%Time %Date %RelFile %Func %Msg"/>
         <format id="criticalemail" format="Critical error on our server!\n    %Time %Date %RelFile %Func %Msg \nSent by Seelog"/>
     </formats>

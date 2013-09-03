@@ -7,12 +7,16 @@ import (
 	"strconv"
 )
 
+func HtmlType(w *http.ResponseWriter) {
+	(*w).Header().Add("Content-Type", "text/html")
+}
+
 //展示设备列表
 func (hs *HttpServer) DeviceHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("web/pages/device.html")
 	if err != nil {
 		log.Warn(err)
-		hs.NotFoundHandler(&w, r)
+		http.NotFound(w, r)
 		return
 	}
 	var cols int = 20
@@ -24,6 +28,7 @@ func (hs *HttpServer) DeviceHandler(w http.ResponseWriter, r *http.Request) {
 			cols = 20
 		}
 	}
+	HtmlType(&w)
 	devices, err := hs.dataManager.DeviceList(cols)
 	if err != nil {
 		log.Warnf("获取设备信息失败:%s", err.Error())
@@ -37,7 +42,7 @@ func (hs *HttpServer) AlarmHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("web/pages/alarm.html")
 	if err != nil {
 		log.Warn(err)
-		hs.NotFoundHandler(&w, r)
+		http.NotFound(w, r)
 		return
 	}
 	var cols int = 50
@@ -49,7 +54,7 @@ func (hs *HttpServer) AlarmHandler(w http.ResponseWriter, r *http.Request) {
 			cols = 50
 		}
 	}
-
+	HtmlType(&w)
 	dataList, err := hs.dataManager.AlarmList(cols)
 	if err != nil {
 		log.Warnf("获取报警信息失败:%s", err.Error())
@@ -63,20 +68,21 @@ func (hs *HttpServer) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("web/pages/index.html")
 	if err != nil {
 		log.Warn(err)
-		hs.NotFoundHandler(&w, r)
+		http.NotFound(w, r)
 		return
 	}
+	HtmlType(&w)
 	t.Execute(w, nil)
 }
 
-//处理404
-func (hs *HttpServer) NotFoundHandler(w *http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("web/pages/404.html")
+//日志查看页面
+func (hs *HttpServer) LogViewHandler(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("web/pages/logs.html")
 	if err != nil {
 		log.Warn(err)
+		http.NotFound(w, r)
 		return
-	} else {
-		t.Execute(*w, nil)
 	}
-
+	HtmlType(&w)
+	t.Execute(w, nil)
 }

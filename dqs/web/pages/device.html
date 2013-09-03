@@ -10,9 +10,9 @@
 <div align="center">
 	 <table>
 	 	<caption>注册设备信息</caption>
-	<thead><tr><th>设备编号</th><th>注册时间</th><th>在线状态</th><th>更新时间</th></tr></thead>
-	 	{{range .}}
-	 	<tr><td>{{.SensorId}}</td><td>{{.RegisterTime}}</td><td>{{.Online}}</td><td>{{.UpdateTime}}</td></tr>
+	<thead><tr><th>序号</th><th>设备编号</th><th>注册时间</th><th>在线状态</th><th>更新时间</th></tr></thead>
+	 	{{range $i,$v:=.}}
+	 	<tr><td>{{$i}}</td><td>{{.SensorId}}</td><td>{{.RegisterTime}}</td><td>{{.Online}}</td><td>{{.UpdateTime}}</td></tr>
 {{end}}
 	</table>
 </div>
