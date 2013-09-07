@@ -20,12 +20,5 @@
 		<DeviceCollection></DeviceCollection>
 	</DataServer>
 	<!--web控制台,可以设置为[true|false].默认不开启false -->
-	<HttpEnable>true</HttpEnable>
-	<!--web控制台信息 -->
-	<HttpServer>
-		<!--服务IP,可以不配置,置空则使用服务器所有可用的IP地址 -->
-		<Host></Host>
-		<!--服务端口 -->
-		<Port>80</Port>
-	</HttpServer>
+	<HttpServerEnable>true</HttpServerEnable>
 </Server>

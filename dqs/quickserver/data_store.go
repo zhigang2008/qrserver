@@ -57,8 +57,13 @@ func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
 		dataManager.deviceCollection = conf.DeviceCollection
 	}
 
-	log.Infof("datamanager %v \n", dataManager)
+	log.Infof("DataManager %v \n", dataManager)
 	return dataManager, nil
+}
+
+//获取session
+func (dm *DataManager) getSession() *mgo.Session {
+	return dm.session
 }
 
 //保存报警信息

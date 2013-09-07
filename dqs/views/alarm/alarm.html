@@ -1,0 +1,20 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv=Content-Type/>
+<link rel="stylesheet" type="text/css" media="all" href="/css/style.css"/>
+<title>报警信息</title>
+</head>
+<body>
+	<div><a href="/">[首页]</a></div>
+<div align="center">
+	 <table>
+	 	<caption>报警信息</caption>
+	<thead><tr><th>记录编号</th><th>传感器编号</th><th>经度</th><th>纬度</th><th>站点类型</th><th>观测对象</th><th>安装方向</th><th>行政区码</th><th>初始时刻</th><th>周期</th><th>PGA</th><th>SI</th><th>数据长度</th><th>记录时间</th></tr></thead>
+	 	{{range .}}
+	 	<tr><td>{{.SeqNo}}</td><td>{{.SensorId}}</td><td>{{.Longitude}}</td><td>{{.Latitude}}</td><td>{{.SiteType}}</td><td>{{.ObserveObject}}</td><td>{{.Direction}}</td><td>{{.RegionCode}}</td><td>{{.InitTime}}</td><td>{{.Period}}</td><td>{{.PGA}}</td><td>{{.SI}}</td><td>{{.Length}}</td><td>{{.CreateTime}}</td></tr>
+{{end}}
+	</table>
+</div>
+</body>
+</html>

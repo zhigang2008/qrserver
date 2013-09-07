@@ -42,11 +42,13 @@ func InitAndStart(conf ServerConfig) (err error) {
 		return
 	}
 
-	//是否启动HTTP console
-	if conf.HttpEnable == true {
-		//启用http server
-		go StartHttp(conf)
-	}
+	/*
+		//是否启动HTTP console
+		if conf.HttpEnable == true {
+			//启用http server
+			go StartHttp(conf)
+		}
+	*/
 
 	return server.start()
 
@@ -103,7 +105,7 @@ func Receiver(server *Server, conn net.Conn) {
 	defer conn.Close()
 
 	buf := make([]byte, RECV_BUF_LEN)
-	var deviceId string
+	var deviceId string = ""
 
 	remoteHost := conn.RemoteAddr().String()
 	log.Infof("终端建立连接:[%s]", remoteHost)
@@ -133,7 +135,9 @@ func Receiver(server *Server, conn net.Conn) {
 			log.Warnf("远程终端[%s]已断开连接: %s \n", remoteHost, err1)
 			ClientNum--
 			//设备下线
-			dataProcessor.DeviceOffline(deviceId)
+			if deviceId != "" {
+				dataProcessor.DeviceOffline(deviceId)
+			}
 
 			log.Infof("当前建立连接的设备:%d", ClientNum)
 			return
@@ -141,7 +145,9 @@ func Receiver(server *Server, conn net.Conn) {
 			log.Warnf("远程终端[%s]读取失败: %s \n", remoteHost, err1)
 			ClientNum--
 			//设备下线
-			dataProcessor.DeviceOffline(deviceId)
+			if deviceId != "" {
+				dataProcessor.DeviceOffline(deviceId)
+			}
 			log.Infof("当前建立连接的设备:%d", ClientNum)
 			return
 		}

@@ -11,6 +11,12 @@ import (
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
+
+	logger, e := log.LoggerFromConfigAsFile("seelog.xml")
+	if e != nil {
+		fmt.Println("读取日志配置出错:" + e.Error())
+	}
+	log.ReplaceLogger(logger)
 	defer log.Flush()
 
 	fmt.Println("Server starting ......")
@@ -24,6 +30,13 @@ func main() {
 		os.Exit(1)
 	}
 
+	//是否启动HTTP console
+	if conf.HttpServerEnable == true {
+		go server.StartHttp()
+	}
+
+	//启动监听服务
+	log.Info("启动监听服务...")
 	err := server.InitAndStart(conf)
 	if err != nil {
 		//fmt.Printf("服务启动失败 : %s\n", err.Error())
