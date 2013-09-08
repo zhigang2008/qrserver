@@ -27,7 +27,7 @@
 	</table>
 	
   <div class="panel-footer" style="padding:10px 15px 25px;">
-   <span >共 {{.Count}} 记录 /  {{.PageCount}} 页 </span>
+   <span >{{.CurrentPage}} / {{.PageCount}} 页  [共 {{.Count}} 记录] </span>
    <span class="pull-right">
    	<ul class="pagination" style="margin:1px;padding-top:0px;">
      <li><a href="/device?page=1&pagesize={{.PageSize}}">&laquo;</a></li>
