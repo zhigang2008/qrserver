@@ -1,19 +1,17 @@
 package quickserver
 
 import (
-	log "github.com/cihub/seelog"
-	//"net/http"
-	//"strconv"
 	"dqs/controllers"
+	"dqs/dao"
 	"github.com/astaxie/beego"
+	log "github.com/cihub/seelog"
 )
 
 //Http Server 结构
 //需要数据库操作.
 
 type HttpServer struct {
-	Name        string
-	dataManager *DataManager
+	Name string
 }
 
 /*/启动 http Server
@@ -45,22 +43,20 @@ func StartHttp(conf ServerConfig) {
 //启动 http Server
 func StartHttp() {
 	s := HttpServer{}
-	var err error
-	dbConfig := DataServerConfig{
-		Host:             beego.AppConfig.String("database.host"),
-		DataBaseName:     beego.AppConfig.String("database.dbname"),
-		DataCollection:   beego.AppConfig.String("database.datacollection"),
-		DeviceCollection: beego.AppConfig.String("database.devicecollection"),
-	}
-	port, err2 := beego.AppConfig.Int("database.port")
+	s.Name = "Http Server"
 
-	if err2 != nil {
+	host := beego.AppConfig.String("database.host")
+	dataBaseName := beego.AppConfig.String("database.dbname")
+	dataCollection := beego.AppConfig.String("database.datacollection")
+	deviceCollection := beego.AppConfig.String("database.devicecollection")
+	port, err := beego.AppConfig.Int("database.port")
+
+	if err != nil {
 		log.Warnf("Http Server 的配置的数据库端口参数应是整型格式.")
 		return
 	}
-	dbConfig.Port = port
 
-	s.dataManager, err = InitDatabase(dbConfig)
+	err = dao.Init(host, port, dataBaseName, dataCollection, deviceCollection)
 	if err != nil {
 		log.Warnf("Http Server 数据库连接不能创建:%s", err.Error())
 		return
@@ -68,13 +64,15 @@ func StartHttp() {
 
 	log.Info("启动 Http Server...")
 	beego.Router("/", &controllers.MainController{})
+	beego.Router("/alarm", &controllers.AlarmController{})
+	beego.Router("/device", &controllers.DeviceController{})
+	beego.Router("/device/:id", &controllers.DeviceController{}, "*:GetDeviceInfo")
 	beego.SetStaticPath("/logs", "logs")
-	beego.
-		beego.Run()
+	beego.Run()
 }
 
 //关闭http的数据库连接
 func (s *HttpServer) Close() {
-	s.dataManager.DataClose()
+	dao.Close()
 	beego.CloseSelf()
 }

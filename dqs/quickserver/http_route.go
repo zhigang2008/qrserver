@@ -1,5 +1,6 @@
 package quickserver
 
+/*
 import (
 	log "github.com/cihub/seelog"
 	"html/template"
@@ -86,3 +87,4 @@ func (hs *HttpServer) LogViewHandler(w http.ResponseWriter, r *http.Request) {
 	HtmlType(&w)
 	t.Execute(w, nil)
 }
+*/
