@@ -12,6 +12,7 @@ import (
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
+	//配置日志
 	logger, e := log.LoggerFromConfigAsFile("seelog.xml")
 	if e != nil {
 		fmt.Println("读取日志配置出错:" + e.Error())
@@ -22,6 +23,7 @@ func main() {
 	fmt.Println("Server starting ......")
 	log.Info("Server starting ......")
 
+	//读取配置文件
 	conf, err0 := server.ReadConfigFromFile()
 	if err0 != nil {
 		//fmt.Printf("配置文件读取失败 : %s\n", err0.Error())

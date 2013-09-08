@@ -2,12 +2,12 @@
     <outputs formatid="common">
         <console/>
         <!--<file path="file.log"/>-->
-		<rollingfile type="date" filename="logs/server.log" datepattern="2006.02.01"  />
+		<rollingfile type="date" filename="logs/server.log" datepattern="2006.01.02"  />
 		
         <!--
         <network address="192.168.0.2" port="8123"/>
         <filter levels="critical">
-            <file path="critical.log" formatid="critical"/>
+            <file path="logs/critical.log" formatid="critical"/>
             <smtp formatid="criticalemail" senderaddress="noreply-notification-service@dqs.org" sendername="Automatic notification service" hostname="mail.none.org" hostport="587" username="nns" password="123">
                 <recipient address="john-smith@none.com"/>
                 <recipient address="hans-meier@none.com"/>
@@ -17,7 +17,7 @@
     </outputs>
     <formats>
         <format id="common" format="%Date %Time [%LEV] %Msg %n"/>
-        <format id="critical" format="%Time %Date %RelFile %Func %Msg"/>
-        <format id="criticalemail" format="Critical error on our server!\n    %Time %Date %RelFile %Func %Msg \nSent by Seelog"/>
+        <format id="critical" format="%Date %Time  %RelFile %Func %Msg"/>
+        <format id="criticalemail" format="[服务器产生严重错误]!\n    %Date %Time  %RelFile %Func %Msg \nSent by dqsServer"/>
     </formats>
 </seelog>

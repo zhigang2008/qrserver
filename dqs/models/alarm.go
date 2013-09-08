@@ -2,6 +2,7 @@ package models
 
 import (
 	"dqs/dao"
+	"dqs/util"
 	"labix.org/v2/mgo/bson"
 	"time"
 )
@@ -25,14 +26,23 @@ type AlarmInfo struct {
 	CreateTime    time.Time
 }
 
-func AlarmList(n int) []AlarmInfo {
+//报警信息列表
+func AlarmList(p *util.Pagination) error {
 	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DataCollection)
 	alarms := []AlarmInfo{}
 
-	err := c.Find(&bson.M{}).Sort("-createtime").Limit(n).All(&alarms)
+	query := c.Find(&bson.M{}).Sort("-createtime")
+	count, err := query.Count()
 	if err != nil {
-		panic(err)
-		return nil
+		return err
 	}
-	return alarms
+	p.Count = count
+
+	//查找数据
+	err = query.Skip(p.SkipNum()).Limit(p.PageSize).All(&alarms)
+	if err != nil {
+		return err
+	}
+	p.Data = alarms
+	return nil
 }

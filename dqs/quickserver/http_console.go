@@ -1,7 +1,6 @@
 package quickserver
 
 import (
-	"dqs/controllers"
 	"dqs/dao"
 	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
@@ -56,6 +55,7 @@ func StartHttp() {
 		return
 	}
 
+	//创建数据库连接
 	err = dao.Init(host, port, dataBaseName, dataCollection, deviceCollection)
 	if err != nil {
 		log.Warnf("Http Server 数据库连接不能创建:%s", err.Error())
@@ -63,11 +63,11 @@ func StartHttp() {
 	}
 
 	log.Info("启动 Http Server...")
-	beego.Router("/", &controllers.MainController{})
-	beego.Router("/alarm", &controllers.AlarmController{})
-	beego.Router("/device", &controllers.DeviceController{})
-	beego.Router("/device/:id", &controllers.DeviceController{}, "*:GetDeviceInfo")
-	beego.SetStaticPath("/logs", "logs")
+
+	//配置路由信息
+	RouteConfig()
+
+	//启动Beego服务
 	beego.Run()
 }
 

@@ -2,6 +2,7 @@ package models
 
 import (
 	"dqs/dao"
+	"dqs/util"
 	"labix.org/v2/mgo/bson"
 	"time"
 )
@@ -56,16 +57,25 @@ type SensorInfo struct {
 	IO2 int //IO输出2
 }
 
-func DeviceList(n int) []DeviceInfo {
+func DeviceList(p *util.Pagination) error {
 
 	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DeviceCollection)
 	devices := []DeviceInfo{}
-	//查找设备
-	err := c.Find(&bson.M{}).Sort("-registertime").Limit(n).All(&devices)
+	query := c.Find(&bson.M{}).Sort("-registertime")
+	count, err := query.Count()
 	if err != nil {
-		return nil
+		return err
 	}
-	return devices
+	p.Count = count
+
+	//查找设备
+	err = query.Skip(p.SkipNum()).Limit(p.PageSize).All(&devices)
+	if err != nil {
+		return err
+	}
+	p.Data = devices
+	return nil
+
 }
 
 func GetDevice(sid string) DeviceInfo {
