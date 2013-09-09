@@ -61,7 +61,14 @@ func DeviceList(p *util.Pagination) error {
 
 	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DeviceCollection)
 	devices := []DeviceInfo{}
-	query := c.Find(&bson.M{}).Sort("-registertime")
+	//构造查询参数
+	m := bson.M{}
+	for k, v := range p.QueryParams {
+		m[k] = v
+	}
+
+	//查询总数
+	query := c.Find(&m).Sort("-registertime")
 	count, err := query.Count()
 	if err != nil {
 		return err

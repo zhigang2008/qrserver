@@ -31,7 +31,14 @@ func AlarmList(p *util.Pagination) error {
 	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DataCollection)
 	alarms := []AlarmInfo{}
 
-	query := c.Find(&bson.M{}).Sort("-createtime")
+	//构造查询参数
+	m := bson.M{}
+	for k, v := range p.QueryParams {
+		m[k] = v
+	}
+
+	//查询总数
+	query := c.Find(&m).Sort("-createtime")
 	count, err := query.Count()
 	if err != nil {
 		return err

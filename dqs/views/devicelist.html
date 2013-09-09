@@ -1,28 +1,36 @@
 ﻿{{template "header" .}}
-<div class="container">
-	 <div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading"><span class="label label-info" style="font-size:120%;">设备信息</span></div>
-  <!--<div class="panel-body">
-    <p>...</p>
-  </div>
- -->
+ 
  {{with .pagedata}}
-   {{$pagesize := .PageSize}}
-   {{$curpage :=.CurrentPage}}
+ {{$pagesize := .PageSize}}
+ {{$curpage :=.CurrentPage}}
+ {{$params := .QueryParams}}
+<div class="container">
+ <div class="panel panel-default">
+  <!-- Default panel contents -->
+ <div class="panel-heading"><span class="label label-info" style="font-size:120%;">设备信息</span></div>
+  <div class="panel-body" style="padding:2px">
+   <div class="col-lg-2 pull-right">
+    	<select class="form-control selectpicker" data-style="btn-info">
+       <option data-icon="icon-heart">全部</option>
+       <option data-content="<span class='label label-success'>在线</span>">在线</option>
+       <option data-content="<span class='label label-default'>离线</span>">离线</option>
+   </select>
+</div>
+  </div>
   <!-- Table -->
   <table class="table table-striped table-bordered table-hover">
 	<thead><tr><th>序号</th><th>设备编号</th><th>注册时间</th><th>在线状态</th><th>更新时间</th><th>管理</th></tr></thead>
-	 	{{with .Data}}
-	 	{{range $i,$v:=.}}
+	 	{{range $i,$v:=.Data}}
 	 	<tr>
-	 		<td>{{$i}}</td><td>{{.SensorId}}</td><td>{{dateformat .RegisterTime "2006-01-02 15:04:05"}}</td><td>{{.Online}}</td><td>{{dateformat .UpdateTime "2006-01-02 15:04:05"}}</td>
+	 		<td>{{seqno $i $pagesize $curpage}}</td>
+	 		<td>{{.SensorId}}</td><td>{{dateformat .RegisterTime "2006-01-02 15:04:05"}}</td>
+	 		<td>{{if .Online}}<span class="label label-success">在线</span>{{else}}<span class="label label-default">离线</span> {{end}}</td>
+	 		<td>{{dateformat .UpdateTime "2006-01-02 15:04:05"}}</td>
 	 		<td>
 	 			<a href="/device/{{.SensorId}}"><span class="label label-primary">设备参数</span> </a> /
-	 			<a href="/alarm/{{.SensorId}}"><span class="label label-primary">报警信息</span> </a> /
+	 			<a href="/alarm?sensorid={{.SensorId}}"><span class="label label-primary">报警信息</span> </a> /
       </td>
 	 	</tr>
-   {{end}}
    {{end}}
 	</table>
 	
@@ -30,15 +38,16 @@
    <span >{{.CurrentPage}} / {{.PageCount}} 页  [共 {{.Count}} 记录] </span>
    <span class="pull-right">
    	<ul class="pagination" style="margin:1px;padding-top:0px;">
-     <li><a href="/device?page=1&pagesize={{.PageSize}}">&laquo;</a></li>
-    {{range .NavPages}}
-      <li><a href="/device?page={{.}}&pagesize={{$pagesize}}" >{{.}}</a></li>
-    {{end}}
-    <li><a href="/device?page={{.PageCount}}&pagesize={{.PageSize}}">&raquo;</a></li>
-   </ul>
-   
+      <li><a href="{{"/device?page=1&pagesize="|html}}{{.PageSize}}{{purl $params }}">&laquo;</a></li>
+      {{range .NavPages}}
+        <li {{if compare . $curpage}} class="active" {{end}} ><a href="{{"/device?page="|html}}{{.}}{{"&pagesize="|html}}{{$pagesize}}{{purl $params}}">{{.}}</a></li>
+       {{end}}
+      <li><a href="{{"/device?page="|html}}{{.PageCount}}{{"&pagesize="|html}}{{.PageSize}}{{purl $params}}">&raquo;</a></li>
+     </ul>
+   </span>
   </div>
+  
+</div>
+</div>
 {{end}}
-</div>
-</div>
 {{template "footer"}}

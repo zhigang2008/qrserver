@@ -11,6 +11,7 @@ type AlarmController struct {
 	beego.Controller
 }
 
+//报警信息列表
 func (this *AlarmController) Get() {
 	this.Data["title"] = "报警信息"
 	this.Data["author"] = "wangzhigang"
@@ -26,6 +27,13 @@ func (this *AlarmController) Get() {
 		pagination.PageSize = 10
 	} else {
 		pagination.PageSize = int(pagesize)
+	}
+
+	//查询参数
+
+	sid := this.GetString("sensorid")
+	if sid != "" {
+		pagination.AddParams("sensorid", sid)
 	}
 
 	//执行查询

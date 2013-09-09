@@ -6,7 +6,7 @@ type Pagination struct {
 	CurrentPage int
 	NavPages    []int
 	PageCount   int
-	QueryParams map[string]string
+	QueryParams map[string]interface{}
 	Data        interface{}
 }
 
@@ -55,7 +55,10 @@ func (p *Pagination) Compute() {
 }
 
 //添加的查询参数
-func (p *Pagination) AddParams(k string, v string) {
+func (p *Pagination) AddParams(k string, v interface{}) {
+	if p.QueryParams == nil {
+		p.QueryParams = make(map[string]interface{})
+	}
 	p.QueryParams[k] = v
 }
 

@@ -2,14 +2,15 @@
 
 {{with .pagedata}}
 {{$pagesize := .PageSize}}
+{{$curpage := .CurrentPage}}
+{{$params := .QueryParams}}
 <div class="container">
-	 <div class="panel panel-default">
+	<div class="panel panel-default">
   <!-- Default panel contents -->
   <div class="panel-heading"><span class="label label-danger" style="font-size:120%;">突发报警信息</span></div>
   <!--<div class="panel-body" style="padding-bottom:2px;" >
   </div>
   -->
-  
   <!-- Table -->
   <table class="table table-striped table-bordered table-hover">
    <thead><tr><th>记录编号</th><th>传感器编号</th><th>经度</th><th>纬度</th><th>站点类型</th><th>观测对象</th><th>安装方向</th><th>行政区码</th><th>初始时刻</th><th>周期</th><th>PGA</th><th>SI</th><th>数据长度</th><th>记录时间</th></tr></thead>
@@ -21,17 +22,18 @@
 	</table>
 	 
   <div class="panel-footer" style="padding:10px 15px 25px;">
-   <span >共 {{.Count}} 记录 /  {{.PageCount}} 页 </span>
+   <span >{{.CurrentPage}} / {{.PageCount}} 页  [共 {{.Count}} 记录] </span>
    <span class="pull-right">
    	<ul class="pagination" style="margin:1px;padding-top:0px;">
-      <li><a href="/alarm?page=1&pagesize={{.PageSize}}">&laquo;</a></li>
+      <li><a href="{{"/alarm?page=1&pagesize="|html}}{{.PageSize}}{{purl $params }}">&laquo;</a></li>
       {{range .NavPages}}
-        <li><a href="/alarm?page={{.}}&pagesize={{$pagesize}}">{{.}}</a></li>
+        <li {{if compare . $curpage}} class="active" {{end}} ><a href="{{"/alarm?page="|html}}{{.}}{{"&pagesize="|html}}{{$pagesize}}{{purl $params}}">{{.}}</a></li>
        {{end}}
-      <li><a href="/alarm?page={{.PageCount}}&pagesize={{.PageSize}}">&raquo;</a></li>
+      <li><a href="{{"/alarm?page="|html}}{{.PageCount}}{{"&pagesize="|html}}{{.PageSize}}{{purl $params}}">&raquo;</a></li>
      </ul>
    </span>
   </div>
+  
 </div>
 </div>
 {{end}}
