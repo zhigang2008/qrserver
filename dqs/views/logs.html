@@ -1,0 +1,57 @@
+﻿{{template "header" .}}
+<div class="container">
+ <div class="panel panel-default">
+  <!-- Default panel contents -->
+ <div class="panel-heading">
+ 	<span class="label label-info" style="font-size:120%;">运行日志</span></div>
+ <div class="panel-body" style="padding:2px">
+   <p>{{.errormsg}}</p>
+   <div class="pull-right col-md-2">
+   	<span class="label label-info">最多显示:</span><select id="numselect" class="selectpicker" data-width="90%">
+   		<option value="20">20</option>
+   		<option value="50">50</option>
+   		<option value="100">100</option>
+   		<option value="200">200</option>
+   		<option value="500">500</option>
+   	</select>
+   </div>
+  </div>
+  
+  <!-- Table -->
+  <table class="table table-striped table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>序号</th>
+			<th>文件名</th>
+			<th>文件大小</th>
+		  <th>更新时间</th>
+      <th>管理</th>
+    </tr>
+  </thead>
+	<tbody>
+		{{range $i,$v:=.LogFiles}}
+	 	<tr>
+	 		<td>{{seqno $i 0 1}}</td>
+	 		<td>{{.Name}}</td>
+	 		<td>{{.Size}}</td>
+	 		<td>{{dateformat .ModTime "2006-01-02 15:04:05"}}</td>
+	 		<td>
+	 			<a href="/logs/{{.Name}}"><span class="label label-primary">查看</span> </a> /
+      </td>
+	 	</tr>
+   {{end}}
+ </tbody> 
+	</table>
+  
+</div>
+</div>
+{{template "footer"}}
+<script>
+$(document).ready(function() {
+  //$('.selectpicker').selectpicker({});
+  $('#numselect').change( function(){
+  	var p=$(this).children('option:selected').val(); 
+  	window.location.href='/loglist?num='+p;
+  });
+  });
+</script>

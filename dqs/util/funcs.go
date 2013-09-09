@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"strconv"
 )
 
 //判断相等
@@ -69,8 +70,21 @@ func GenerateSeqNo(seq, step, pos int) int {
 //生成查询参数连接url
 func GenerateParamUrl(p map[string]interface{}) string {
 	purl := ""
-	for k, v := range p {
-		purl += "&" + k + "=" + fmt.Sprintf("%s", v)
+	for k, o := range p {
+		purl += "&" + k + "="
+		switch v := o.(type) {
+		case int:
+			purl += strconv.Itoa(v)
+		case bool:
+			purl += strconv.FormatBool(v)
+		case int64:
+			purl += strconv.FormatInt(v, 10)
+		case uint64:
+			purl += strconv.FormatUint(v, 10)
+		default:
+			purl += fmt.Sprintf("%s", v)
+
+		}
 	}
 	return purl
 }
