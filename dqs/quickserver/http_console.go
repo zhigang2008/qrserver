@@ -2,6 +2,7 @@ package quickserver
 
 import (
 	"dqs/dao"
+	"dqs/util"
 	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 )
@@ -64,9 +65,10 @@ func StartHttp() {
 
 	log.Info("启动 Http Server...")
 
+	//配置自定义模板方法
+	AddTemplateFuncs()
 	//配置路由信息
 	RouteConfig()
-
 	//启动Beego服务
 	beego.Run()
 }
@@ -75,4 +77,11 @@ func StartHttp() {
 func (s *HttpServer) Close() {
 	dao.Close()
 	beego.CloseSelf()
+}
+
+//添加模板函数
+func AddTemplateFuncs() {
+	//beego.AddFuncMap("eq", util.Equals)
+	beego.AddFuncMap("seqno", util.GenerateSeqNo)
+	beego.AddFuncMap("purl", util.GenerateParamUrl)
 }

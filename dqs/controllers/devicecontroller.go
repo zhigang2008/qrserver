@@ -12,6 +12,7 @@ type DeviceController struct {
 	beego.Controller
 }
 
+//获取设备列表或者单个设备信息
 func (this *DeviceController) Get() {
 	sid := this.Ctx.Params[":objectId"]
 	//单个设备查询
@@ -38,6 +39,15 @@ func (this *DeviceController) Get() {
 			pagination.PageSize = 10
 		} else {
 			pagination.PageSize = int(pagesize)
+		}
+		//查询参数
+		sid := this.GetString("sensorid")
+		if sid != "" {
+			pagination.AddParams("sensorid", sid)
+		}
+		online, err3 := this.GetBool("online")
+		if err3 != nil {
+			pagination.AddParams("online", online)
 		}
 
 		//执行查询

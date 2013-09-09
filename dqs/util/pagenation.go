@@ -56,6 +56,9 @@ func (p *Pagination) Compute() {
 
 //添加的查询参数
 func (p *Pagination) AddParams(k string, v string) {
+	if p.QueryParams == nil {
+		p.QueryParams = make(map[string]string)
+	}
 	p.QueryParams[k] = v
 }
 
