@@ -40,14 +40,18 @@ func (this *DeviceController) Get() {
 		} else {
 			pagination.PageSize = int(pagesize)
 		}
+
 		//查询参数
 		sid := this.GetString("sensorid")
 		if sid != "" {
 			pagination.AddParams("sensorid", sid)
 		}
-		online, err3 := this.GetBool("online")
-		if err3 != nil {
-			pagination.AddParams("online", online)
+		sonline := this.GetString("online")
+		if sonline != "" {
+			online, err := this.GetBool("online")
+			if err == nil {
+				pagination.AddParams("online", online)
+			}
 		}
 
 		//执行查询

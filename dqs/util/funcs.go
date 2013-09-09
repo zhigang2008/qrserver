@@ -1,5 +1,9 @@
 package util
 
+import (
+	"fmt"
+)
+
 //判断相等
 func Equals(a, b interface{}) bool {
 	switch a.(type) {
@@ -63,10 +67,10 @@ func GenerateSeqNo(seq, step, pos int) int {
 }
 
 //生成查询参数连接url
-func GenerateParamUrl(p map[string]string) string {
+func GenerateParamUrl(p map[string]interface{}) string {
 	purl := ""
 	for k, v := range p {
-		purl += "&" + k + "=" + v
+		purl += "&" + k + "=" + fmt.Sprintf("%s", v)
 	}
 	return purl
 }
