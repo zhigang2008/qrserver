@@ -1,4 +1,6 @@
 ﻿{{template "header" .}}
+ 
+{{with .device}}
 <div class="container">
 	 <div class="panel panel-info">
   <!-- Default panel contents -->
@@ -8,13 +10,12 @@
  <form class="form-horizontal" role="form">
  	 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <button type="button" class="btn btn-success">重新读取</button>
-      <button type="button" class="btn btn-primary">设置参数</button>
-      <button type="button" class="btn btn-warning">取消</button>
+      <button id="refreshparams" type="button" class="btn btn-success">重新读取</button>
+      <button id="setparams" type="button" class="btn btn-primary">设置参数</button>
+      <button id="cancleset" type="button" class="btn btn-warning">取消</button>
     </div>
   </div>
- {{with .device}}
-  {{with .SetParams}}
+{{with .SetParams}}
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SonsorId">传感器编号</label>
     <div class="col-sm-6">
@@ -203,9 +204,36 @@
   </div>
  
   {{end}}
- {{end}}
+
 </form>
 </div>
 </div>
 </div>
+{{template "scripts"}}
+
+<script>
+	$(document).ready(function(){
+		//刷新参数
+    $('#refreshparams').bind('click', function() {
+    	$('#refreshparams').attr('disabled',true);
+      $.ajax({
+             type: "GET",
+             url: "/device/params/{{.SensorId}}",
+             dataType:"json",
+             //data: "name=John&location=Boston",
+             success: function(json){
+               alert( "Data Saved: " + json.SiteName );
+              },
+             error: function(error) {
+             	
+             	alert('error'+error.responseText)
+             }
+           });
+        $('#refreshparams').attr('disabled',false);  
+    });
+
+ });
+</script>
+ 
+ {{end}}
 {{template "footer"}}

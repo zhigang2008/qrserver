@@ -64,5 +64,17 @@ func (this *DeviceController) Get() {
 		this.Data["pagedata"] = pagination
 		this.TplNames = "devicelist.html"
 	}
+}
+
+func (this *DeviceController) RefreshParams() {
+	sid := this.Ctx.Params[":id"]
+
+	if sid != "" {
+		//执行设备参数读取
+		answer := JsonAnswer{isok: "true", msg: "读取成功fjsldfjdslfjsdlfjsdlfjsldjfldsjffdsfdsfdsfsd"}
+
+		this.Data["json"] = &answer
+		this.ServeJson()
+	}
 
 }
