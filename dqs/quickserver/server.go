@@ -19,7 +19,8 @@ const (
 )
 
 var (
-	ClientNum int = 0
+	ClientNum      int = 0
+	ConnecitonPool map[string]*net.Conn
 )
 
 //服务器对象结构
@@ -42,6 +43,8 @@ func InitAndStart(conf ServerConfig) (err error) {
 		return
 	}
 
+	//会话连接池
+	ConnecitonPool = make(map[string]*net.Conn)
 	/*
 		//是否启动HTTP console
 		if conf.HttpEnable == true {
@@ -95,6 +98,7 @@ func (server *Server) start() (err error) {
 
 		tempDelay = 0
 
+		//
 		go Receiver(server, conn)
 	}
 

@@ -66,12 +66,27 @@ func (this *DeviceController) Get() {
 	}
 }
 
+//重新获取设备参数
 func (this *DeviceController) RefreshParams() {
 	sid := this.Ctx.Params[":id"]
 
 	if sid != "" {
 		//执行设备参数读取
-		answer := JsonAnswer{isok: "true", msg: "读取成功fjsldfjdslfjsdlfjsdlfjsldjfldsjffdsfdsfdsfsd"}
+		answer := JsonAnswer{Ok: false, Msg: "成功"}
+
+		this.Data["json"] = &answer
+		this.ServeJson()
+	}
+
+}
+
+//更新设备参数
+func (this *DeviceController) UpdateParams() {
+	sid := this.Ctx.Params[":id"]
+
+	if sid != "" {
+		//执行设备参数读取
+		answer := JsonAnswer{Ok: true, Msg: "成功"}
 
 		this.Data["json"] = &answer
 		this.ServeJson()

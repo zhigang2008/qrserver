@@ -7,19 +7,27 @@
   <div class="panel-heading">设备详细信息</div>
   <div class="panel-body">
   
- <form class="form-horizontal" role="form">
+  <!--提示框-->
+  <div  id="msg" class="alert alert-warning alert-dismissable" style="display:none">
+     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+     <p id="msgcontent"></p>
+ </div>
+
+ <form class="form-horizontal" role="form" action="/deviceparams/update/{{.SensorId}}" type="post">
  	 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button id="refreshparams" type="button" class="btn btn-success">重新读取</button>
+      &nbsp;&nbsp;
       <button id="setparams" type="button" class="btn btn-primary">设置参数</button>
-      <button id="cancleset" type="button" class="btn btn-warning">取消</button>
+      &nbsp;&nbsp;
+      <button id="setsave" type="submit" class="btn btn-warning" style="display:none">保存设置</button>
     </div>
   </div>
 {{with .SetParams}}
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SonsorId">传感器编号</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="SonsorId" placeholder="SensorId" value="{{.SensorId}}" disabled>
+      <input id="sensorid" type="text" class="form-control" id="SonsorId" placeholder="SensorId" value="{{.SensorId}}" disabled>
     </div>
   </div>
   <div class="form-group">
@@ -213,23 +221,45 @@
 
 <script>
 	$(document).ready(function(){
-		//刷新参数
+		//刷新参数按钮
     $('#refreshparams').bind('click', function() {
     	$('#refreshparams').attr('disabled',true);
       $.ajax({
              type: "GET",
-             url: "/device/params/{{.SensorId}}",
+             url: "/deviceparams/refresh/{{.SensorId}}",
              dataType:"json",
              //data: "name=John&location=Boston",
              success: function(json){
-               alert( "Data Saved: " + json.SiteName );
+               if(json.Ok==true){
+               	//读取成功后,刷新页面获取最新数据
+               	 window.location.reload(true)
+                }else{
+                	$("#msgcontent").html(json.Msg)
+             	    $('#msg').show()
+                }
               },
              error: function(error) {
-             	
-             	alert('error'+error.responseText)
+             	$("#msgcontent").html("读取参数失败,报告管理员")
+             	$('#msg').show()
              }
            });
         $('#refreshparams').attr('disabled',false);  
+    });
+    
+    //设置参数按钮
+    var setchange=false;
+    $("#setparams").bind('click',function(){
+         $("#setsave").toggle();
+         if(setchange==false){
+         	setchange=true;
+         	$("#setparams").text("取消设置");
+         	$(":text").attr('disabled',false);
+         	$("#sensorid").attr('disabled',true);
+        }else{
+        	setchange=false;
+         	$("#setparams").text("设置参数");
+         	$(":text").attr('disabled',true);
+        }
     });
 
  });
