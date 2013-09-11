@@ -5,7 +5,7 @@
 package quickserver
 
 import (
-	//"fmt"
+	"fmt"
 	log "github.com/cihub/seelog"
 	"io"
 	"net"
@@ -19,6 +19,7 @@ const (
 )
 
 var (
+	server         *Server
 	ClientNum      int = 0
 	ConnecitonPool map[string]*net.Conn
 )
@@ -33,7 +34,7 @@ type Server struct {
 
 //服务器初始化并启动监听
 func InitAndStart(conf ServerConfig) (err error) {
-	server := &Server{
+	server = &Server{
 		serverHost: conf.Host,
 		serverPost: strconv.Itoa(conf.Port),
 		tcpType:    conf.Type,
@@ -45,13 +46,6 @@ func InitAndStart(conf ServerConfig) (err error) {
 
 	//会话连接池
 	ConnecitonPool = make(map[string]*net.Conn)
-	/*
-		//是否启动HTTP console
-		if conf.HttpEnable == true {
-			//启用http server
-			go StartHttp(conf)
-		}
-	*/
 
 	return server.start()
 
@@ -99,17 +93,18 @@ func (server *Server) start() (err error) {
 		tempDelay = 0
 
 		//
-		go Receiver(server, conn)
+		go receiver(server, conn)
 	}
 
 }
 
 //接收数据处理数据
-func Receiver(server *Server, conn net.Conn) {
+func receiver(server *Server, conn net.Conn) {
 	defer conn.Close()
 
 	buf := make([]byte, RECV_BUF_LEN)
 	var deviceId string = ""
+	var sessionSaved = false
 
 	remoteHost := conn.RemoteAddr().String()
 	log.Infof("终端建立连接:[%s]", remoteHost)
@@ -119,7 +114,6 @@ func Receiver(server *Server, conn net.Conn) {
 
 	//获取一个数据处理器
 	dataProcessor := NewDataProcessor(server.dataManager)
-	defer dataProcessor.FreeDLL()
 
 	for {
 		n, err1 := conn.Read(buf)
@@ -132,6 +126,13 @@ func Receiver(server *Server, conn net.Conn) {
 			}
 			deviceId = string(buf[0:10])
 
+			//存储会话connection
+			if sessionSaved == false {
+				saveConnection(deviceId, &conn)
+				sessionSaved = true
+			}
+
+			//数据处理
 			log.Info(string(buf[0:n]))
 			dataProcessor.DataProcess(buf[0:n])
 
@@ -140,6 +141,7 @@ func Receiver(server *Server, conn net.Conn) {
 			ClientNum--
 			//设备下线
 			if deviceId != "" {
+				removeConnection(deviceId)
 				dataProcessor.DeviceOffline(deviceId)
 			}
 
@@ -150,6 +152,7 @@ func Receiver(server *Server, conn net.Conn) {
 			ClientNum--
 			//设备下线
 			if deviceId != "" {
+				removeConnection(deviceId)
 				dataProcessor.DeviceOffline(deviceId)
 			}
 			log.Infof("当前建立连接的设备:%d", ClientNum)
@@ -160,8 +163,26 @@ func Receiver(server *Server, conn net.Conn) {
 
 }
 
+//会话连接池
+func saveConnection(id string, conn *net.Conn) {
+	ConnecitonPool[id] = conn
+	for k, v := range ConnecitonPool {
+		fmt.Printf("[%s]的会话:%x \n", k, v)
+	}
+}
+
+//会话连接池移除会话
+func removeConnection(id string) {
+	fmt.Printf("remove id=%s\n", id)
+	delete(ConnecitonPool, id)
+	for k, v := range ConnecitonPool {
+		fmt.Printf("[%s]的会话:%x \n", k, v)
+	}
+}
+
 //停止服务
-func (server *Server) Stop() {
+func Stop() {
 	server.dataManager.DataClose()
+	DllUtil.FreeDLL()
 	log.Warn("Server Stop")
 }

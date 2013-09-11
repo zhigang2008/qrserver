@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"dqs/models"
+	"dqs/quickserver"
 	"dqs/util"
 	//"fmt"
 	"github.com/astaxie/beego"
@@ -69,14 +70,18 @@ func (this *DeviceController) Get() {
 //重新获取设备参数
 func (this *DeviceController) RefreshParams() {
 	sid := this.Ctx.Params[":id"]
+	err := quickserver.CommandRead(sid)
+	answer := JsonAnswer{}
+	if err != nil {
+		answer.Ok = false
+		answer.Msg = "读取失败:" + err.Error()
 
-	if sid != "" {
-		//执行设备参数读取
-		answer := JsonAnswer{Ok: false, Msg: "成功"}
-
-		this.Data["json"] = &answer
-		this.ServeJson()
+	} else {
+		answer.Ok = true
+		answer.Msg = "成功"
 	}
+	this.Data["json"] = &answer
+	this.ServeJson()
 
 }
 

@@ -1,4 +1,4 @@
-package quickserver
+package httpserver
 
 import (
 	"dqs/dao"

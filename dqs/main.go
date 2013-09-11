@@ -2,7 +2,8 @@
 package main
 
 import (
-	server "dqs/quickServer"
+	httpServer "dqs/httpserver"
+	server "dqs/quickserver"
 	"fmt"
 	log "github.com/cihub/seelog"
 	"os"
@@ -34,7 +35,7 @@ func main() {
 
 	//是否启动HTTP console
 	if conf.HttpServerEnable == true {
-		go server.StartHttp()
+		go httpServer.StartHttp()
 	}
 
 	//启动监听服务
@@ -46,6 +47,7 @@ func main() {
 		log.Flush()
 		os.Exit(1)
 	}
-
 	log.Info("服务启动正常")
+
+	defer server.Stop()
 }
