@@ -157,7 +157,7 @@ type DeviceInfo struct {
 
 //传感器参数转为服务端对象
 func RetData2SensorInfo(ret *RetData) *SensorInfo {
-	s := SensorInfo{}
+	s := new(SensorInfo)
 	s.SensorId = string(ret.SensorId[0:10])
 	s.SiteName = string(ret.SiteName[0:10])
 	s.Longitude = ret.Longitude
@@ -189,12 +189,12 @@ func RetData2SensorInfo(ret *RetData) *SensorInfo {
 	s.DA2 = ret.DA2
 	s.IO1 = ret.IO1
 	s.IO2 = ret.IO2
-	return &s
+	return s
 }
 
 //服务器后端传感器对象转化为前端传感器数据
 func SensorInfo2RetData(sensor *SensorInfo) *RetData {
-	r := RetData{}
+	r := new(RetData)
 	for i, b := 0, []byte(sensor.SensorId); i < 10; i++ {
 		r.SensorId[i] = b[i]
 	}
@@ -245,7 +245,7 @@ func SensorInfo2RetData(sensor *SensorInfo) *RetData {
 	r.DA2 = sensor.DA2
 	r.IO1 = sensor.IO1
 	r.IO2 = sensor.IO2
-	return &r
+	return r
 }
 
 //突发数据转化为报警信息

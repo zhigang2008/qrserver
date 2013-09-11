@@ -4,7 +4,6 @@ import (
 	"dqs/models"
 	"dqs/quickserver"
 	"dqs/util"
-	//"fmt"
 	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 )
@@ -88,13 +87,28 @@ func (this *DeviceController) RefreshParams() {
 //更新设备参数
 func (this *DeviceController) UpdateParams() {
 	sid := this.Ctx.Params[":id"]
+	answer := JsonAnswer{}
 
+	//判断设备编号
 	if sid != "" {
-		//执行设备参数读取
-		answer := JsonAnswer{Ok: true, Msg: "成功"}
-
-		this.Data["json"] = &answer
-		this.ServeJson()
+		params := quickserver.SensorInfo{}
+		err := this.ParseForm(&params)
+		if err != nil {
+			answer.Ok = false
+			answer.Msg = "读取失败:" + err.Error()
+		} else {
+			//发送控制指令
+			err = quickserver.CommandSet(sid, quickserver.SensorInfo2RetData(&params))
+			if err != nil {
+				answer.Ok = false
+				answer.Msg = "控制命令执行失败:" + err.Error()
+			} else {
+				answer.Ok = true
+				answer.Msg = "成功"
+			}
+		}
 	}
+	this.Data["json"] = &answer
+	this.ServeJson()
 
 }

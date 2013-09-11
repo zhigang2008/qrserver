@@ -56,7 +56,30 @@ func (dp *dllUtil) ParseReadFlashParam(rec []byte) (*FlashData, error) {
 	return &flashData, nil
 }
 
-//DLL解析接收的设置数据
+//生成参数读取命令
+func (dp *dllUtil) GenerateReadParam(param string) ([]byte, error) {
+	p := []byte(param + "g")
+	ret := [100]byte{}
+
+	ok, _, err := dp.p_GenerateReadParam.Call(
+		uintptr(unsafe.Pointer(&p[0])),
+		uintptr(unsafe.Pointer(&ret)))
+	if ok == 1 {
+		rett := []byte{}
+		//截取真正的数据
+		for _, v := range ret {
+			if v == 0 {
+				break
+			}
+			rett = append(rett, v)
+		}
+		return rett, nil
+	} else {
+		return nil, err //errors.New("调用dll解析读取参数失败")
+	}
+}
+
+//DLL解析接收的读取参数命令返回的数据
 func (dp *dllUtil) ParseReadSetParam(rec []byte) (*RetData, error) {
 	retData := RetData{}
 
@@ -80,24 +103,16 @@ func (dp *dllUtil) ParseDelParam(rec []byte) bool {
 	}
 }
 
-//DLL解析设备参数设置是否成功
-func (dp *dllUtil) ParseSetParam(rec []byte) bool {
-	ok, _, _ := dp.p_ParseSetParam.Call(
-		uintptr(unsafe.Pointer(&rec[0])))
-	if ok == 1 {
-		return true
-	} else {
-		return false
-	}
-}
+//生成设置参数的指令
+//@待测试正确性....
 
-//编码参数读取命令
-func (dp *dllUtil) GenerateReadParam(param string) ([]byte, error) {
-	p := []byte(param)
-	ret := [100]byte{}
+func (dp *dllUtil) GenerateSetParam(param string, retData *RetData) ([]byte, error) {
+	p := []byte(param + "s")
+	ret := [1024]byte{}
 
-	ok, _, err := dp.p_GenerateReadParam.Call(
+	ok, _, err := dp.p_GenerateSetParam.Call(
 		uintptr(unsafe.Pointer(&p[0])),
+		uintptr(unsafe.Pointer(&retData)),
 		uintptr(unsafe.Pointer(&ret)))
 	if ok == 1 {
 		rett := []byte{}
@@ -111,5 +126,16 @@ func (dp *dllUtil) GenerateReadParam(param string) ([]byte, error) {
 		return rett, nil
 	} else {
 		return nil, err //errors.New("调用dll解析读取参数失败")
+	}
+}
+
+//DLL解析设备参数设置是否成功
+func (dp *dllUtil) ParseSetParam(rec []byte) bool {
+	ok, _, _ := dp.p_ParseSetParam.Call(
+		uintptr(unsafe.Pointer(&rec[0])))
+	if ok == 1 {
+		return true
+	} else {
+		return false
 	}
 }
