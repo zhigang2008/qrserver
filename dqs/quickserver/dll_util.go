@@ -2,7 +2,7 @@ package quickserver
 
 import (
 	"errors"
-	//	"fmt"
+	"fmt"
 	"syscall"
 	"unsafe"
 )
@@ -22,6 +22,7 @@ type dllUtil struct {
 	p_GenerateSetParam    *syscall.Proc
 	p_parseFlashData      *syscall.Proc
 	p_GenerateReadParam   *syscall.Proc
+	p_sendStr             *syscall.Proc
 }
 
 //初始化数据处理器
@@ -35,6 +36,8 @@ func init() {
 	DllUtil.p_GenerateSetParam = DllUtil.dll.MustFindProc("GenerateSetParam")
 	DllUtil.p_parseFlashData = DllUtil.dll.MustFindProc("parseFlashData")
 	DllUtil.p_GenerateReadParam = DllUtil.dll.MustFindProc("GenerateReadParam")
+	//CRC校验用
+	DllUtil.p_sendStr = DllUtil.dll.MustFindProc("sendStr")
 
 }
 
@@ -104,7 +107,6 @@ func (dp *dllUtil) ParseDelParam(rec []byte) bool {
 }
 
 //生成设置参数的指令
-//@待测试正确性....
 
 func (dp *dllUtil) GenerateSetParam(param string, retData *RetData) ([]byte, error) {
 	p := []byte(param + "s")
@@ -112,7 +114,7 @@ func (dp *dllUtil) GenerateSetParam(param string, retData *RetData) ([]byte, err
 
 	ok, _, err := dp.p_GenerateSetParam.Call(
 		uintptr(unsafe.Pointer(&p[0])),
-		uintptr(unsafe.Pointer(&retData)),
+		uintptr(unsafe.Pointer(retData)),
 		uintptr(unsafe.Pointer(&ret)))
 	if ok == 1 {
 		rett := []byte{}
@@ -138,4 +140,36 @@ func (dp *dllUtil) ParseSetParam(rec []byte) bool {
 	} else {
 		return false
 	}
+}
+
+//DLL CRC校验
+func (dp *dllUtil) SendStr(rec []byte) [5]byte {
+	code := [5]byte{}
+	dp.p_sendStr.Call(
+		uintptr(unsafe.Pointer(&rec[0])),
+		uintptr(unsafe.Pointer(&code[0])))
+	return code
+}
+
+//添加CRC校验码
+func (dp *dllUtil) AppendCRCCode(rec []byte) []byte {
+	code := dp.SendStr(rec)
+	finalStr := append(rec, code[0], code[1], code[2], code[3])
+	return finalStr
+}
+
+//校验字符串是否符合crc校验
+func (dp *dllUtil) CheckCRCCode(str string) bool {
+	initStr := str[0:(len(str) - 4)]
+	initCode := str[(len(str) - 4):]
+	ccode := dp.SendStr([]byte(initStr))
+	code := []byte{ccode[0], ccode[1], ccode[2], ccode[3]}
+	fmt.Printf("initstr=%s \ninitCode=%s\nccode=%s\ncode=%s\n", initStr, initCode, ccode, code)
+	fmt.Printf("%s\n", dp.SendStr(code))
+	if string(code) == string(initCode) {
+		return true
+	} else {
+		return false
+	}
+
 }
