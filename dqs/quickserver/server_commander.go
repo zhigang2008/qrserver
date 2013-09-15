@@ -2,6 +2,7 @@ package quickserver
 
 import (
 	"errors"
+	"fmt"
 	log "github.com/cihub/seelog"
 )
 
@@ -31,9 +32,12 @@ func CommandRead(id string) error {
 //发送参数设置指令
 func CommandSet(id string, params *RetData) error {
 	connP := ConnecitonPool[id]
+	fmt.Println(params)
+
 	if connP != nil {
 		command, err := DllUtil.GenerateSetParam(id, params)
 		if err == nil {
+			fmt.Println(string(command))
 			n, err0 := (*connP).Write(command)
 			if err0 != nil {
 				return err0
