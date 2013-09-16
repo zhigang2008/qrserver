@@ -221,6 +221,8 @@
 
 <script>
 	$(document).ready(function(){
+		
+		{{if .Online}}
 		//刷新参数按钮
     $('#refreshparams').bind('click', function() {
     	$('#refreshparams').attr('disabled',true);
@@ -245,9 +247,10 @@
            });
         $('#refreshparams').attr('disabled',false);  
     });
-    
+
     //设置参数按钮
     var setchange=false;
+    
     $("#setparams").bind('click',function(){
          $("#setsave").toggle();
          if(setchange==false){
@@ -261,6 +264,15 @@
          	$(":text").attr('disabled',true);
         }
     });
+    
+  {{else}}
+  	//不在线,不能执行操作
+    $('#refreshparams').attr('disabled',true); 
+    $('#setparams').attr('disabled',true);  
+    
+    $("#msgcontent").html("设备未连线,无法进行读写操作")
+    $('#msg').show()
+  {{end}}
 
  });
 </script>

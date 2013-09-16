@@ -91,11 +91,16 @@ func (dm *DataManager) UpdateDeviceStatus(status *SensorInfo) (err error) {
 	device.UpdateTime = time.Now()
 
 	//更新数据
-	err0 := c.Update(&bson.M{"sensorid": device.SensorId}, &device)
+	//err0 := c.Update(&bson.M{"sensorid": device.SensorId}, &device)
+	//只更新部分信息
+	colQuerier := bson.M{"sensorid": device.SensorId}
+	change := bson.M{"$set": bson.M{"setparams": device.SetParams, "updatetime": time.Now()}}
+	err0 := c.Update(colQuerier, change)
 	if err0 != nil {
 		log.Infof("数据库更新设备参数失败:%s", err0.Error())
 		return err0
 	}
+
 	return nil
 }
 
@@ -130,7 +135,7 @@ func (dm *DataManager) DeviceRegister(device *DeviceInfo) (err error) {
 
 	//更新设备信息
 	colQuerier := bson.M{"sensorid": device.SensorId}
-	change := bson.M{"$set": bson.M{"registertime": time.Now(), "online": true, "updatetime": time.Now()}}
+	change := bson.M{"$set": bson.M{"registertime": time.Now(), "online": true, "updatetime": time.Now(), "remoteaddr": device.RemoteAddr}}
 	err0 := c.Update(colQuerier, change)
 	if err0 != nil {
 		log.Infof("数据库更新设备参数失败:%s", err0.Error())
@@ -145,7 +150,7 @@ func (dm *DataManager) DeviceOffline(deviceid string) (err error) {
 	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
 	//更新设备信息
 	colQuerier := bson.M{"sensorid": deviceid}
-	change := bson.M{"$set": bson.M{"offlinetime": time.Now(), "online": false, "updatetime": time.Now()}}
+	change := bson.M{"$set": bson.M{"offtime": time.Now(), "online": false, "updatetime": time.Now()}}
 	err0 := c.Update(colQuerier, change)
 	if err0 != nil {
 		return err0

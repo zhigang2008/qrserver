@@ -14,7 +14,9 @@ type DeviceInfo struct {
 	OffTime      time.Time
 	Online       bool
 	UpdateTime   time.Time
+	RemoteAddr   string
 	SetParams    SensorInfo
+	CustomParams CustomDefineParams
 }
 
 //传感器参数结构
@@ -55,6 +57,10 @@ type SensorInfo struct {
 	DA2 int //DA输出2
 	IO1 int //IO输出1
 	IO2 int //IO输出2
+}
+
+type CustomDefineParams struct {
+	NetType int
 }
 
 func DeviceList(p *util.Pagination) error {
