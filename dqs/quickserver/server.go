@@ -134,7 +134,7 @@ func receiver(server *Server, conn net.Conn) {
 
 			//数据处理
 			log.Info(string(buf[0:n]))
-			dataProcessor.DataProcess(buf[0:n])
+			dataProcessor.DataProcess(buf[0:n], remoteHost)
 
 		case io.EOF: //当对方断开连接时触发该方法
 			log.Warnf("远程终端[%s]已断开连接: %s \n", remoteHost, err1)

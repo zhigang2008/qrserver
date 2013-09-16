@@ -21,6 +21,7 @@
 		<tr>
 			<th>序号</th>
 			<th>设备编号</th>
+			<th>站点名称</th>
 			<th>注册时间</th>
 		  <th>在线状态
 		  	<span style="margin-left:15px;">
@@ -32,6 +33,7 @@
        </span>
       </th>
      <th>更新时间</th>
+     <th>最后连接地址</th>
      <th>管理</th>
     </tr>
   </thead>
@@ -39,9 +41,12 @@
 		{{range $i,$v:=.Data}}
 	 	<tr>
 	 		<td>{{seqno $i $pagesize $curpage}}</td>
-	 		<td>{{.SensorId}}</td><td>{{dateformat .RegisterTime "2006-01-02 15:04:05"}}</td>
+	 		<td>{{.SensorId}}</td>
+	 		<td>{{.SetParams.SiteName}}</td>
+	 		<td>{{dateformat .RegisterTime "2006-01-02 15:04:05"}}</td>
 	 		<td>{{if .Online}}<span class="label label-success">在线</span>{{else}}<span class="label label-default">离线</span> {{end}}</td>
 	 		<td>{{dateformat .UpdateTime "2006-01-02 15:04:05"}}</td>
+	 		<td>{{.RemoteAddr}}</td>
 	 		<td>
 	 			<a href="/device/{{.SensorId}}"><span class="label label-primary">设备参数</span> </a> /
 	 			<a href="/alarm?sensorid={{.SensorId}}"><span class="label label-primary">报警信息</span> </a> /

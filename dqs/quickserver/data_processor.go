@@ -20,7 +20,7 @@ func NewDataProcessor(dm *DataManager) *DataProcessor {
 }
 
 //解析数据
-func (dp *DataProcessor) DataProcess(content []byte) (err error) {
+func (dp *DataProcessor) DataProcess(content []byte, remote string) (err error) {
 	log.Info("Begin process data")
 
 	fmt.Printf("设备:%s\n", content[0:10])
@@ -32,7 +32,7 @@ func (dp *DataProcessor) DataProcess(content []byte) (err error) {
 	case 'a', 'A': //突发数据
 		dp.ProcessFlashData(content)
 	case 'z', 'Z': //设备注册
-		dp.DeviceRegister(&content)
+		dp.DeviceRegister(&content, remote)
 	case 'g', 'G': //状态及参数设定
 		dp.ProcessStatusData(content)
 	case 'r', 'R': //地形波读取
@@ -45,9 +45,18 @@ func (dp *DataProcessor) DataProcess(content []byte) (err error) {
 
 //处理突发数据
 func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
+
+	//进行数据处理
 	id := string(content[0:10])
+
+	//先进行CRC校验.无效数据直接抛弃.
+	if DllUtil.CheckCRCCode(content) != true {
+		log.Warnf("[%s]设备报警态数据CRC校验失败:%s", id, err.Error())
+		return
+	}
+
 	//调用dll解析
-	data, err := DllUtil.ParseReadFlashParam(content)
+	data, err := DllUtil.ParseReadFlashParam(content[0 : len(content)-4])
 	if err != nil {
 		log.Warnf("[%s]报警信息DLL解析失败:%s", id, err.Error())
 		return err
@@ -66,8 +75,14 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 //处理状态数据
 func (dp *DataProcessor) ProcessStatusData(content []byte) (err error) {
 	id := string(content[0:10])
+	//先进行CRC校验.无效数据直接抛弃.
+	if DllUtil.CheckCRCCode(content) != true {
+		log.Warnf("[%s]设备状态数据CRC校验失败:%s", id, err.Error())
+		return
+	}
+
 	//调用dll解析
-	data, err := DllUtil.ParseReadSetParam(content)
+	data, err := DllUtil.ParseReadSetParam(content[0 : len(content)-4])
 	if err != nil {
 		log.Warnf("[%s]状态信息DLL解析失败:%s", id, err.Error())
 		return err
@@ -84,12 +99,14 @@ func (dp *DataProcessor) ProcessStatusData(content []byte) (err error) {
 }
 
 //设备注册
-func (dp *DataProcessor) DeviceRegister(content *[]byte) (err error) {
+func (dp *DataProcessor) DeviceRegister(content *[]byte, remote string) (err error) {
 	device := new(DeviceInfo)
 	device.SensorId = string((*content)[0:10])
 	device.Online = true
 	device.RegisterTime = time.Now()
 	device.UpdateTime = time.Now()
+	device.RemoteAddr = remote
+
 	err = dp.dataManager.DeviceRegister(device)
 	if err != nil {
 		log.Warnf("设备注册失败:%s", err.Error())
@@ -100,10 +117,10 @@ func (dp *DataProcessor) DeviceRegister(content *[]byte) (err error) {
 }
 
 //设备下线
-func (dp *DataProcessor) DeviceOffline(remote string) {
-	err := dp.dataManager.DeviceOffline(remote)
+func (dp *DataProcessor) DeviceOffline(deviceid string) {
+	err := dp.dataManager.DeviceOffline(deviceid)
 	if err != nil {
-		log.Warnf("设备[%s]下线失败:%s", remote, err.Error())
+		log.Warnf("设备[%s]下线失败:%s", deviceid, err.Error())
 	}
-	log.Infof("设备[%s]下线", remote)
+	log.Infof("设备[%s]下线", deviceid)
 }

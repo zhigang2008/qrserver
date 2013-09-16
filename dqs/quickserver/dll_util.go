@@ -62,12 +62,19 @@ func (dp *dllUtil) ParseReadFlashParam(rec []byte) (*FlashData, error) {
 //生成参数读取命令
 func (dp *dllUtil) GenerateReadParam(param string) ([]byte, error) {
 	p := []byte(param + "g")
-	ret := [100]byte{}
+	p = append(p, 0)
+
+	ret := make([]byte, 20)
+
+	fmt.Printf("ret b=%s\n", ret)
 
 	ok, _, err := dp.p_GenerateReadParam.Call(
 		uintptr(unsafe.Pointer(&p[0])),
-		uintptr(unsafe.Pointer(&ret)))
+		uintptr(unsafe.Pointer(&ret[0])))
 	if ok == 1 {
+
+		fmt.Printf("ret r=%s\n", ret)
+
 		rett := []byte{}
 		//截取真正的数据
 		for _, v := range ret {
@@ -110,6 +117,8 @@ func (dp *dllUtil) ParseDelParam(rec []byte) bool {
 
 func (dp *dllUtil) GenerateSetParam(param string, retData *RetData) ([]byte, error) {
 	p := []byte(param + "s")
+	p = append(p, 0)
+
 	ret := [1024]byte{}
 
 	ok, _, err := dp.p_GenerateSetParam.Call(
@@ -145,6 +154,8 @@ func (dp *dllUtil) ParseSetParam(rec []byte) bool {
 //DLL CRC校验
 func (dp *dllUtil) SendStr(rec []byte) [5]byte {
 	code := [5]byte{}
+	rec = append(rec, 0)
+
 	dp.p_sendStr.Call(
 		uintptr(unsafe.Pointer(&rec[0])),
 		uintptr(unsafe.Pointer(&code[0])))
@@ -159,7 +170,7 @@ func (dp *dllUtil) AppendCRCCode(rec []byte) []byte {
 }
 
 //校验字符串是否符合crc校验
-func (dp *dllUtil) CheckCRCCode(str string) bool {
+func (dp *dllUtil) CheckCRCCode(str []byte) bool {
 	initStr := str[0:(len(str) - 4)]
 	initCode := str[(len(str) - 4):]
 	ccode := dp.SendStr([]byte(initStr))

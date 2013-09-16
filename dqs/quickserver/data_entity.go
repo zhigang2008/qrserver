@@ -152,6 +152,7 @@ type DeviceInfo struct {
 	OffTime      time.Time
 	Online       bool
 	UpdateTime   time.Time
+	RemoteAddr   string
 	SetParams    SensorInfo
 }
 
