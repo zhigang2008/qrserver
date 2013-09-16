@@ -59,12 +59,15 @@ type SensorInfo struct {
 	IO2 int //IO输出2
 }
 
+//用户自定义数据
 type CustomDefineParams struct {
-	NetType int
+	NetType    string
+	NetTraffic float32
+	NetQixian  float32
 }
 
+//设备列表
 func DeviceList(p *util.Pagination) error {
-
 	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DeviceCollection)
 	devices := []DeviceInfo{}
 	//构造查询参数
@@ -88,9 +91,9 @@ func DeviceList(p *util.Pagination) error {
 	}
 	p.Data = devices
 	return nil
-
 }
 
+//根据编号查找设备
 func GetDevice(sid string) DeviceInfo {
 	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DeviceCollection)
 	device := DeviceInfo{}
@@ -100,4 +103,53 @@ func GetDevice(sid string) DeviceInfo {
 		device = DeviceInfo{}
 	}
 	return device
+}
+
+//添加设备信息
+func AddDevice(dev *DeviceInfo) error {
+	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DeviceCollection)
+
+	err := c.Insert(dev)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//保存设备参数信息
+func UpdateDeviceSetParams(dev *DeviceInfo) error {
+	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DeviceCollection)
+	device := DeviceInfo{}
+	//查找设备
+	err := c.Find(&bson.M{"sensorid": dev.SensorId}).One(&device)
+	if err != nil {
+		return err
+	}
+	//更新信息
+	device.SetParams = dev.SetParams
+	device.UpdateTime = time.Now()
+	err = c.Update(&bson.M{"sensorid": dev.SensorId}, &device)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//保存设备自定义信息
+func UpdateDeviceCustomeParams(dev *DeviceInfo) error {
+	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DeviceCollection)
+	device := DeviceInfo{}
+	//查找设备
+	err := c.Find(&bson.M{"sensorid": dev.SensorId}).One(&device)
+	if err != nil {
+		return err
+	}
+	//更新信息
+	device.CustomParams = dev.CustomParams
+	device.UpdateTime = time.Now()
+	err = c.Update(&bson.M{"sensorid": dev.SensorId}, &device)
+	if err != nil {
+		return err
+	}
+	return nil
 }
