@@ -1,15 +1,24 @@
 package quickserver
 
 import (
+	"errors"
 	"fmt"
 	log "github.com/cihub/seelog"
 	"time"
 )
 
 //数据处理器结构
+var dataProcessor *DataProcessor
+
 //包含调用的dll以及 其中的function句柄
 type DataProcessor struct {
 	dataManager *DataManager
+}
+
+//初始化全局数据处理器
+func InitDataProcessor(dm *DataManager) {
+	dataProcessor = new(DataProcessor)
+	dataProcessor.dataManager = dm
 }
 
 //初始化数据处理器
@@ -49,10 +58,12 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 	//进行数据处理
 	id := string(content[0:10])
 
-	//先进行CRC校验.无效数据直接抛弃.
-	if DllUtil.CheckCRCCode(content) != true {
-		log.Warnf("[%s]设备报警态数据CRC校验失败:%s", id, err.Error())
-		return
+	if ServerConfigs.CRC {
+		//先进行CRC校验.无效数据直接抛弃.
+		if DllUtil.CheckCRCCode(content) != true {
+			log.Warnf("[%s]设备报警态数据CRC校验失败", id)
+			return errors.New("CRC校验失败,数据非法")
+		}
 	}
 
 	//调用dll解析
@@ -69,17 +80,20 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 		return err
 	}
 	log.Infof("报警信息保存成功")
-	return
+	return nil
 }
 
 //处理状态数据
-func (dp *DataProcessor) ProcessStatusData(content []byte) (err error) {
+func (dp *DataProcessor) ProcessStatusData(content []byte) error {
 	id := string(content[0:10])
-	//先进行CRC校验.无效数据直接抛弃.
-	//if DllUtil.CheckCRCCode(content) != true {
-	//	log.Warnf("[%s]设备状态数据CRC校验失败:%s", id, err.Error())
-	//	return
-	//}
+
+	if ServerConfigs.CRC {
+		//先进行CRC校验.无效数据直接抛弃.
+		if DllUtil.CheckCRCCode(content) != true {
+			log.Warnf("[%s]设备状态数据CRC校验失败", id)
+			return errors.New("CRC校验失败,数据非法")
+		}
+	}
 
 	//调用dll解析
 	data, err := DllUtil.ParseReadSetParam(content[0 : len(content)-4])
@@ -95,7 +109,7 @@ func (dp *DataProcessor) ProcessStatusData(content []byte) (err error) {
 		return err
 	}
 	log.Infof("设备状态及参数读取成功")
-	return
+	return nil
 }
 
 //设备注册
@@ -123,4 +137,13 @@ func (dp *DataProcessor) DeviceOffline(deviceid string) {
 		log.Warnf("设备[%s]下线失败:%s", deviceid, err.Error())
 	}
 	log.Infof("设备[%s]下线", deviceid)
+}
+
+//所有设备下线
+func (dp *DataProcessor) ResetAllDeviceStatus() {
+	err := dp.dataManager.ResetAllDeviceStatus()
+	if err != nil {
+		log.Warnf("所有设备状态重置失败:[%s]", err.Error())
+	}
+	log.Infof("所有设备状态重置为offline")
 }

@@ -33,6 +33,7 @@
        </span>
       </th>
      <th>更新时间</th>
+     <th>网络类型</th>
      <th>最后连接地址</th>
      <th>管理</th>
     </tr>
@@ -43,9 +44,11 @@
 	 		<td>{{seqno $i $pagesize $curpage}}</td>
 	 		<td>{{.SensorId}}</td>
 	 		<td>{{.SetParams.SiteName}}</td>
+	 		
 	 		<td>{{dateformat .RegisterTime "2006-01-02 15:04:05"}}</td>
 	 		<td>{{if .Online}}<span class="label label-success">在线</span>{{else}}<span class="label label-default">离线</span> {{end}}</td>
 	 		<td>{{dateformat .UpdateTime "2006-01-02 15:04:05"}}</td>
+	 		<td>{{.CustomParams.NetType}}</td>
 	 		<td>{{.RemoteAddr}}</td>
 	 		<td>
 	 			<a href="/device/{{.SensorId}}"><span class="label label-primary">设备参数</span> </a> /

@@ -158,6 +158,19 @@ func (dm *DataManager) DeviceOffline(deviceid string) (err error) {
 	return nil
 }
 
+//所有设备下线
+func (dm *DataManager) ResetAllDeviceStatus() (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
+	//更新设备信息
+	colQuerier := bson.M{}
+	change := bson.M{"$set": bson.M{"online": false}}
+	_, err0 := c.UpdateAll(colQuerier, change)
+	if err0 != nil {
+		return err0
+	}
+	return nil
+}
+
 //查找设备信息
 func (dm *DataManager) DeviceList(n int) (*[]DeviceInfo, error) {
 	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)

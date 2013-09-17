@@ -234,6 +234,7 @@
              success: function(json){
                if(json.Ok==true){
                	//读取成功后,刷新页面获取最新数据
+               	 alert("成功读取");
                	 window.location.reload(true)
                 }else{
                 	$("#msgcontent").html(json.Msg)

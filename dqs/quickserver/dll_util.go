@@ -2,7 +2,7 @@ package quickserver
 
 import (
 	"errors"
-	"fmt"
+	//	"fmt"
 	"syscall"
 	"unsafe"
 )
@@ -66,14 +66,10 @@ func (dp *dllUtil) GenerateReadParam(param string) ([]byte, error) {
 
 	ret := make([]byte, 20)
 
-	fmt.Printf("ret b=%s\n", ret)
-
 	ok, _, err := dp.p_GenerateReadParam.Call(
 		uintptr(unsafe.Pointer(&p[0])),
 		uintptr(unsafe.Pointer(&ret[0])))
 	if ok == 1 {
-
-		fmt.Printf("ret r=%s\n", ret)
 
 		rett := []byte{}
 		//截取真正的数据
@@ -152,8 +148,12 @@ func (dp *dllUtil) ParseSetParam(rec []byte) bool {
 }
 
 //DLL CRC校验
-func (dp *dllUtil) SendStr(rec []byte) [5]byte {
+func (dp *dllUtil) SendStr(initStr []byte) [5]byte {
 	code := [5]byte{}
+
+	//分配新的变量,以防止数据操作与追加影响既有slice
+	rec := []byte{}
+	copy(rec, initStr)
 	rec = append(rec, 0)
 
 	dp.p_sendStr.Call(
@@ -170,16 +170,15 @@ func (dp *dllUtil) AppendCRCCode(rec []byte) []byte {
 }
 
 //校验字符串是否符合crc校验
-func (dp *dllUtil) CheckCRCCode(str []byte) bool {
-	str = []byte{'1', '2', '3', '4', '5', '6', '7', '8', '9'}
-	fmt.Printf("zifu=%d\n", str[5])
-	fmt.Printf("str=%c\n", str)
-	initCode := str[(len(str) - 5):]
-	initStr := str[0:(len(str) - 4)]
+func (dp *dllUtil) CheckCRCCode(cstr []byte) bool {
 
-	ccode := dp.SendStr([]byte(initStr))
+	initStr := cstr[0:(len(cstr) - 4)]
+	initCode := cstr[(len(cstr) - 4):]
+
+	ccode := dp.SendStr(initStr)
 	code := []byte{ccode[0], ccode[1], ccode[2], ccode[3]}
-	fmt.Printf("initstr=%s \ninitCode=%d\nccode=%s\ncode=%s\n", initStr, initCode, ccode, code)
+
+	//fmt.Printf("initstr=%s \ninitCode=%s\nccode=%s\ncode=%s\n", initStr, initCode, ccode, code)
 	if string(code) == string(initCode) {
 		return true
 	} else {

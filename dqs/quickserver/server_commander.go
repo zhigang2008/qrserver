@@ -12,23 +12,41 @@ func CommandRead(id string) error {
 	if connP != nil {
 		command, err := DllUtil.GenerateReadParam(id)
 		if err == nil {
-
+			//发送控制命令
 			n, err0 := (*connP).Write(command)
 
 			if err0 != nil {
 				return err0
 			} else {
 				log.Infof("向[%s]设备发送参数读取指令成功:%d", id, n)
-				//读取反馈
+
+				//读取客户端反馈
 				c := make(chan []byte)
 				AddCommand(id, c)
 				back := <-c
-				//TODO
 
 				fmt.Printf("back=%s\n", back)
+				//取消控制命令
 				DeleteCommand(id)
 
-				return nil
+				//进行数据校验
+				if len(back) < 11 {
+					return errors.New("参数设置失败")
+				}
+				backid := back[0:10]
+				if string(backid) != id || (back[10] != 'g' && back[10] != 'G') {
+					log.Warn("接收到的数据与发送目标不匹配")
+					//重新发送数据
+					CommandRead(id)
+				} else {
+					//进行数据处理
+					err1 := dataProcessor.ProcessStatusData(back)
+					if err1 != nil {
+						return errors.New("读取数据更新失败:" + err1.Error())
+
+					}
+				}
+
 			}
 
 		} else {
@@ -53,8 +71,37 @@ func CommandSet(id string, params *RetData) error {
 			if err0 != nil {
 				return err0
 			} else {
-				log.Infof("向[%s]设备发送参数设置指令成功:%d", id, n)
-				return nil
+				log.Infof("向[%s]设备发送参数读取指令成功:%d", id, n)
+
+				//读取客户端反馈
+				c := make(chan []byte)
+				AddCommand(id, c)
+				back := <-c
+
+				fmt.Printf("back=%s\n", back)
+				//取消控制命令
+				DeleteCommand(id)
+
+				//进行数据校验
+				if len(back) < 11 {
+					return errors.New("参数设置失败")
+				}
+
+				backid := back[0:10]
+				if string(backid) != id || (back[10] != 's' && back[10] != 'S') {
+					log.Warn("接收到的数据与发送目标不匹配")
+					//重新发送数据
+					CommandSet(id, params)
+				} else {
+					//进行数据处理
+					ok := DllUtil.ParseSetParam(back)
+					if ok {
+						return nil
+
+					} else {
+						return errors.New("参数设置失败")
+					}
+				}
 			}
 
 		} else {

@@ -46,6 +46,10 @@ func InitAndStart(conf ServerConfig) (err error) {
 	if err != nil {
 		return
 	}
+	//初始化数据处理器
+	InitDataProcessor(server.dataManager)
+	//初始化设备下线状态
+	dataProcessor.ResetAllDeviceStatus()
 
 	//会话连接池
 	ConnecitonPool = make(map[string]*net.Conn)
@@ -121,7 +125,7 @@ func receiver(server *Server, conn net.Conn) {
 	log.Infof("当前建立连接的设备:%d", ClientNum)
 
 	//获取一个数据处理器
-	dataProcessor := NewDataProcessor(server.dataManager)
+	//dataProcessor := NewDataProcessor(server.dataManager)
 
 	for {
 		n, err1 := conn.Read(buf)
@@ -147,7 +151,7 @@ func receiver(server *Server, conn net.Conn) {
 			if ok == true {
 				c <- buf[0:n]
 			} else {
-				dataProcessor.DataProcess(buf[0:n], remoteHost)
+				go dataProcessor.DataProcess(buf[0:n], remoteHost)
 			}
 
 		case io.EOF: //当对方断开连接时触发该方法

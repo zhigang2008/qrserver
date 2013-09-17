@@ -16,6 +16,11 @@ const (
 	TCP6        = "tcp6"
 )
 
+//全局的服务器配置
+var (
+	ServerConfigs ServerConfig
+)
+
 //服务器配置信息结构
 type ServerConfig struct {
 	XMLName          xml.Name `xml:"Server"`
@@ -24,6 +29,7 @@ type ServerConfig struct {
 	Type             string
 	Database         DataServerConfig
 	HttpServerEnable bool
+	CRC              bool
 }
 
 //数据库配置文件
@@ -38,26 +44,26 @@ type DataServerConfig struct {
 
 //读取配置文件,并进行校验
 func ReadConfigFromFile() (ServerConfig, error) {
-	var result ServerConfig
-	result.Host = defaultHost
-	result.Port = defaultPort
-	result.Type = defaultType
+
+	ServerConfigs.Host = defaultHost
+	ServerConfigs.Port = defaultPort
+	ServerConfigs.Type = defaultType
 
 	content, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		log.Error(err)
-		return result, err
+		return ServerConfigs, err
 	}
 
-	err = xml.Unmarshal(content, &result)
+	err = xml.Unmarshal(content, &ServerConfigs)
 	if err != nil {
 		log.Error(err)
-		return result, err
+		return ServerConfigs, err
 	}
-	log.Info(result)
+	log.Info(ServerConfigs)
 
-	err = CheckConfig(result)
-	return result, err
+	err = CheckConfig(ServerConfigs)
+	return ServerConfigs, err
 }
 
 /*检查读取到的配置文件*/

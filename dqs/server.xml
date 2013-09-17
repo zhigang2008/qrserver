@@ -21,4 +21,6 @@
 	</DataServer>
 	<!--web控制台,可以设置为[true|false].默认不开启false -->
 	<HttpServerEnable>true</HttpServerEnable>
+	<!--是否进行CRC校验,可设置为[true|false].默认不开启false -->
+	<CRC>false</CRC>
 </Server>
