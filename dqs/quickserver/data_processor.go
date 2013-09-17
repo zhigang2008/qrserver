@@ -76,10 +76,10 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 func (dp *DataProcessor) ProcessStatusData(content []byte) (err error) {
 	id := string(content[0:10])
 	//先进行CRC校验.无效数据直接抛弃.
-	if DllUtil.CheckCRCCode(content) != true {
-		log.Warnf("[%s]设备状态数据CRC校验失败:%s", id, err.Error())
-		return
-	}
+	//if DllUtil.CheckCRCCode(content) != true {
+	//	log.Warnf("[%s]设备状态数据CRC校验失败:%s", id, err.Error())
+	//	return
+	//}
 
 	//调用dll解析
 	data, err := DllUtil.ParseReadSetParam(content[0 : len(content)-4])

@@ -8,15 +8,26 @@ import (
 
 //发送设备参数读取指令
 func CommandRead(id string) error {
-	connP := ConnecitonPool[id]
+	connP := GetConnection(id)
 	if connP != nil {
 		command, err := DllUtil.GenerateReadParam(id)
 		if err == nil {
+
 			n, err0 := (*connP).Write(command)
+
 			if err0 != nil {
 				return err0
 			} else {
 				log.Infof("向[%s]设备发送参数读取指令成功:%d", id, n)
+				//读取反馈
+				c := make(chan []byte)
+				AddCommand(id, c)
+				back := <-c
+				//TODO
+
+				fmt.Printf("back=%s\n", back)
+				DeleteCommand(id)
+
 				return nil
 			}
 
@@ -31,7 +42,7 @@ func CommandRead(id string) error {
 
 //发送参数设置指令
 func CommandSet(id string, params *RetData) error {
-	connP := ConnecitonPool[id]
+	connP := GetConnection(id)
 	fmt.Println(params)
 
 	if connP != nil {

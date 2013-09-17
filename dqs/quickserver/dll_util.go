@@ -171,12 +171,15 @@ func (dp *dllUtil) AppendCRCCode(rec []byte) []byte {
 
 //校验字符串是否符合crc校验
 func (dp *dllUtil) CheckCRCCode(str []byte) bool {
+	str = []byte{'1', '2', '3', '4', '5', '6', '7', '8', '9'}
+	fmt.Printf("zifu=%d\n", str[5])
+	fmt.Printf("str=%c\n", str)
+	initCode := str[(len(str) - 5):]
 	initStr := str[0:(len(str) - 4)]
-	initCode := str[(len(str) - 4):]
+
 	ccode := dp.SendStr([]byte(initStr))
 	code := []byte{ccode[0], ccode[1], ccode[2], ccode[3]}
-	fmt.Printf("initstr=%s \ninitCode=%s\nccode=%s\ncode=%s\n", initStr, initCode, ccode, code)
-	fmt.Printf("%s\n", dp.SendStr(code))
+	fmt.Printf("initstr=%s \ninitCode=%d\nccode=%s\ncode=%s\n", initStr, initCode, ccode, code)
 	if string(code) == string(initCode) {
 		return true
 	} else {

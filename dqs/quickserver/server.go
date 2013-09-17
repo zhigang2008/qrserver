@@ -11,6 +11,7 @@ import (
 	"net"
 	//"runtime"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -22,6 +23,8 @@ var (
 	server         *Server
 	ClientNum      int = 0
 	ConnecitonPool map[string]*net.Conn
+	CommandPool    map[string]chan []byte
+	mut            sync.Mutex
 )
 
 //服务器对象结构
@@ -46,6 +49,7 @@ func InitAndStart(conf ServerConfig) (err error) {
 
 	//会话连接池
 	ConnecitonPool = make(map[string]*net.Conn)
+	CommandPool = make(map[string]chan []byte)
 
 	return server.start()
 
@@ -70,6 +74,7 @@ func (server *Server) start() (err error) {
 	var tempDelay time.Duration
 
 	//不断监听
+	//go func() {
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
@@ -95,7 +100,10 @@ func (server *Server) start() (err error) {
 		//
 		go receiver(server, conn)
 	}
+	//}()
 
+	//select {}
+	return
 }
 
 //接收数据处理数据
@@ -134,7 +142,13 @@ func receiver(server *Server, conn net.Conn) {
 
 			//数据处理
 			log.Info(string(buf[0:n]))
-			dataProcessor.DataProcess(buf[0:n], remoteHost)
+			//判断是否有控制命令等待返回数据
+			c, ok := hasCommand(deviceId)
+			if ok == true {
+				c <- buf[0:n]
+			} else {
+				dataProcessor.DataProcess(buf[0:n], remoteHost)
+			}
 
 		case io.EOF: //当对方断开连接时触发该方法
 			log.Warnf("远程终端[%s]已断开连接: %s \n", remoteHost, err1)
@@ -165,6 +179,9 @@ func receiver(server *Server, conn net.Conn) {
 
 //会话连接池
 func saveConnection(id string, conn *net.Conn) {
+	mut.Lock()
+	defer mut.Unlock()
+
 	ConnecitonPool[id] = conn
 	for k, v := range ConnecitonPool {
 		fmt.Printf("[%s]的会话:%x \n", k, v)
@@ -173,10 +190,48 @@ func saveConnection(id string, conn *net.Conn) {
 
 //会话连接池移除会话
 func removeConnection(id string) {
-	fmt.Printf("remove id=%s\n", id)
+	mut.Lock()
+	defer mut.Unlock()
 	delete(ConnecitonPool, id)
 	for k, v := range ConnecitonPool {
 		fmt.Printf("[%s]的会话:%x \n", k, v)
+	}
+}
+
+//获取会话连接
+func GetConnection(id string) *net.Conn {
+	val, ok := ConnecitonPool[id]
+	if ok {
+		return val
+	} else {
+		return nil
+	}
+}
+
+//设置控制命令
+func AddCommand(id string, c chan []byte) {
+	mut.Lock()
+	defer mut.Unlock()
+
+	CommandPool[id] = c
+}
+
+//会话连接池移除会话
+func DeleteCommand(id string) {
+	mut.Lock()
+	defer mut.Unlock()
+	delete(CommandPool, id)
+}
+
+//判断是否有控制命令等待返回
+func hasCommand(id string) (chan []byte, bool) {
+	val, ok := CommandPool[id]
+	if ok {
+		fmt.Printf("has command :%x\n", val)
+		return val, true
+	} else {
+		fmt.Printf("no command \n")
+		return nil, false
 	}
 }
 
