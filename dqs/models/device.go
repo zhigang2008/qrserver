@@ -3,6 +3,8 @@ package models
 import (
 	"dqs/dao"
 	"dqs/util"
+	"errors"
+	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	"time"
 )
@@ -64,6 +66,7 @@ type CustomDefineParams struct {
 	NetType    string
 	NetTraffic float32
 	NetQixian  float32
+	NotUse     bool
 }
 
 //设备列表
@@ -108,10 +111,18 @@ func GetDevice(sid string) DeviceInfo {
 //添加设备信息
 func AddDevice(dev *DeviceInfo) error {
 	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DeviceCollection)
-
-	err := c.Insert(dev)
-	if err != nil {
+	//先查找,是否存在
+	device := DeviceInfo{}
+	err := c.Find(&bson.M{"sensorid": dev.SensorId}).One(&device)
+	if err != nil && err != mgo.ErrNotFound {
 		return err
+	}
+	if device.SensorId != "" {
+		return errors.New("已存在该设备")
+	}
+	err = c.Insert(dev)
+	if err != nil {
+		return errors.New("添加失败:" + err.Error())
 	}
 	return nil
 }

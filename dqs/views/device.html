@@ -8,19 +8,31 @@
   <div class="panel-body">
   
   <!--提示框-->
-  <div  id="msg" class="alert alert-warning alert-dismissable" style="display:none">
-     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  <div  id="msg" class="alert alert-success alert-dismissable" style="display:none">
+     <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
      <p id="msgcontent"></p>
  </div>
+ <div id="process-div" class="progress progress-striped active" style="display:none">
+  <div id="process-bar" class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 5%">
+  </div>
+</div>
+<!-- Nav tabs -->
+<ul id="nav-tab" class="nav nav-tabs">
+  <li><a href="#deviceparams" data-toggle="tab">设备参数</a></li>
+  <li><a href="#customparams" data-toggle="tab">自定义数据</a></li>
+</ul>
 
- <form class="form-horizontal" role="form" action="/deviceparams/update/{{.SensorId}}" type="post">
+<!--标签内容 -->
+<div  class="tab-content">
+ <div id="deviceparams" class="tab-pane active" >
+ <form id="setparamform" class="form-horizontal" role="form" action="/deviceparams/update/{{.SensorId}}" type="post">
  	 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button id="refreshparams" type="button" class="btn btn-success">重新读取</button>
       &nbsp;&nbsp;
       <button id="setparams" type="button" class="btn btn-primary">设置参数</button>
       &nbsp;&nbsp;
-      <button id="setsave" type="submit" class="btn btn-warning" style="display:none">保存设置</button>
+      <button id="setsave" type="button" class="btn btn-warning" style="display:none">保存设置</button>
     </div>
   </div>
 {{with .SetParams}}
@@ -210,26 +222,96 @@
       <input type="text" class="form-control" id="IO2" name="IO2" placeholder="IO2" value="{{.IO2}}" disabled>
     </div>
   </div>
- 
-  {{end}}
+{{end}}
+ </form>
+</div> <!--end deviceparams-->
+<!--自定义数据-->
 
+<div id="customparams" class="tab-pane " >
+	<form id="customparamform" class="form-horizontal" role="form" action="/customparams/update/{{.SensorId}}" type="post">
+ 	 <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button id="setparams2" type="button" class="btn btn-primary">设置参数</button>
+      &nbsp;&nbsp;
+      <button id="setsave2" type="button" class="btn btn-warning" style="display:none">保存设置</button>
+    </div>
+  </div>
+	{{with .CustomParams}}
+	 <div class="form-group">
+	<label class="col-sm-2 control-label" for="NetType">网络类型</label>
+    <div class="col-sm-6">
+      <input id="NetType" type="text" class="form-control" name="NetType"  placeholder="NetType" value="{{.NetType}}" disabled>
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-2 control-label" for="NetQixian">网络期限</label>
+    <div class="col-sm-6">
+      <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" value="{{.NetQixian}}" disabled>
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-2 control-label" for="NetQixian">网络流量</label>
+    <div class="col-sm-6">
+      <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic" value="{{.NetTraffic}}" disabled>
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-2 control-label" for="NotUse">是否禁用</label>
+    <div class="col-sm-6">
+      <input id="NotUse" type="text" class="form-control" name="NotUse"  placeholder="Disabled" value="{{.NotUse}}" disabled>
+    </div>
+  </div>
+	{{end}}	
 </form>
 </div>
-</div>
+
+</div> <!--end tab-content-->
+
+</div> <!--end panel-body-->
+</div> <!--end panel-->
 </div>
 {{template "scripts"}}
-
+<script src="/static/js/tab.js"></script>
 <script>
-	$(document).ready(function(){
-		
+	 //进度条
+    var p=10;
+    function processbar(){
+    	p+=1;
+      $("#process-bar").css("width",p+"%");
+      if(p<100){
+     	 setTimeout("processbar()",100);
+      }
+    };
+
+
+//初始化    
+$(document).ready(function(){
 		{{if .Online}}
+		$('#nav-tab a:first').tab('show')
+		 //ajax提示信息
+    $(document).ajaxStart(function(){
+         $("#process-div").show();
+         $("#msg").hide();
+         $('#refreshparams').attr('disabled',true);
+         $('#setsave').attr('disabled',true);
+         $('#setsave2').attr('disabled',true);
+         processbar();
+     }).ajaxStop(function(){
+     	   p=10;
+     	   $('#refreshparams').attr('disabled',false);
+     	   $('#setsave').attr('disabled',false); 
+     	   $('#setsave2').attr('disabled',false);   
+         $("#process-div").hide();
+    });
+    
 		//刷新参数按钮
     $('#refreshparams').bind('click', function() {
-    	$('#refreshparams').attr('disabled',true);
       $.ajax({
              type: "GET",
              url: "/deviceparams/refresh/{{.SensorId}}",
              dataType:"json",
+             async: true,
+             timeout: 60000,
              //data: "name=John&location=Boston",
              success: function(json){
                if(json.Ok==true){
@@ -237,43 +319,100 @@
                	 alert("成功读取");
                	 window.location.reload(true)
                 }else{
-                	$("#msgcontent").html(json.Msg)
-             	    $('#msg').show()
+                	showError(json.Msg)
                 }
               },
-             error: function(error) {
-             	$("#msgcontent").html("读取参数失败,报告管理员")
-             	$('#msg').show()
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+             	showWarning("读取参数失败,报告管理员:"+textStatus)
              }
            });
-        $('#refreshparams').attr('disabled',false);  
+       
     });
 
     //设置参数按钮
     var setchange=false;
-    
     $("#setparams").bind('click',function(){
          $("#setsave").toggle();
          if(setchange==false){
          	setchange=true;
          	$("#setparams").text("取消设置");
-         	$(":text").attr('disabled',false);
-         	//$("#SensorId").attr('disabled',true);
+         	$("#setparamform  :text").attr('disabled',false);
         }else{
         	setchange=false;
          	$("#setparams").text("设置参数");
-         	$(":text").attr('disabled',true);
+         	$("#setparamform :text").attr('disabled',true);
         }
     });
-    
+
   {{else}}
+  	$('#nav-tab a:last').tab('show')
   	//不在线,不能执行操作
     $('#refreshparams').attr('disabled',true); 
     $('#setparams').attr('disabled',true);  
     
-    $("#msgcontent").html("设备未连线,无法进行读写操作")
-    $('#msg').show()
+    showWarning("设备未连线,无法进行设备参数的读写操作.仅可以进行自定义参数读写");
+    
   {{end}}
+  
+  
+//设置自定义参数按钮
+    var setchange2=false;
+    $("#setparams2").bind('click',function(){
+         $("#setsave2").toggle();
+         if(setchange2==false){
+         	setchange2=true;
+         	$("#setparams2").text("取消设置");
+         	$("#customparamform  :text").attr('disabled',false);
+         }else{
+        	setchange2=false;
+         	$("#setparams2").text("设置参数");
+         	$("#customparamform  :text").attr('disabled',true);
+        }
+    });
+  
+ //设备参数表单提交
+    	$("#setsave").bind('click', function() {
+      $.ajax({
+             type: "POST",
+             url: "/deviceparams/update/{{.SensorId}}",
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             data: $("#setparamform").serialize() ,
+             success: function(json){
+               if(json.Ok==true){
+                    showSuccess("设备参数更改成功!");
+               	 
+                }else{
+                 showError(json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 showError("更改失败,报告管理员:"+textStatus);
+             }
+           });
+    });
+   //自定义参数表单提交 
+    $("#setsave2").bind('click', function() {
+      $.ajax({
+             type: "POST",
+             url: "/customparams/update/{{.SensorId}}",
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             data: $("#customparamform").serialize() ,
+             success: function(json){
+               if(json.Ok==true){
+                    showSuccess("自定义数据保存成功!");
+                }else{
+                 showError(json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 showError("保存失败,报告管理员:"+textStatus);
+             }
+           });
+    });
 
  });
 </script>

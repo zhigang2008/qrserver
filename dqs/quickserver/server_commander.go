@@ -61,7 +61,7 @@ func CommandRead(id string) error {
 //发送参数设置指令
 func CommandSet(id string, params *RetData) error {
 	connP := GetConnection(id)
-	fmt.Println(params)
+	//fmt.Println(params)
 
 	if connP != nil {
 		command, err := DllUtil.GenerateSetParam(id, params)
@@ -99,7 +99,8 @@ func CommandSet(id string, params *RetData) error {
 						return nil
 
 					} else {
-						return errors.New("参数设置失败")
+						return nil
+						//return errors.New("参数设置失败")
 					}
 				}
 			}

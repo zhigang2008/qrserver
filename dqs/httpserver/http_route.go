@@ -9,15 +9,21 @@ import (
 func RouteConfig() {
 
 	beego.Router("/", &controllers.MainController{})
-	beego.RESTRouter("/device", &controllers.DeviceController{})
+
 	beego.Router("/alarm", &controllers.AlarmController{})
 	beego.Router("/loglist", &controllers.LogsController{})
 	beego.Router("/analyze", &controllers.AnalyzeController{})
 	beego.Router("/report", &controllers.ReportController{})
+	beego.RESTRouter("/device", &controllers.DeviceController{})
 
-	//
-	beego.Router("/deviceparams/refresh/:id", &controllers.DeviceController{}, "*:RefreshParams")
-	beego.Router("/deviceparams/update/:id", &controllers.DeviceController{}, "*:UpdateParams")
+	//添加设备页面
+	beego.Router("/device/add", &controllers.DeviceController{}, "*:ToDeviceAddPage")
+	//设备参数
+	beego.Router("/deviceparams/refresh/:id", &controllers.DeviceController{}, "*:RefreshDeviceParams")
+	beego.Router("/deviceparams/update/:id", &controllers.DeviceController{}, "*:UpdateDeviceParams")
+	//设备自定义参数
+	beego.Router("/customparams/update/:id", &controllers.DeviceController{}, "*:UpdateCustomParams")
+
 	//静态文件路径
 	beego.SetStaticPath("/logs", "logs")
 	beego.SetStaticPath("/img", "static/img")
