@@ -55,6 +55,7 @@
 	 		<td>
 	 			<a href="/device/{{.SensorId}}"><span class="label label-primary">设备管理</span> </a> /
 	 			<a href="/alarm?sensorid={{.SensorId}}"><span class="label label-primary">报警信息</span> </a> /
+	 			<a href="javascript:DeleteDevice('{{.Id.Hex}}');"><span class="label label-primary">删除</span> </a> /
       </td>
 	 	</tr>
    {{end}}
@@ -80,6 +81,26 @@
 {{template "scripts"}}
 
 <script>
+	function DeleteDevice(objectid){
+		$.ajax({
+             type: "DELETE",
+             url: "/device/"+objectid,
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             success: function(json){
+               if(json.Ok==true){
+                   alert("设备已删除");
+                }else{
+                 alert(json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 alert("更改失败,报告管理员:"+textStatus);
+             }
+           });
+	}
+	
 $(document).ready(function() {
   //$('.selectpicker').selectpicker({});
   $('#statuschange').change( function(){

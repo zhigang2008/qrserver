@@ -11,6 +11,7 @@ import (
 
 //服务端后台使用
 type DeviceInfo struct {
+	Id           bson.ObjectId "_id"
 	SensorId     string
 	RegisterTime time.Time
 	OffTime      time.Time
@@ -123,6 +124,16 @@ func AddDevice(dev *DeviceInfo) error {
 	err = c.Insert(dev)
 	if err != nil {
 		return errors.New("添加失败:" + err.Error())
+	}
+	return nil
+}
+
+//删除设备信息
+func DeleteDevice(id string) error {
+	c := dao.GetSession().DB(dao.DatabaseName).C(dao.DeviceCollection)
+	err := c.RemoveId(bson.ObjectIdHex(id))
+	if err != nil {
+		return err
 	}
 	return nil
 }

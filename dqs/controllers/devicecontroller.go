@@ -101,6 +101,29 @@ func (this *DeviceController) Post() {
 	this.ServeJson()
 }
 
+//删除设备
+func (this *DeviceController) Delete() {
+	answer := JsonAnswer{}
+	sid := this.Ctx.Params[":objectId"]
+
+	if sid != "" {
+		err := models.DeleteDevice(sid)
+		if err != nil {
+			answer.Ok = false
+			answer.Msg = "设备删除失败:" + err.Error()
+		} else {
+			answer.Ok = true
+			answer.Msg = "删除成功"
+		}
+	} else {
+		answer.Ok = false
+		answer.Msg = "没有设备需要删除"
+	}
+
+	this.Data["json"] = &answer
+	this.ServeJson()
+}
+
 //重新获取设备参数
 func (this *DeviceController) RefreshDeviceParams() {
 	sid := this.Ctx.Params[":id"]
