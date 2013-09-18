@@ -26,69 +26,70 @@
      </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="SonsorId">传感器编号</label>
+    <label class="col-sm-2 control-label" for="SonsorId" >传感器编号</label>
     <div class="col-sm-6">
-      <input id="SensorId" type="text" class="form-control" name="SensorId"  placeholder="SensorId" value="{{.SensorId}}" >
+      <input id="SensorId" type="text" class="form-control" name="SensorId"  placeholder="SensorId" value="{{.SensorId}}" required />
+      <p class="help-block"></p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SiteName">站点名称</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="SiteName" name="SiteName" placeholder="SiteName" value="{{.SiteName}}" >
+      <input type="text" class="form-control" id="SiteName" name="SiteName" placeholder="SiteName" value="{{.SiteName}}" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Longitude">经度</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Longitude" name="Longitude" placeholder="Longitude" value="{{.Longitude}}" >
+      <input type="text" class="form-control" id="Longitude" name="Longitude" placeholder="Longitude" value="{{.Longitude}}" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Latitude">纬度</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Latitude" name="Latitude" placeholder="Latitude" value="{{.Latitude}}" >
+      <input type="text" class="form-control" id="Latitude" name="Latitude" placeholder="Latitude" value="{{.Latitude}}" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SiteType">场地类型</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="SiteType" name="SiteType" placeholder="SiteType" value="{{.SiteType}}" >
+      <input type="text" class="form-control" id="SiteType" name="SiteType" placeholder="SiteType" value="{{.SiteType}}" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="ObserveObject">观测对象</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="ObserveObject" name="ObserveObject" placeholder="ObserveObject" value="{{.ObserveObject}}" >
+      <input type="text" class="form-control" id="ObserveObject" name="ObserveObject" placeholder="ObserveObject" value="{{.ObserveObject}}" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Accelerometer">加速度计型号</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Accelerometer" name="Accelerometer" placeholder="Accelerometer" value="{{.Accelerometer}}" >
+      <input type="text" class="form-control" id="Accelerometer" name="Accelerometer" placeholder="Accelerometer" value="{{.Accelerometer}}" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Direction">安装方向</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Direction"  name="Direction" placeholder="Direction" value="{{.Direction}}" >
+      <input type="text" class="form-control" id="Direction"  name="Direction" placeholder="Direction" value="{{.Direction}}" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="RangeType">量程选择</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="RangeType" name="RangeType" placeholder="RangeType" value="{{.RangeType}}" >
+      <input type="text" class="form-control" id="RangeType" name="RangeType" placeholder="RangeType" value="{{.RangeType}}" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Period">采样周期</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Period" name="Period" placeholder="Period" value="{{.Period}}" >
+      <input type="text" class="form-control" id="Period" name="Period" placeholder="Period" value="{{.Period}}" />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="RegionCode">行政区划代码</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="RegionCode" name="RegionCode" placeholder="RegionCode" value="{{.RegionCode}}" >
+      <input type="text" class="form-control" id="RegionCode" name="RegionCode" placeholder="RegionCode" value="{{.RegionCode}}" />
     </div>
   </div>
   <!--
@@ -216,25 +217,25 @@
 <div class="form-group">
 	<label class="col-sm-2 control-label" for="NetType">网络类型</label>
     <div class="col-sm-6">
-      <input id="NetType" type="text" class="form-control" name="NetType"  placeholder="NetType" value="{{.NetType}}" >
+      <input id="NetType" type="text" class="form-control" name="NetType"  placeholder="NetType" value="{{.NetType}}" />
     </div>
   </div>
    <div class="form-group">
   <label class="col-sm-2 control-label" for="NetQixian">网络期限</label>
     <div class="col-sm-6">
-      <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" value="{{.NetQixian}}" >
+      <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" value="{{.NetQixian}}" />
     </div>
   </div>
    <div class="form-group">
   <label class="col-sm-2 control-label" for="NetQixian">网络流量</label>
     <div class="col-sm-6">
-      <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic" value="{{.NetTraffic}}" >
+      <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic" value="{{.NetTraffic}}" />
     </div>
   </div>
    <div class="form-group">
   <label class="col-sm-2 control-label" for="NotUse">是否禁用</label>
     <div class="col-sm-6">
-      <input id="NotUse" type="text" class="form-control" name="NotUse"  placeholder="Disabled" value="{{.NotUse}}" >
+      <input id="NotUse" type="text" class="form-control" name="NotUse"  placeholder="true/false" value="{{.NotUse}}" />
     </div>
   </div>
 
@@ -244,8 +245,11 @@
 </div> <!--end panel-->
 </div>
 {{template "scripts"}}
+<script src="/static/js/validation.js"></script>
 <script>
  $(document).ready(function() {	
+  $("input,select,textarea").not("[type=submit]").jqBootstrapValidation();	
+  
  	$("#savedevice").bind('click', function() {
       $.ajax({
              type: "POST",
