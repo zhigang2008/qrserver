@@ -79,9 +79,9 @@
 </div>
 
 {{template "scripts"}}
-
+<script src="/static/js/bootbox.min.js"></script>
 <script>
-	function DeleteDevice(objectid){
+	function DoDeleteDevice(objectid){
 		$.ajax({
              type: "DELETE",
              url: "/device/"+objectid,
@@ -90,15 +90,27 @@
              timeout: 60000,
              success: function(json){
                if(json.Ok==true){
-                   alert("设备已删除");
+                   bootbox.alert("删除成功!",function(){
+                   	 window.location.reload(true);
+                   });
                 }else{
-                 alert(json.Msg);
+                 bootbox.alert("删除失败:"+json.Msg);
                 }
               },
              error: function(XMLHttpRequest, textStatus, errorThrown) {
-                 alert("更改失败,报告管理员:"+textStatus);
+                 bootbox.alert("更改失败,报告管理员:"+textStatus);
              }
            });
+	}
+	
+function DeleteDevice(objectid){
+		bootbox.confirm("你确定删除该设备?",function(result){
+			if(result==true){
+				DoDeleteDevice(objectid);
+			}else{
+				return;
+			}
+		});
 	}
 	
 $(document).ready(function() {

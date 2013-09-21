@@ -19,7 +19,7 @@
   </div>
 </div>
 -->
- <form id="deviceform" class="form-horizontal" role="form" action="/device" type="post">
+ <form id="deviceform" class="form-horizontal" role="form" action="#" type="post">
  	 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button id="savedevice" type="button" class="btn btn-success btn-lg">保&nbsp;&nbsp;存</button>
@@ -245,12 +245,25 @@
 </div> <!--end panel-->
 </div>
 {{template "scripts"}}
-<script src="/static/js/validation.js"></script>
+<script src="/static/js/validate.min.js"></script>
+<script src="/static/js/validate.messages_zh.js"></script>
+<script src="/static/js/validate.bootstrap.js"></script>
 <script>
  $(document).ready(function() {	
-  $("input,select,textarea").not("[type=submit]").jqBootstrapValidation();	
+  var form = $("#deviceform");
+  form.validate( {
+  	
+	    highlight: function(label) {
+	    	$(label).closest('.form-group').addClass('has-error');
+	    },
+	    unhighlight: function(label) {
+	    	$(label).closest('.form-group').removeClass('has-error');
+	    }
+	  });	
   
+  //提交操作
  	$("#savedevice").bind('click', function() {
+ 		if(form.valid()){
       $.ajax({
              type: "POST",
              url: "/device",
@@ -270,8 +283,12 @@
                  showError("保存失败,报告管理员:"+textStatus);
              }
            });
+           
+           }else{
+  	      showWarning("请校正填写数据.");
+         }
     });
-    
+  
 });
 </script>
 {{template "footer"}}

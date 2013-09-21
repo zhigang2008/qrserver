@@ -121,6 +121,8 @@ func AddDevice(dev *DeviceInfo) error {
 	if device.SensorId != "" {
 		return errors.New("已存在该设备")
 	}
+	//添加objectid
+	dev.Id = bson.NewObjectId()
 	err = c.Insert(dev)
 	if err != nil {
 		return errors.New("添加失败:" + err.Error())
