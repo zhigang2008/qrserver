@@ -31,6 +31,7 @@
       <input id="SensorId" type="text" class="form-control" name="SensorId"  placeholder="SensorId" value="{{.SensorId}}" required />
       <p class="help-block"></p>
     </div>
+    <div class="col-sm-2"></div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SiteName">站点名称</label>
@@ -247,19 +248,24 @@
 {{template "scripts"}}
 <script src="/static/js/validate.min.js"></script>
 <script src="/static/js/validate.messages_zh.js"></script>
-<script src="/static/js/validate.bootstrap.js"></script>
+<script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
 <script>
  $(document).ready(function() {	
   var form = $("#deviceform");
-  form.validate( {
-  	
+  form.validate(
+  /* {
+  	   errorPlacement: function(error, element) {
+          error.appendTo( element.parent("div").next("div") );
+      },
 	    highlight: function(label) {
 	    	$(label).closest('.form-group').addClass('has-error');
 	    },
 	    unhighlight: function(label) {
 	    	$(label).closest('.form-group').removeClass('has-error');
 	    }
-	  });	
+	  }
+	  */
+	  );	
   
   //提交操作
  	$("#savedevice").bind('click', function() {

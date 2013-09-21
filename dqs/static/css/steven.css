@@ -25,3 +25,7 @@ body {
 
 /* Optional responsive image override */
 img { max-width: none; }
+/*校验样式*/
+.form-group .popover{
+	min-width:150px;
+}
