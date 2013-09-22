@@ -41,7 +41,7 @@
 	 		<td>{{.Phone}}</td>
 	 		<td>{{.Email}}</td>
 	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</td>
-	 		<td>{{if .Blocked}}<span class="label label-default">禁用</span>{{else}}<span class="label label-success">可用</span> {{end}}</td>
+	 		<td>{{if .Blocked}}<span class="label label-default">停用</span>{{else}}<span class="label label-success">Active</span> {{end}}</td>
 	 		<td>
 	 			<a href="/user/{{.UserId}}"><span class="label label-primary">详细信息</span> </a> /
 	 			<a href="javascript:DeleteUser('{{.ObjectId.Hex}}');"><span class="label label-primary">删除</span> </a> /
