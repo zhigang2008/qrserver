@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"dqs/dao"
 	"dqs/models"
 	"dqs/quickserver"
 	"dqs/util"
@@ -20,7 +21,7 @@ func (this *DeviceController) Get() {
 	if sid != "" {
 		this.Data["title"] = "设备详细信息"
 		this.Data["author"] = "wangzhigang"
-		this.Data["device"] = models.GetDevice(sid)
+		this.Data["device"] = dao.GetDevice(sid)
 
 		this.TplNames = "device.html"
 
@@ -56,7 +57,7 @@ func (this *DeviceController) Get() {
 		}
 
 		//执行查询
-		err = models.DeviceList(&pagination)
+		err = dao.DeviceList(&pagination)
 		if err != nil {
 			log.Warnf("查询所有设备信息失败:%s", err.Error())
 		}
@@ -87,7 +88,7 @@ func (this *DeviceController) Post() {
 		device.UpdateTime = time.Now()
 		device.RegisterTime = time.Now()
 
-		err = models.AddDevice(&device)
+		err = dao.AddDevice(&device)
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = "设备添加失败:" + err.Error()
@@ -107,7 +108,7 @@ func (this *DeviceController) Delete() {
 	sid := this.Ctx.Params[":objectId"]
 
 	if sid != "" {
-		err := models.DeleteDevice(sid)
+		err := dao.DeleteDevice(sid)
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = "设备删除失败:" + err.Error()
@@ -171,7 +172,7 @@ func (this *DeviceController) UpdateDeviceParams() {
 				device.SetParams = params2
 				device.SensorId = sid
 
-				err = models.UpdateDeviceSetParams(&device)
+				err = dao.UpdateDeviceSetParams(&device)
 				if err != nil {
 					answer.Ok = false
 					answer.Msg = "设备数据已更新,数据库保存未成功.请等待设备上报数据"
@@ -205,7 +206,7 @@ func (this *DeviceController) UpdateCustomParams() {
 			device.SensorId = sid
 			device.CustomParams = params
 
-			err = models.UpdateDeviceCustomeParams(&device)
+			err = dao.UpdateDeviceCustomeParams(&device)
 			if err != nil {
 				answer.Ok = false
 				answer.Msg = "数据保存失败:" + err.Error()

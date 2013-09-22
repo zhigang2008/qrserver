@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"dqs/models"
+	"dqs/dao"
 	"dqs/util"
 	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
@@ -37,7 +37,7 @@ func (this *AlarmController) Get() {
 	}
 
 	//执行查询
-	err = models.AlarmList(&pagination)
+	err = dao.AlarmList(&pagination)
 	if err != nil {
 		log.Warnf("查询报警信息失败:%s", err.Error())
 	}

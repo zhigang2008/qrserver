@@ -24,6 +24,10 @@ func RouteConfig() {
 	//设备自定义参数
 	beego.Router("/customparams/update/:id", &controllers.DeviceController{}, "*:UpdateCustomParams")
 
+	//用户管理
+	beego.RESTRouter("/user", &controllers.UserController{})
+	beego.Router("/user/add", &controllers.UserController{}, "*:ToUserAddPage")
+
 	//静态文件路径
 	beego.SetStaticPath("/logs", "logs")
 	beego.SetStaticPath("/img", "static/img")

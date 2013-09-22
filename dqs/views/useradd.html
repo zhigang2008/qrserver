@@ -1,0 +1,86 @@
+﻿{{template "header" .}}
+ 
+<div class="container">
+	 <div class="panel panel-info">
+  <!-- Default panel contents -->
+  <div class="panel-heading">用户信息</div>
+  <div class="panel-body">
+  
+  <!--提示框-->
+  <div  id="msg" class="alert alert-success alert-dismissable" style="display:none">
+     <!--取消关闭按钮
+     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+     -->
+     <p id="msgcontent"></p>
+ </div>
+ <!--
+ <div id="process-div" class="progress progress-striped active" style="display:none">
+  <div id="process-bar" class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 5%">
+  </div>
+</div>
+-->
+ <form id="userform" class="form-horizontal" role="form" action="#" type="post">
+ 	 <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button id="saveuser" type="button" class="btn btn-success btn-lg">保&nbsp;&nbsp;存</button>
+     </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="SonsorId" >用户ID</label>
+    <div class="col-sm-6">
+      <input id="UserId" type="text" class="form-control" name="UserId"  placeholder="UserId"  required />
+      <p class="help-block"></p>
+    </div>
+  </div>
+ <div class="form-group">
+    <label class="col-sm-2 control-label" for="SonsorId" >用户名称</label>
+    <div class="col-sm-6">
+      <input id="UserName" type="text" class="form-control" name="UserName"  placeholder="UserName"  required />
+      <p class="help-block"></p>
+    </div>
+  </div>
+</form>
+
+</div> <!--end panel-body-->
+</div> <!--end panel-->
+</div>
+{{template "scripts"}}
+<script src="/static/js/validate.min.js"></script>
+<script src="/static/js/validate.messages_zh.js"></script>
+<script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
+<script>
+ $(document).ready(function() {	
+  var form = $("#userform");
+  form.validate();	
+  
+  //提交操作
+ 	$("#saveuser").bind('click', function() {
+ 		if(form.valid()){
+      $.ajax({
+             type: "POST",
+             url: "/user",
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             data: $("#userform").serialize() ,
+             success: function(json){
+               if(json.Ok==true){
+                    showSuccess("用户添加成功!");
+               	 
+                }else{
+                 showError(json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 showError("保存失败,报告管理员:"+textStatus);
+             }
+           });
+           
+           }else{
+  	      showWarning("请校正填写数据.");
+         }
+    });
+  
+});
+</script>
+{{template "footer"}}

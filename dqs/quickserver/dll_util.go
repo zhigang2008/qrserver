@@ -59,6 +59,20 @@ func (dp *dllUtil) ParseReadFlashParam(rec []byte) (*FlashData, error) {
 	return &flashData, nil
 }
 
+//DLL解析接收的地形波数据
+//@ToDo 需要进行测试验证
+func (dp *dllUtil) ParseFlashData(rec []byte, deviceId string) (readData [240]int16, frameNum int16, err error) {
+
+	fn, _, _ := dp.p_parseFlashData.Call(
+		uintptr(unsafe.Pointer(&rec[0])),
+		uintptr(unsafe.Pointer(&readData[0])),
+		uintptr(unsafe.Pointer(&deviceId)))
+	if fn == 0 {
+		return readData, frameNum, errors.New("DLL解析波形图数据失败")
+	}
+	return readData, int16(fn), nil
+}
+
 //生成参数读取命令
 func (dp *dllUtil) GenerateReadParam(param string) ([]byte, error) {
 	p := []byte(param + "g")

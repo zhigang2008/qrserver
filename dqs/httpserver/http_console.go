@@ -49,6 +49,7 @@ func StartHttp() {
 	dataBaseName := beego.AppConfig.String("database.dbname")
 	dataCollection := beego.AppConfig.String("database.datacollection")
 	deviceCollection := beego.AppConfig.String("database.devicecollection")
+	userCollection := beego.AppConfig.String("database.usercollection")
 	port, err := beego.AppConfig.Int("database.port")
 
 	if err != nil {
@@ -57,7 +58,7 @@ func StartHttp() {
 	}
 
 	//创建数据库连接
-	err = dao.Init(host, port, dataBaseName, dataCollection, deviceCollection)
+	err = dao.Init(host, port, dataBaseName, dataCollection, deviceCollection, userCollection)
 	if err != nil {
 		log.Warnf("Http Server 数据库连接不能创建:%s", err.Error())
 		return

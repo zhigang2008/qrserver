@@ -14,6 +14,7 @@ const (
 	defaultDatabase         = "dqs"    //默认数据库名称
 	defaultDataCollection   = "data"   //默认数据Collection
 	defaultDeviceCollection = "device" //默认设备Collection
+	defaultUserCollection   = "user"   //默认用户Collection
 )
 
 //全局信息
@@ -23,10 +24,11 @@ var (
 	DatabaseName     string
 	DataCollection   string
 	DeviceCollection string
+	UserCollection   string
 )
 
 //初始化数据库连接
-func Init(host string, port int, dbname, datacol, devicecol string) (err error) {
+func Init(host string, port int, dbname, datacol, devicecol, usercol string) (err error) {
 	mux.Lock()
 	dbsession, err = mgo.Dial(host + ":" + strconv.Itoa(port))
 	if err != nil {
@@ -39,6 +41,7 @@ func Init(host string, port int, dbname, datacol, devicecol string) (err error) 
 	DatabaseName = defaultDatabase
 	DataCollection = defaultDataCollection
 	DeviceCollection = defaultDeviceCollection
+	UserCollection = defaultUserCollection
 
 	if dbname != "" {
 		DatabaseName = dbname
@@ -48,6 +51,9 @@ func Init(host string, port int, dbname, datacol, devicecol string) (err error) 
 	}
 	if devicecol != "" {
 		DeviceCollection = devicecol
+	}
+	if usercol != "" {
+		UserCollection = usercol
 	}
 
 	return nil

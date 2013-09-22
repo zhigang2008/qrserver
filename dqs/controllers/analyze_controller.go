@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	//"dqs/models"
+	//"dqs/dao"
 	//"dqs/util"
 	"github.com/astaxie/beego"
 

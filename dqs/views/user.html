@@ -1,0 +1,85 @@
+﻿{{template "header" .}}
+ 
+{{with .user}}
+<div class="container">
+	 <div class="panel panel-info">
+  <!-- Default panel contents -->
+  <div class="panel-heading">详细信息</div>
+  <div class="panel-body">
+  
+  <!--提示框-->
+  <div  id="msg" class="alert alert-success alert-dismissable" style="display:none">
+     <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
+     <p id="msgcontent"></p>
+ </div>
+ <div id="process-div" class="progress progress-striped active" style="display:none">
+  <div id="process-bar" class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 5%">
+  </div>
+</div>
+
+<div id="customparams" class="tab-pane " >
+	<form id="userform" class="form-horizontal" role="form" action="#" type="post">
+ 	 <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button id="btn-update" type="button" class="btn btn-primary">更改信息</button>
+      &nbsp;&nbsp;
+      <button id="btn-save" type="button" class="btn btn-warning" style="display:none">保存设置</button>
+    </div>
+  </div>
+
+	 <div class="form-group">
+	<label class="col-sm-2 control-label" for="NetType">用户ID</label>
+    <div class="col-sm-6">
+      <input id="UserId" type="text" class="form-control" name="UserId"  placeholder="UserId" value="{{.UserId}}" disabled>
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-2 control-label" for="NetQixian">用户名称</label>
+    <div class="col-sm-6">
+      <input id="UserName" type="text" class="form-control" name="UserName"  placeholder="UserName" value="{{.UserName}}" disabled>
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-2 control-label" for="NetQixian">Email</label>
+    <div class="col-sm-6">
+      <input id="Email" type="text" class="form-control" name="Email"  placeholder="Email" value="{{.Email}}" disabled>
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-2 control-label" for="NotUse">是否禁用</label>
+    <div class="col-sm-6">
+      <input id="Blocked" type="text" class="form-control" name="Blocked"  placeholder="Blocked" value="{{.Blocked}}" disabled>
+    </div>
+  </div>
+</form>
+</div>
+
+
+</div> <!--end panel-body-->
+</div> <!--end panel-->
+</div>
+{{template "scripts"}}
+
+<script>
+//初始化    
+$(document).ready(function(){
+
+    //设置参数按钮
+    var setchange=false;
+    $("#btn-update").bind('click',function(){
+         $("#btn-save").toggle();
+         if(setchange==false){
+         	setchange=true;
+         	$("#btn-update").text("取消设置");
+         	$("#userform  :text").attr('disabled',false);
+        }else{
+        	setchange=false;
+         	$("#btn-update").text("设置参数");
+         	$("#userform :text").attr('disabled',true);
+        }
+    });
+});
+</script> 
+ {{end}}
+
+{{template "footer"}}

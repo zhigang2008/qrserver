@@ -1,0 +1,108 @@
+﻿{{template "header" .}}
+ 
+ {{with .pagedata}}
+ {{$pagesize := .PageSize}}
+ {{$curpage :=.CurrentPage}}
+ {{$params := .QueryParams}}
+<div class="container">
+ <div class="panel panel-default">
+  <!-- Default panel contents -->
+ <div class="panel-heading">
+ 	<span class="label label-info" style="font-size:120%;">用户列表</span></div>
+ <!-- <div class="panel-body" style="padding:2px">
+   <div class="col-lg-2 pull-right">
+    </div>
+  </div>
+  -->
+  <!-- Table -->
+  <table class="table table-striped table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>序号</th>
+			<th>用户ID</th>
+			<th>用户名称</th>
+			<th>头衔</th>
+		  <th>电话</th>
+		  <th>手机</th>
+		  <th>EMAIL</th>
+      <th>创建时间</th>
+      <th>禁用状态</th>
+      <th>管理</th>
+    </tr>
+  </thead>
+	<tbody>
+		{{range $i,$v:=.Data}}
+	 	<tr>
+	 		<td>{{seqno $i $pagesize $curpage}}</td>
+	 		<td>{{.UserId}}</td>
+	 		<td>{{.UserName}}</td>
+	 		<td>{{.Title}}</td>
+	 		<td>{{.Telephone}}</td>
+	 		<td>{{.Phone}}</td>
+	 		<td>{{.Email}}</td>
+	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</td>
+	 		<td>{{if .Blocked}}<span class="label label-default">禁用</span>{{else}}<span class="label label-success">可用</span> {{end}}</td>
+	 		<td>
+	 			<a href="/user/{{.UserId}}"><span class="label label-primary">详细信息</span> </a> /
+	 			<a href="javascript:DeleteUser('{{.ObjectId.Hex}}');"><span class="label label-primary">删除</span> </a> /
+      </td>
+	 	</tr>
+   {{end}}
+ </tbody> 
+	</table>
+	
+  <div class="panel-footer" style="padding:10px 15px 25px;">
+   <span >{{.CurrentPage}} / {{.PageCount}} 页  [共 {{.Count}} 记录] </span>
+   <span class="pull-right">
+   	<ul class="pagination" style="margin:1px;padding-top:0px;">
+      <li><a href="{{"/user?page=1&pagesize="|html}}{{.PageSize}}{{purl $params }}">&laquo;</a></li>
+      {{range .NavPages}}
+        <li {{if compare . $curpage}} class="active" {{end}} ><a href="{{"/user?page="|html}}{{.}}{{"&pagesize="|html}}{{$pagesize}}{{purl $params}}">{{.}}</a></li>
+       {{end}}
+      <li><a href="{{"/user?page="|html}}{{.PageCount}}{{"&pagesize="|html}}{{.PageSize}}{{purl $params}}">&raquo;</a></li>
+     </ul>
+   </span>
+  </div>
+  
+</div>
+</div>
+{{end}}
+
+{{template "scripts"}}
+<script src="/static/js/bootbox.min.js"></script>
+<script>
+	function DoDelete(objectid){
+		$.ajax({
+             type: "DELETE",
+             url: "/user/"+objectid,
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             success: function(json){
+               if(json.Ok==true){
+                   bootbox.alert("删除成功!",function(){
+                   	 window.location.reload(true);
+                   });
+                }else{
+                 bootbox.alert("删除失败:"+json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 bootbox.alert("更改失败,报告管理员:"+textStatus);
+             }
+           });
+	}
+	
+function DeleteUser(objectid){
+		bootbox.confirm("你确定删除该用户?",function(result){
+			if(result==true){
+				DoDelete(objectid);
+			}else{
+				return;
+			}
+		});
+	}
+</script>
+
+
+{{template "footer"}}
