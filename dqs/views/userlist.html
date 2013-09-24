@@ -8,7 +8,11 @@
  <div class="panel panel-default">
   <!-- Default panel contents -->
  <div class="panel-heading">
- 	<span class="label label-info" style="font-size:120%;">用户列表</span></div>
+ 	<span class="label label-info" style="font-size:120%;">用户列表</span>
+ 	<div class="col-lg-2 pull-right">
+ 		<a href="/user/add"><span class="label label-success">添加用户</span> </a>
+   </div>
+ </div>
  <!-- <div class="panel-body" style="padding:2px">
    <div class="col-lg-2 pull-right">
     </div>
@@ -25,6 +29,7 @@
 		  <th>电话</th>
 		  <th>手机</th>
 		  <th>EMAIL</th>
+		  <th>角色</th>
       <th>创建时间</th>
       <th>禁用状态</th>
       <th>管理</th>
@@ -36,10 +41,17 @@
 	 		<td>{{seqno $i $pagesize $curpage}}</td>
 	 		<td>{{.UserId}}</td>
 	 		<td>{{.UserName}}</td>
-	 		<td>{{.Title}}</td>
-	 		<td>{{.Telephone}}</td>
+	 		<td>{{.UserTitle}}</td>
 	 		<td>{{.Phone}}</td>
+	 		<td>{{.Mobile}}</td>
 	 		<td>{{.Email}}</td>
+	 		<td>
+	 			{{range $ri,$rv:=.Roles}}
+	 			 {{if compare $rv "role_admin"}}管理员,{{end}}
+	 			 {{if compare $rv "role_user"}}普通用户,{{end}}
+	 			 {{if compare $rv "role_visitor"}}访客,{{end}}
+	 			{{end}}
+	 		</td>
 	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</td>
 	 		<td>{{if .Blocked}}<span class="label label-default">停用</span>{{else}}<span class="label label-success">Active</span> {{end}}</td>
 	 		<td>

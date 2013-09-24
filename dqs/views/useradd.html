@@ -3,9 +3,10 @@
 <div class="container">
 	 <div class="panel panel-info">
   <!-- Default panel contents -->
-  <div class="panel-heading">用户信息</div>
+  <div class="panel-heading">
+  	<span class="label label-success" style="font-size:120%;">添加用户</span>
+  </div>
   <div class="panel-body">
-  
   <!--提示框-->
   <div  id="msg" class="alert alert-success alert-dismissable" style="display:none">
      <!--取消关闭按钮
@@ -26,17 +27,66 @@
      </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="SonsorId" >用户ID</label>
+    <label class="col-sm-2 control-label" for="UserId" >用户ID</label>
     <div class="col-sm-6">
-      <input id="UserId" type="text" class="form-control" name="UserId"  placeholder="UserId"  required />
+      <input id="UserId" type="text" class="form-control" name="UserId"  placeholder="UserId"  />
       <p class="help-block"></p>
     </div>
   </div>
  <div class="form-group">
-    <label class="col-sm-2 control-label" for="SonsorId" >用户名称</label>
+    <label class="col-sm-2 control-label" for="UserName" >真实姓名</label>
     <div class="col-sm-6">
-      <input id="UserName" type="text" class="form-control" name="UserName"  placeholder="UserName"  required />
+      <input id="UserName" type="text" class="form-control" name="UserName"  placeholder="UserName"  />
       <p class="help-block"></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="Email" >Email</label>
+    <div class="col-sm-6">
+      <input id="Email" type="text" class="form-control" name="Email"  placeholder="Email"  />
+      <p class="help-block"></p>
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label" for="Phone" >电话</label>
+    <div class="col-sm-6">
+      <input id="Phone" type="text" class="form-control" name="Phone"  placeholder="Phone"   />
+      <p class="help-block"></p>
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label" for="Mobile" >手机</label>
+    <div class="col-sm-6">
+      <input id="Mobile" type="text" class="form-control" name="Mobile"  placeholder="Mobile"  />
+      <p class="help-block"></p>
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label" for="UserTitle" >头衔</label>
+    <div class="col-sm-6">
+      <input id="UserTitle" type="text" class="form-control" name="UserTitle"  placeholder="头衔"   />
+      <p class="help-block"></p>
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label" for="Addr" >地址</label>
+    <div class="col-sm-6">
+      <input id="Addr" type="text" class="form-control" name="Addr"  placeholder="地址"   />
+      <p class="help-block"></p>
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label" for="Roles" >角色</label>
+    <div class="col-sm-6">
+      <label class="checkbox-inline">
+         <input type="checkbox"  name="Roles" value="role_admin"> 管理员
+      </label>
+      <label class="checkbox-inline">
+         <input type="checkbox"  name="Roles" value="role_user" checked> 普通用户
+      </label>
+      <label class="checkbox-inline">
+          <input type="checkbox" name="Roles" value="role_visitor"> 访客
+      </label>
     </div>
   </div>
 </form>
@@ -46,12 +96,44 @@
 </div>
 {{template "scripts"}}
 <script src="/static/js/validate.min.js"></script>
+<script src="/static/js/validate.additional-methods.min.js"></script>
 <script src="/static/js/validate.messages_zh.js"></script>
 <script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
 <script>
  $(document).ready(function() {	
   var form = $("#userform");
-  form.validate();	
+  form.validate({
+  rules: {
+    UserId: {
+      required: true,
+      rangelength: [4, 16]
+    },
+    UserName: {
+      required: true,
+      chinese: true
+    },
+    Email: {
+      required: true,
+      email: true
+    },
+    Phone: {
+      phone: true
+    },
+    Mobile: {
+      mobile: true
+    },
+    Roles: {
+      required: true
+    },
+    Addr: {
+      maxlength: 100
+    },
+    UserTitle: {
+      maxlength: 50
+    }
+    
+  }
+});	
   
   //提交操作
  	$("#saveuser").bind('click', function() {

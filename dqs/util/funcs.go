@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 //判断相等
@@ -87,4 +88,50 @@ func GenerateParamUrl(p map[string]interface{}) string {
 		}
 	}
 	return purl
+}
+
+//判断是否包含在数组中
+func Contain(c interface{}, b interface{}) bool {
+	switch c.(type) {
+	case []string:
+		n, ok := c.([]string)
+		if ok {
+			for _, v := range n {
+				if strings.TrimSpace(fmt.Sprintf("%v", v)) == strings.TrimSpace(fmt.Sprintf("%v", b)) {
+					return true
+				}
+			}
+		}
+	case []int:
+		n, ok := c.([]int)
+		if ok {
+			for _, v := range n {
+				if strings.TrimSpace(fmt.Sprintf("%v", v)) == strings.TrimSpace(fmt.Sprintf("%v", b)) {
+					return true
+				}
+			}
+		}
+	case []int32:
+		n, ok := c.([]int32)
+		if ok {
+			for _, v := range n {
+				if strings.TrimSpace(fmt.Sprintf("%v", v)) == strings.TrimSpace(fmt.Sprintf("%v", b)) {
+					return true
+				}
+			}
+		}
+	case []int64:
+		n, ok := c.([]int64)
+		if ok {
+			for _, v := range n {
+				if strings.TrimSpace(fmt.Sprintf("%v", v)) == strings.TrimSpace(fmt.Sprintf("%v", b)) {
+					return true
+				}
+			}
+		}
+	default:
+		return false
+	}
+
+	return false
 }

@@ -21,13 +21,14 @@ type User struct {
 	NickName   string
 	Email      string
 	Gender     string
-	Telephone  string
 	Phone      string
+	Mobile     string
 	Addr       string
-	Title      string
-	Admin      bool
+	UserTitle  string
 	Blocked    bool
 	CreateTime time.Time
+	UpdateTime time.Time
+	Roles      []string
 }
 
 //设置密码
@@ -47,4 +48,14 @@ func (this *User) CheckPwd(pwd string) bool {
 	} else {
 		return false
 	}
+}
+
+//角色判断
+func (this *User) HasRole(role string) bool {
+	for _, v := range this.Roles {
+		if v == role {
+			return true
+		}
+	}
+	return false
 }

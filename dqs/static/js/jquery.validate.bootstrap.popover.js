@@ -4,8 +4,8 @@ $.extend($.validator.prototype, {
     }
 });
 $.extend($.validator.defaults, {
-    errorClass: 'error',
-    validClass: 'success',
+    errorClass: 'has-error',
+    validClass: 'has-success',
     errorElement: 'span',
     highlight: function (element, errorClass, validClass) {
         var $element;
@@ -25,7 +25,7 @@ $.extend($.validator.defaults, {
             $element = $(element);
         }
         $element.removeClass(errorClass).addClass(validClass);
-        $element.parents("div.form-group").removeClass("error");
+        $element.parents("div.form-group").removeClass("has-error");
     },
     showErrors: function (errorMap, errorList) {
         $.each(this.successList, function (index, value) {

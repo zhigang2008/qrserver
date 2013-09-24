@@ -27,30 +27,83 @@
     </div>
   </div>
 
-	 <div class="form-group">
-	<label class="col-sm-2 control-label" for="NetType">用户ID</label>
+	<div class="form-group">
+    <label class="col-sm-2 control-label" for="UserId" >用户ID</label>
     <div class="col-sm-6">
-      <input id="UserId" type="text" class="form-control" name="UserId"  placeholder="UserId" value="{{.UserId}}" disabled>
+    	<input id="UserId" type="hidden"  name="UserId"  value="{{.UserId}}"  />
+      <p class="form-control-static">{{.UserId}}</p>
+      <p class="help-block"></p>
+    </div>
+  </div>
+ <div class="form-group">
+    <label class="col-sm-2 control-label" for="UserName" >真实姓名</label>
+    <div class="col-sm-6">
+      <input id="UserName" type="text" class="form-control" name="UserName"  placeholder="UserName"  value="{{.UserName}}" disabled />
+      <p class="help-block"></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="Email" >Email</label>
+    <div class="col-sm-6">
+      <input id="Email" type="text" class="form-control" name="Email"  placeholder="Email"  value="{{.Email}}" disabled />
+      <p class="help-block"></p>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetQixian">用户名称</label>
+    <label class="col-sm-2 control-label" for="Phone" >电话</label>
     <div class="col-sm-6">
-      <input id="UserName" type="text" class="form-control" name="UserName"  placeholder="UserName" value="{{.UserName}}" disabled>
+      <input id="Phone" type="text" class="form-control" name="Phone"  placeholder="Phone"   value="{{.Phone}}" disabled />
+      <p class="help-block"></p>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetQixian">Email</label>
+    <label class="col-sm-2 control-label" for="Mobile" >手机</label>
     <div class="col-sm-6">
-      <input id="Email" type="text" class="form-control" name="Email"  placeholder="Email" value="{{.Email}}" disabled>
+      <input id="Mobile" type="text" class="form-control" name="Mobile"  placeholder="Mobile"  value="{{.Mobile}}" disabled />
+      <p class="help-block"></p>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NotUse">是否禁用</label>
+    <label class="col-sm-2 control-label" for="UserTitle" >头衔</label>
     <div class="col-sm-6">
-      <input id="Blocked" type="text" class="form-control" name="Blocked"  placeholder="Blocked" value="{{.Blocked}}" disabled>
+      <input id="UserTitle" type="text" class="form-control" name="UserTitle"  placeholder="头衔"  value="{{.UserTitle}}" disabled />
+      <p class="help-block"></p>
     </div>
   </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label" for="Addr" >地址</label>
+    <div class="col-sm-6">
+      <input id="Addr" type="text" class="form-control" name="Addr"  placeholder="地址"   value="{{.Addr}}"  disabled />
+      <p class="help-block"></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="Blocked" >是否禁用</label>
+    <div class="col-sm-6">
+      <label class="radio-inline">
+         <input type="radio"  name="Blocked" value="false" {{if compare .Blocked  false}}  checked {{end}} disabled /> 
+         <span class="label label-success">活动</span>
+      </label>
+      <label class="checkbox-inline">
+         <input type="radio"  name="Blocked" value="true"  {{if .Blocked }} checked {{end}} disabled /> 
+         <span class="label label-default">停用</span>
+      </label>
+    </div>
+ </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label" for="Roles" >角色</label>
+    <div class="col-sm-6">
+      <label class="checkbox-inline">
+         <input type="checkbox"  name="Roles" value="role_admin" {{if contain .Roles "role_admin"}} checked {{end}} disabled /> 管理员
+      </label>
+      <label class="checkbox-inline">
+         <input type="checkbox"  name="Roles" value="role_user"  {{if contain .Roles "role_user"}} checked {{end}} disabled /> 普通用户
+      </label>
+      <label class="checkbox-inline">
+          <input type="checkbox" name="Roles" value="role_visitor" {{if contain .Roles "role_visitor"}} checked {{end}} disabled /> 访客
+      </label>
+    </div>
+ </div>
 </form>
 </div>
 
@@ -59,25 +112,96 @@
 </div> <!--end panel-->
 </div>
 {{template "scripts"}}
-
+<script src="/static/js/validate.min.js"></script>
+<script src="/static/js/validate.additional-methods.min.js"></script>
+<script src="/static/js/validate.messages_zh.js"></script>
+<script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
 <script>
 //初始化    
 $(document).ready(function(){
+	
+	//表单校验
+  $("#userform").validate({
+   rules: {
+     UserId: {
+      required: true,
+      rangelength: [4, 16]
+    },
+    UserName: {
+      required: true,
+      chinese: true
+    },
+    Email: {
+      required: true,
+      email: true
+    },
+    Phone: {
+      phone: true
+    },
+    Mobile: {
+      mobile: true
+    },
+    Blocked: {
+      required: true
+    },
+    Roles: {
+      required: true
+    },
+    Addr: {
+      maxlength: 100
+    },
+    UserTitle: {
+      maxlength: 50
+    }
+  }
+});	
 
     //设置参数按钮
-    var setchange=false;
+  var setchange=false;
     $("#btn-update").bind('click',function(){
          $("#btn-save").toggle();
          if(setchange==false){
          	setchange=true;
          	$("#btn-update").text("取消设置");
          	$("#userform  :text").attr('disabled',false);
+         	$("#userform  :checkbox").attr('disabled',false);
+         	$("#userform  :radio").attr('disabled',false);
+         	
         }else{
         	setchange=false;
          	$("#btn-update").text("设置参数");
          	$("#userform :text").attr('disabled',true);
+         	$("#userform :checkbox").attr('disabled',true);
         }
     });
+   //提交操作
+ 	$("#btn-save").bind('click', function() {
+ 		if($("#userform").valid()){
+      $.ajax({
+             type: "PUT",
+             url: "/user",
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             data: $("#userform").serialize() ,
+             success: function(json){
+               if(json.Ok==true){
+                    showSuccess("用户信息修改成功!");
+               	 
+                }else{
+                 showError(json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 showError("失败失败,报告管理员:"+textStatus);
+             }
+           });
+           
+           }else{
+  	      showWarning("请校正填写数据.");
+         }
+    });
+    
 });
 </script> 
  {{end}}

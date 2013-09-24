@@ -85,4 +85,6 @@ func AddTemplateFuncs() {
 	//beego.AddFuncMap("eq", util.Equals)
 	beego.AddFuncMap("seqno", util.GenerateSeqNo)
 	beego.AddFuncMap("purl", util.GenerateParamUrl)
+	beego.AddFuncMap("contain", util.Contain)
+
 }

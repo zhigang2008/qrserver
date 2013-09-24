@@ -4,6 +4,7 @@ import (
 	"dqs/dao"
 	"dqs/models"
 	"dqs/util"
+	//	"fmt"
 	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 	"time"
@@ -71,8 +72,9 @@ func (this *UserController) Post() {
 		answer.Ok = false
 		answer.Msg = "数据传递失败:" + err.Error()
 	} else {
+		user.Roles = this.GetStrings("Roles")
+		user.SetPassword(beego.AppConfig.String("user.default.password"))
 		user.CreateTime = time.Now()
-		user.SetPassword(user.Password)
 
 		err = dao.AddUser(&user)
 		if err != nil {
@@ -81,6 +83,34 @@ func (this *UserController) Post() {
 		} else {
 			answer.Ok = true
 			answer.Msg = "保存成功"
+		}
+	}
+
+	this.Data["json"] = &answer
+	this.ServeJson()
+}
+
+//更改用户信息
+func (this *UserController) Put() {
+	answer := JsonAnswer{}
+
+	user := models.User{}
+	err := this.ParseForm(&user)
+
+	if err != nil {
+		answer.Ok = false
+		answer.Msg = "数据传递失败:" + err.Error()
+	} else {
+		user.Roles = this.GetStrings("Roles")
+		user.UpdateTime = time.Now()
+
+		err = dao.UpdateUser(&user)
+		if err != nil {
+			answer.Ok = false
+			answer.Msg = "用户更改失败:" + err.Error()
+		} else {
+			answer.Ok = true
+			answer.Msg = "用户更改成功"
 		}
 	}
 

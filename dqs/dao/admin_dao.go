@@ -20,7 +20,7 @@ func UserList(p *util.Pagination) error {
 	}
 
 	//查询总数
-	query := c.Find(&m).Sort("-createtime")
+	query := c.Find(&m).Sort("-updatetime")
 	count, err := query.Count()
 	if err != nil {
 		return err
@@ -64,6 +64,7 @@ func AddUser(u *models.User) error {
 	//添加objectid
 	u.ObjectId = bson.NewObjectId()
 	u.CreateTime = time.Now()
+	u.UpdateTime = time.Now()
 
 	err = c.Insert(u)
 	if err != nil {
@@ -85,7 +86,27 @@ func DeleteUser(objectid string) error {
 //保存设备参数信息
 func UpdateUser(user *models.User) error {
 	c := GetSession().DB(DatabaseName).C(UserCollection)
-	err := c.Update(&bson.M{"userid": user.UserId}, user)
+
+	ouser := models.User{}
+	//查找用户
+	err := c.Find(&bson.M{"userid": user.UserId}).One(&ouser)
+	if err != nil {
+		return err
+	}
+	//更改内容o
+	ouser.UserName = user.UserName
+	ouser.NickName = user.NickName
+	ouser.Email = user.Email
+	ouser.Gender = user.Gender
+	ouser.Phone = user.Phone
+	ouser.Mobile = user.Mobile
+	ouser.Addr = user.Addr
+	ouser.UserTitle = user.UserTitle
+	ouser.Blocked = user.Blocked
+	ouser.Roles = user.Roles
+	ouser.UpdateTime = user.UpdateTime
+
+	err = c.Update(&bson.M{"_id": ouser.ObjectId}, ouser)
 	if err != nil {
 		return err
 	}
