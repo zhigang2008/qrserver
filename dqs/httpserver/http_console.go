@@ -2,7 +2,6 @@ package httpserver
 
 import (
 	"dqs/dao"
-	"dqs/util"
 	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 )
@@ -13,32 +12,6 @@ import (
 type HttpServer struct {
 	Name string
 }
-
-/*/启动 http Server
-func StartHttp(conf ServerConfig) {
-	s := HttpServer{}
-	var err error
-	s.dataManager, err = InitDatabase(conf.Database)
-	defer s.dataManager.DataClose()
-
-	if err == nil {
-		log.Info("启动HttpSever...")
-		http.Handle("/css/", http.FileServer(http.Dir("web")))
-		http.Handle("/js/", http.FileServer(http.Dir("web")))
-		//日志查看
-		http.Handle("/logs/", http.StripPrefix("/logs/", http.FileServer(http.Dir("./logs"))))
-
-		http.HandleFunc("/device/", s.DeviceHandler)
-		http.HandleFunc("/alarm/", s.AlarmHandler)
-		//http.HandleFunc("/log/", s.LogViewHandler)
-		http.HandleFunc("/", s.IndexHandler)
-
-		http.ListenAndServe(conf.HttpServer.Host+":"+strconv.Itoa(conf.HttpServer.Port), nil)
-
-	}
-
-}
-*/
 
 //启动 http Server
 func StartHttp() {
@@ -66,10 +39,13 @@ func StartHttp() {
 
 	log.Info("启动 Http Server...")
 
+	//初始化配置
+	configInit()
 	//配置自定义模板方法
-	AddTemplateFuncs()
+	addTemplateFuncs()
+
 	//配置路由信息
-	RouteConfig()
+	routeConfig()
 	//启动Beego服务
 	beego.Run()
 }
@@ -78,13 +54,4 @@ func StartHttp() {
 func (s *HttpServer) Close() {
 	dao.Close()
 	beego.CloseSelf()
-}
-
-//添加模板函数
-func AddTemplateFuncs() {
-	//beego.AddFuncMap("eq", util.Equals)
-	beego.AddFuncMap("seqno", util.GenerateSeqNo)
-	beego.AddFuncMap("purl", util.GenerateParamUrl)
-	beego.AddFuncMap("contain", util.Contain)
-
 }

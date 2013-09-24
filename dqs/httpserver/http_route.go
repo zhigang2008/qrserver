@@ -6,7 +6,7 @@ import (
 	//"net/http"
 )
 
-func RouteConfig() {
+func routeConfig() {
 
 	beego.Router("/", &controllers.MainController{})
 
@@ -28,6 +28,8 @@ func RouteConfig() {
 	beego.RESTRouter("/user", &controllers.UserController{})
 	beego.Router("/user/add", &controllers.UserController{}, "*:ToUserAddPage")
 
+	//登录管理
+	beego.Router("/sign", &controllers.CommonController{}, "*:Sign")
 	//静态文件路径
 	beego.SetStaticPath("/logs", "logs")
 	beego.SetStaticPath("/img", "static/img")
