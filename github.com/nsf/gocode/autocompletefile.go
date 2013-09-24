@@ -27,19 +27,21 @@ type auto_complete_file struct {
 	package_name string
 
 	decls     map[string]*decl
-	packages  package_imports
+	packages  []package_import
 	filescope *scope
 	scope     *scope
 
 	cursor int // for current file buffer only
 	fset   *token.FileSet
+	env    *gocode_env
 }
 
-func new_auto_complete_file(name string) *auto_complete_file {
+func new_auto_complete_file(name string, env *gocode_env) *auto_complete_file {
 	p := new(auto_complete_file)
 	p.name = name
 	p.cursor = -1
 	p.fset = token.NewFileSet()
+	p.env = env
 	return p
 }
 
@@ -55,7 +57,7 @@ func (f *auto_complete_file) process_data(data []byte) {
 	f.package_name = package_name(file)
 
 	f.decls = make(map[string]*decl)
-	f.packages = new_package_imports(f.name, file.Decls)
+	f.packages = collect_package_imports(f.name, file.Decls, f.env)
 	f.filescope = new_scope(nil)
 	f.scope = f.filescope
 
@@ -169,13 +171,12 @@ func (f *auto_complete_file) process_stmt(stmt ast.Stmt) {
 	case *ast.IfStmt:
 		if f.cursor_in_if_head(t) {
 			f.process_stmt(t.Init)
-		} else if f.cursor_in(t.Body) {
+		} else if f.cursor_in_if_stmt(t) {
 			f.scope, _ = advance_scope(f.scope)
-
 			f.process_stmt(t.Init)
 			f.process_block_stmt(t.Body)
+			f.process_stmt(t.Else)
 		}
-		f.process_stmt(t.Else)
 	case *ast.BlockStmt:
 		f.process_block_stmt(t)
 	case *ast.RangeStmt:
@@ -351,7 +352,7 @@ func (f *auto_complete_file) process_assign_stmt(a *ast.AssignStmt) {
 
 func (f *auto_complete_file) process_field_list(field_list *ast.FieldList, s *scope) {
 	if field_list != nil {
-		decls := ast_field_list_to_decls(field_list, decl_var, 0, s)
+		decls := ast_field_list_to_decls(field_list, decl_var, 0, s, false)
 		for _, d := range decls {
 			f.scope.add_named_decl(d)
 		}
@@ -361,6 +362,17 @@ func (f *auto_complete_file) process_field_list(field_list *ast.FieldList, s *sc
 func (f *auto_complete_file) cursor_in_if_head(s *ast.IfStmt) bool {
 	if f.cursor > f.offset(s.If) && f.cursor <= f.offset(s.Body.Lbrace) {
 		return true
+	}
+	return false
+}
+
+func (f *auto_complete_file) cursor_in_if_stmt(s *ast.IfStmt) bool {
+	if f.cursor > f.offset(s.If) {
+		// magic -10 comes from auto_complete_file.offset method, see
+		// len() expr in there
+		if f.offset(s.End()) == -10 || f.cursor < f.offset(s.End()) {
+			return true
+		}
 	}
 	return false
 }

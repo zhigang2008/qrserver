@@ -145,7 +145,7 @@ func ast_decl_convertable(d ast.Decl) bool {
 	return false
 }
 
-func ast_field_list_to_decls(f *ast.FieldList, class decl_class, flags decl_flags, scope *scope) map[string]*decl {
+func ast_field_list_to_decls(f *ast.FieldList, class decl_class, flags decl_flags, scope *scope, add_anonymous bool) map[string]*decl {
 	count := 0
 	for _, field := range f.List {
 		count += len(field.Names)
@@ -169,7 +169,7 @@ func ast_field_list_to_decls(f *ast.FieldList, class decl_class, flags decl_flag
 		}
 
 		// add anonymous field as a child (type embedding)
-		if class == decl_var && field.Names == nil {
+		if class == decl_var && field.Names == nil && add_anonymous {
 			tp := get_type_path(field.Type)
 			if flags&decl_foreign != 0 && !ast.IsExported(tp.name) {
 				continue
@@ -225,9 +225,9 @@ func ast_type_to_embedded(ty ast.Expr) []ast.Expr {
 func ast_type_to_children(ty ast.Expr, flags decl_flags, scope *scope) map[string]*decl {
 	switch t := ty.(type) {
 	case *ast.StructType:
-		return ast_field_list_to_decls(t.Fields, decl_var, flags, scope)
+		return ast_field_list_to_decls(t.Fields, decl_var, flags, scope, true)
 	case *ast.InterfaceType:
-		return ast_field_list_to_decls(t.Methods, decl_func, flags, scope)
+		return ast_field_list_to_decls(t.Methods, decl_func, flags, scope, false)
 	}
 	return nil
 }
@@ -558,7 +558,12 @@ func lookup_pkg(tp type_path, scope *scope) string {
 
 func type_to_decl(t ast.Expr, scope *scope) *decl {
 	tp := get_type_path(t)
-	return lookup_path(tp, scope)
+	d := lookup_path(tp, scope)
+	if d != nil && d.class == decl_var {
+		// weird variable declaration pointing to itself
+		return nil
+	}
+	return d
 }
 
 func expr_to_decl(e ast.Expr, scope *scope) *decl {
@@ -931,6 +936,12 @@ func (d *decl) infer_type() (ast.Expr, *scope) {
 }
 
 func (d *decl) find_child(name string) *decl {
+	if d.flags&decl_visited != 0 {
+		return nil
+	}
+	d.flags |= decl_visited
+	defer d.clear_visited()
+
 	if d.children != nil {
 		if c, ok := d.children[name]; ok {
 			return c
@@ -1042,6 +1053,8 @@ func pretty_print_type_expr(out io.Writer, e ast.Expr) {
 				// it's always true
 				fmt.Fprintf(out, "interface{}")
 			}
+		} else if strings.HasPrefix(t.Name, "#") {
+			fmt.Fprintf(out, t.Name[1:])
 		} else {
 			fmt.Fprintf(out, t.Name)
 		}
@@ -1318,7 +1331,6 @@ func init() {
 	add_type("uint16")
 	add_type("uint32")
 	add_type("uint64")
-	add_type("float")
 	add_type("int")
 	add_type("uint")
 	add_type("uintptr")
