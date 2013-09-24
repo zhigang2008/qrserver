@@ -52,10 +52,10 @@
 	 		<td>{{.CustomParams.NetType}}</td>
 	 		<td>{{.CustomParams.NotUse}}</td>
 	 		<td>{{.RemoteAddr}}</td>
-	 		<td>
-	 			<a href="/device/{{.SensorId}}"><span class="label label-primary">设备管理</span> </a> /
-	 			<a href="/alarm?sensorid={{.SensorId}}"><span class="label label-primary">报警信息</span> </a> /
-	 			<a href="javascript:DeleteDevice('{{.Id.Hex}}');"><span class="label label-primary">删除</span> </a> /
+	 		<td style="font-size:120%">
+	 			<a href="/device/{{.SensorId}}"><span class="glyphicon glyphicon-cog"></span></a> /
+	 			<a href="/alarm?sensorid={{.SensorId}}"><span class="glyphicon glyphicon-bell"></span></a> /
+	 			<a href="javascript:DeleteDevice('{{.Id.Hex}}');"><span class="glyphicon glyphicon-remove"></span></a> 
       </td>
 	 	</tr>
    {{end}}

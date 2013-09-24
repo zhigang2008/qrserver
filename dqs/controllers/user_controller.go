@@ -11,12 +11,14 @@ import (
 )
 
 type UserController struct {
-	beego.Controller
+	BaseController
 }
 
 //报警信息列表
 func (this *UserController) Get() {
-	sid := this.Ctx.Params[":objectId"]
+	sid := this.GetString(":objectId")
+
+	this.CheckUser()
 	//单个用户查询
 	if sid != "" {
 		this.Data["title"] = "用户详细信息"
@@ -121,7 +123,7 @@ func (this *UserController) Put() {
 //删除用户
 func (this *UserController) Delete() {
 	answer := JsonAnswer{}
-	oid := this.Ctx.Params[":objectId"]
+	oid := this.GetString(":objectId")
 
 	if oid != "" {
 		err := dao.DeleteUser(oid)
@@ -143,8 +145,10 @@ func (this *UserController) Delete() {
 
 //添加用户页面
 func (this *UserController) ToUserAddPage() {
+
 	this.Data["title"] = "添加用户"
 	this.Data["author"] = "wangzhigang"
 
+	this.CheckUser()
 	this.TplNames = "useradd.html"
 }

@@ -41,11 +41,13 @@ func StartHttp() {
 
 	//初始化配置
 	configInit()
+	//添加过滤器
+	//addFilter()
 	//配置自定义模板方法
 	addTemplateFuncs()
-
 	//配置路由信息
 	routeConfig()
+
 	//启动Beego服务
 	beego.Run()
 }

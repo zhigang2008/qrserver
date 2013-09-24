@@ -1,9 +1,10 @@
 package httpserver
 
 import (
+	"dqs/models"
 	"dqs/util"
 	"github.com/astaxie/beego"
-	"net/http"
+	"github.com/astaxie/beego/context"
 )
 
 func configInit() {
@@ -19,10 +20,13 @@ func addTemplateFuncs() {
 
 }
 
-var FilterUser = func(w http.ResponseWriter, r *http.Request) {
-	session := beego.GlobalSessions.SessionStart()
+var checkUser = func(ctx *context.Context) {
+	_, ok := ctx.Input.Session("user").(models.User)
+	if ok {
+		//ctx.Output.res.
+	}
 }
 
 func addFilter() {
-	beego.FilterAfter()
+	beego.AddFilter("*", "AfterExec", checkUser)
 }

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/astaxie/beego"
+	//"github.com/astaxie/beego"
 	"io/ioutil"
 	"os"
 	"sort"
@@ -12,7 +12,7 @@ const (
 )
 
 type LogsController struct {
-	beego.Controller
+	BaseController
 }
 
 //用来排序的结构体及方法
@@ -27,6 +27,8 @@ func (s ByName) Less(i, j int) bool { return s.Files[i].Name() > s.Files[j].Name
 func (this *LogsController) Get() {
 	this.Data["title"] = "运行日志"
 	this.Data["author"] = "wangzhigang"
+	this.CheckUser()
+
 	var num int = 20
 
 	num64, err0 := this.GetInt("num")

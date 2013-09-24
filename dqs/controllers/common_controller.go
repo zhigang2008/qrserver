@@ -5,12 +5,11 @@ import (
 	"dqs/models"
 	"dqs/util"
 	//	"fmt"
-	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 )
 
 type CommonController struct {
-	beego.Controller
+	BaseController
 }
 
 //用户登录
@@ -35,8 +34,8 @@ func (this *CommonController) Sign() {
 			answer.Ok = true
 			answer.Msg = "登录成功"
 			log.Infof("[%s(%s)]成功登录", user.UserId, sid)
-			this.SetSession("user", user)
-			this.SetSession("userName", user.UserName)
+			this.SetSession(CURRENTUSER, user)
+			//this.SetSession("userName", user.UserName)
 		} else {
 			answer.Ok = false
 			answer.Msg = "用户ID/密码不匹配,登录失败"

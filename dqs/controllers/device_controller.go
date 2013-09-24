@@ -5,18 +5,20 @@ import (
 	"dqs/models"
 	"dqs/quickserver"
 	"dqs/util"
-	"github.com/astaxie/beego"
+	//"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 	"time"
 )
 
 type DeviceController struct {
-	beego.Controller
+	BaseController
 }
 
 //获取设备列表或者单个设备信息
 func (this *DeviceController) Get() {
-	sid := this.Ctx.Params[":objectId"]
+	sid := this.GetString(":objectId")
+	this.CheckUser()
+
 	//单个设备查询
 	if sid != "" {
 		this.Data["title"] = "设备详细信息"
@@ -105,7 +107,7 @@ func (this *DeviceController) Post() {
 //删除设备
 func (this *DeviceController) Delete() {
 	answer := JsonAnswer{}
-	sid := this.Ctx.Params[":objectId"]
+	sid := this.GetString(":objectId")
 
 	if sid != "" {
 		err := dao.DeleteDevice(sid)
@@ -127,7 +129,7 @@ func (this *DeviceController) Delete() {
 
 //重新获取设备参数
 func (this *DeviceController) RefreshDeviceParams() {
-	sid := this.Ctx.Params[":id"]
+	sid := this.GetString(":id")
 	err := quickserver.CommandRead(sid)
 	answer := JsonAnswer{}
 	if err != nil {
@@ -145,7 +147,7 @@ func (this *DeviceController) RefreshDeviceParams() {
 
 //更新设备参数
 func (this *DeviceController) UpdateDeviceParams() {
-	sid := this.Ctx.Params[":id"]
+	sid := this.GetString(":id")
 	answer := JsonAnswer{}
 
 	//判断设备编号
@@ -190,7 +192,7 @@ func (this *DeviceController) UpdateDeviceParams() {
 
 //更新自定义参数
 func (this *DeviceController) UpdateCustomParams() {
-	sid := this.Ctx.Params[":id"]
+	sid := this.GetString(":id")
 	answer := JsonAnswer{}
 
 	//判断设备编号
@@ -225,6 +227,6 @@ func (this *DeviceController) UpdateCustomParams() {
 func (this *DeviceController) ToDeviceAddPage() {
 	this.Data["title"] = "添加设备"
 	this.Data["author"] = "wangzhigang"
-
+	this.CheckUser()
 	this.TplNames = "deviceadd.html"
 }

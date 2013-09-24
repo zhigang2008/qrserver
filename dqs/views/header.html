@@ -17,7 +17,7 @@
 <![endif]-->
 </head>
 <body>
-  <div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -54,6 +54,12 @@
               </ul>
             </li>
           </ul>
+          {{if .isLogin}}
+           <ul class="nav navbar-nav navbar-right">
+            <li><a href="/user/self"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{.CurrentUserName}}</a></li>
+            <li><a href="/signout"><span class="glyphicon glyphicon-log-out"></span></a></li>
+         </ul>
+          {{else}}
           <form id="signform" action="/sign" method="post" class="navbar-form navbar-right">
             <div class="form-group">
               <input type="text" name="SignId" placeholder="用户ID/Email/手机" class="form-control">
@@ -63,6 +69,7 @@
             </div>
             <button type="submit" class="btn btn-success">登陆</button>
           </form>
+          {{end}}
         </div><!--/.navbar-collapse -->
       </div>
     </div>
