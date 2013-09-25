@@ -48,6 +48,18 @@ func GetUser(sid string) models.User {
 	return user
 }
 
+//根据Objectid
+func GetUserByObjectId(oid string) models.User {
+	c := GetSession().DB(DatabaseName).C(UserCollection)
+	user := models.User{}
+	//查找用户
+	err := c.Find(&bson.M{"_id": bson.ObjectIdHex(oid)}).One(&user)
+	if err != nil {
+		user = models.User{}
+	}
+	return user
+}
+
 //添加用户
 func AddUser(u *models.User) error {
 	c := GetSession().DB(DatabaseName).C(UserCollection)

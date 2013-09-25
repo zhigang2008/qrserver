@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="author" content="dqs">
+    <link rel="shortcut icon" href="/static/ico/favicon.png">
+    <title>用户登录</title>
+<!-- Bootstrap -->
+<link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="/static/css/bootstrap-select.min.css" rel="stylesheet" media="screen">
+<link href="/static/css/steven.css" rel="stylesheet" media="screen">
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="/static/js/respond.min.js"></script>
+  <script src="/static/js/html5.js"></script>
+<![endif]-->
+ </head>
+ <body>
+   <div class="container">
+   	<ol class="breadcrumb">
+       <li><a href="/"><span class="glyphicon glyphicon-home">&nbsp;</span>首页</a></li>
+       <li class="active">登录</li>
+      </ol>
+    <div class="panel panel-info">
+     <!-- Default panel contents -->
+     <div class="panel-heading">
+     	 登录信息
+    </div>
+    
+    <div class="panel-body">
+    	<!--提示框-->
+      <div  id="msg" class="alert alert-warning alert-dismissable" {{if  compare .msg ""}} style="display:none" {{end}}>
+      	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <p id="msgcontent">{{.msg}}</p>
+      </div>
+     
+      <form id="loginform" class="form-horizontal" role="form" action="/sign" method="post">
+        <!--隐藏,跳转地址-->
+        <input type="hidden" name="tourl" value="{{.tourl}}" > 
+        <p class="help-block"></p>
+        <div class="form-group">
+         <div class="col-sm-offset-3 col-sm-5">
+          <input type="text" id="SignId" name="SignId" class="form-control" placeholder="用户ID/ Email/ 手机号" autofocus>
+         <p class="help-block">您可以使用注册的用户ID、email、手机号进行登录</p>
+        </div>
+       </div>
+        <div class="form-group">
+         <div class="col-sm-offset-3 col-sm-5">
+          <input type="password" id="Password" name="Password" class="form-control" placeholder="Password">
+          <p class="help-block"></p>
+        </div>
+       </div>
+       <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-5">
+         <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+        </div>
+       </div>        
+        
+      </form>
+     </div>
+    </div> <!-- /container -->
+    <!--footer-->
+     <div class="container">
+      <hr>
+      <footer>
+        <p>&copy; 地壳应力研究所 2013</p>
+      </footer>
+    </div> 
+    <!-- Bootstrap core JavaScript -->
+    <script src="/static/js/jquery.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>go template不能显示该注释<![endif]-->
+    <script src="/static/js/respond.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/steven.js"></script>
+    <script src="/static/js/validate.min.js"></script>
+    <script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
+<script>
+ $(document).ready(function() {	
+  var form = $("#loginform");
+  form.validate({
+   rules: {
+    SignId: {
+      required: true
+    },
+    Password: {
+      required: true
+    }},
+    messages:{
+     SignId: {
+      required: "请输入登录ID"
+     },
+    Password: {
+      required: "请输入密码"
+    }
+    }
+  });
+  
+});
+</script>
+  </body>
+</html>
+ 

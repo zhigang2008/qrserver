@@ -10,7 +10,7 @@
  <div class="panel-heading">
  	<span class="label label-info" style="font-size:120%;">用户列表</span>
  	<div class="col-lg-2 pull-right">
- 		<a href="/user/add"><span class="label label-success">添加用户</span> </a>
+ 		<a href="/user/add" data-toggle="tooltip" data-placement="bottom" title="添加新用户"><span class="label label-success" >添加用户</span> </a>
    </div>
  </div>
  <!-- <div class="panel-body" style="padding:2px">
@@ -54,9 +54,9 @@
 	 		</td>
 	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</td>
 	 		<td>{{if .Blocked}}<span class="label label-default">停用</span>{{else}}<span class="label label-success">Active</span> {{end}}</td>
-	 		<td style="font-size:150%">
-	 			<a href="/user/{{.UserId}}"><span class="glyphicon glyphicon-list-alt"></span></a> /
-	 			<a href="javascript:DeleteUser('{{.ObjectId.Hex}}');"><span class="glyphicon glyphicon-remove" ></span> </a> 
+	 		<td style="font-size:120%">
+	 			<a href="/user/{{.UserId}}" data-toggle="tooltip"  data-placement="bottom" title="{{.UserId}}详细信息"><span class="glyphicon glyphicon-list-alt"></span></a> /
+	 			<a href="javascript:DeleteUser('{{.ObjectId.Hex}}','{{.UserId}}');" data-toggle="tooltip"  data-placement="bottom" title="删除{{.UserId}}"><span class="glyphicon glyphicon-remove" ></span> </a> 
       </td>
 	 	</tr>
    {{end}}
@@ -105,8 +105,8 @@
            });
 	}
 	
-function DeleteUser(objectid){
-		bootbox.confirm("你确定删除该用户?",function(result){
+function DeleteUser(objectid,uid){
+		bootbox.confirm("你确定删除用户["+uid+"]?",function(result){
 			if(result==true){
 				DoDelete(objectid);
 			}else{

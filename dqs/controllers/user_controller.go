@@ -14,7 +14,7 @@ type UserController struct {
 	BaseController
 }
 
-//报警信息列表
+//用户信息列表
 func (this *UserController) Get() {
 	sid := this.GetString(":objectId")
 

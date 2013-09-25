@@ -29,3 +29,17 @@ func (this *BaseController) CheckUser() {
 	}
 
 }
+
+//获取Session里的当前用户
+func (this *BaseController) GetCurrentUser() models.User {
+	if beego.SessionOn {
+		u, ok := this.GetSession(CURRENTUSER).(models.User)
+		if ok {
+			return u
+		} else {
+			return models.User{}
+		}
+	}
+	return models.User{}
+
+}

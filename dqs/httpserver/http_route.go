@@ -28,8 +28,14 @@ func routeConfig() {
 	beego.RESTRouter("/user", &controllers.UserController{})
 	beego.Router("/user/add", &controllers.UserController{}, "*:ToUserAddPage")
 
+	//用户自助
+	beego.Router("/userinfo/:objectid", &controllers.UserSelfController{}, "*:View")
+
 	//登录管理
 	beego.Router("/sign", &controllers.CommonController{}, "*:Sign")
+	beego.Router("/signout", &controllers.CommonController{}, "*:SignOut")
+	beego.Router("/login", &controllers.CommonController{}, "*:Login")
+
 	//静态文件路径
 	beego.SetStaticPath("/logs", "logs")
 	beego.SetStaticPath("/img", "static/img")
