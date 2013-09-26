@@ -30,6 +30,6 @@ func (this *UserSelfController) View() {
 		this.TplNames = "userself.html"
 	} else {
 		log.Warnf("用户[%s]试图修改[%s]信息,被禁止", sesUser.UserId, u.UserId)
-		this.Redirect("/", 302)
+		this.Redirect("/login", 302)
 	}
 }

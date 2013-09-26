@@ -7,8 +7,16 @@ import (
 	"github.com/astaxie/beego/context"
 )
 
+const (
+	PAGE_INDEX = "/"
+	PAGE_LOGIN = "/login"
+)
+
 func configInit() {
 	beego.SessionOn = true
+	//错误页面处理
+	beego.Errorhandler("404", page_not_found)
+	beego.Errorhandler("401", page_unauth)
 }
 
 //添加模板函数

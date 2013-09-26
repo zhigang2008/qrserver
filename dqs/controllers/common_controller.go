@@ -4,7 +4,7 @@ import (
 	"dqs/dao"
 	"dqs/models"
 	"dqs/util"
-	"fmt"
+	//"fmt"
 	log "github.com/cihub/seelog"
 	"net/url"
 )
@@ -27,7 +27,7 @@ func (this *CommonController) Sign() {
 		toUrl = this.Ctx.Request.Referer()
 	}
 	params.Set("tourl", toUrl)
-	fmt.Printf("Sign in refer:%s \n", toUrl)
+	//fmt.Printf("Sign in refer:%s \n", toUrl)
 	if sid != "" && pwd != "" {
 		user = dao.GetSignUser(sid)
 	}
