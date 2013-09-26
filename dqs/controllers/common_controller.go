@@ -59,7 +59,7 @@ func (this *CommonController) Sign() {
 func (this *CommonController) SignOut() {
 	//url := this.Ctx.Request.Referer()
 	this.DelSession(CURRENTUSER)
-	this.Redirect("/", 302)
+	this.Redirect(PAGE_INDEX, 302)
 }
 
 //登录页面

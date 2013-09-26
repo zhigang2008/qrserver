@@ -36,7 +36,9 @@
      <th>网络类型</th>
      <th>禁用状态</th>
      <th>最后连接地址</th>
+     {{if contain .CurrentUser.Roles "role_admin"}}
      <th>管理</th>
+     {{end}}
     </tr>
   </thead>
 	<tbody>
@@ -52,11 +54,13 @@
 	 		<td>{{.CustomParams.NetType}}</td>
 	 		<td>{{.CustomParams.NotUse}}</td>
 	 		<td>{{.RemoteAddr}}</td>
+	 		{{if contain .CurrentUser.Roles "role_admin"}}
 	 		<td style="font-size:120%">
 	 			<a href="/device/{{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="详细信息"><span class="glyphicon glyphicon-cog"></span></a> /
 	 			<a href="/alarm?sensorid={{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="报警信息"><span class="glyphicon glyphicon-bell"></span></a> /
 	 			<a href="javascript:DeleteDevice('{{.Id.Hex}}','{{.SensorId}}');" data-toggle="tooltip" data-placement="bottom" title="删除"><span class="glyphicon glyphicon-remove"></span></a> 
       </td>
+      {{end}}
 	 	</tr>
    {{end}}
  </tbody> 

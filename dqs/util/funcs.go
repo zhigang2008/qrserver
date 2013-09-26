@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	//	"github.com/astaxie/beego"
 	"strconv"
 	"strings"
 )
@@ -135,3 +136,21 @@ func Contain(c interface{}, b interface{}) bool {
 
 	return false
 }
+
+/*
+func HasRols(roles ...string) bool {
+	if beego.SessionOn {
+		u, ok := beego.GlobalSessions.(CURRENTUSER).(models.User)
+		if ok {
+			for _, role := range roles {
+				if Contain(u.Roles, role) {
+					return true
+				}
+			}
+		} else {
+			return false
+		}
+	}
+	return false
+}
+*/
