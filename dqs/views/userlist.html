@@ -56,6 +56,7 @@
 	 		<td>{{if .Blocked}}<span class="label label-default">停用</span>{{else}}<span class="label label-success">Active</span> {{end}}</td>
 	 		<td style="font-size:120%">
 	 			<a href="/user/{{.UserId}}" data-toggle="tooltip"  data-placement="bottom" title="{{.UserId}}详细信息"><span class="glyphicon glyphicon-list-alt"></span></a> /
+	 			<a href="/toresetpwd/{{.UserId}}" data-toggle="tooltip"  data-placement="bottom" title="重置{{.UserId}}密码"><span class="glyphicon glyphicon-lock"></span></a> /
 	 			<a href="javascript:DeleteUser('{{.ObjectId.Hex}}','{{.UserId}}');" data-toggle="tooltip"  data-placement="bottom" title="删除{{.UserId}}"><span class="glyphicon glyphicon-remove" ></span> </a> 
       </td>
 	 	</tr>

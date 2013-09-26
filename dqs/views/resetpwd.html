@@ -1,0 +1,112 @@
+﻿{{template "header" .}}
+ 
+{{with .user}}
+<div class="container">
+	 <div class="panel panel-info">
+  <!-- Default panel contents -->
+  <div class="panel-heading">重置密码</div>
+  <div class="panel-body">
+  
+  <!--提示框-->
+  <div  id="msg" class="alert alert-success alert-dismissable" style="display:none">
+     <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
+     <p id="msgcontent"></p>
+ </div>
+ 	 <div class="form-group">
+    <div class="col-sm-12">
+      <a href="/user" ><span class="label label-primary" >返回用户列表</span></a>
+    </div>
+  </div>
+<!--密码修改-->
+<div id="div-pwd" >
+	 <form id="pwdform" class="form-horizontal" role="pwdform" action="#" type="post">
+	 	<div class="form-group">
+    <label class="col-sm-2 control-label" for="UserId" >用户</label>
+    <div class="col-sm-6">
+    	<input id="UserId" type="hidden"  name="UserId"  value="{{.UserId}}"  />
+      <p class="form-control-static">{{.UserName}}[{{.UserId}}]</p>
+      <p class="help-block"></p>
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label" for="newPwd" >新的密码</label>
+    <div class="col-sm-6">
+      <input id="newPwd" type="password" class="form-control" name="newPwd"  placeholder="新密码"   />
+      <p class="help-block">请输入6~16位由数字和字符组成的密码</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="rePwd" >重复密码</label>
+    <div class="col-sm-6">
+      <input id="rePwd" type="password" class="form-control" name="rePwd"  placeholder="重复输入新密码"   />
+      <p class="help-block"></p>
+    </div>
+  </div>
+  <div class="form-group"></div>
+  
+  <div class="form-group">
+    <div class="col-sm-offset-3  btn-group-lg">
+        <button id="btn-pwd-save" type="button" class="btn btn-primary">确&nbsp;&nbsp;定</button>
+        
+        <button type="reset" class="col-sm-offset-2 btn btn-danger">取&nbsp;&nbsp;消</button>
+     </div>
+  </div>
+  </form>
+</div>
+
+</div> <!--end panel-body-->
+</div> <!--end panel-->
+</div>
+{{template "scripts"}}
+<script src="/static/js/validate.min.js"></script>
+<script src="/static/js/validate.additional-methods.min.js"></script>
+<script src="/static/js/validate.messages_zh.js"></script>
+<script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
+<script>
+//初始化    
+$(document).ready(function(){
+ //重置密码表单
+	$("#pwdform").validate({
+   rules: {
+    newPwd: {
+      required: true,
+      rangelength: [6,16]
+    },
+    rePwd: {
+      required: true,
+      equalTo: newPwd
+    }
+  }
+ });
+   //提交操作
+ 	$("#btn-pwd-save").bind('click', function() {
+ 		if($("#pwdform").valid()){
+      $.ajax({
+             type: "POST",
+             url: "/resetpwd",
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             data: $("#pwdform").serialize() ,
+             success: function(json){
+               if(json.Ok==true){
+                    showSuccess("密码修改成功!");
+               	 
+                }else{
+                 showError(json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 showError("密码修改失败:"+textStatus);
+             }
+           });
+           
+           }else{
+  	      showWarning("请校正填写数据.");
+         }
+    });  
+});
+</script> 
+ {{end}}
+
+{{template "footer"}}

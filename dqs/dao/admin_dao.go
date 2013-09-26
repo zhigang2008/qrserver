@@ -124,3 +124,24 @@ func UpdateUser(user *models.User) error {
 	}
 	return nil
 }
+
+//保存设备参数信息
+func ResetUserPassword(sid, newpwd string) error {
+	c := GetSession().DB(DatabaseName).C(UserCollection)
+
+	ouser := models.User{}
+	//查找用户
+	err := c.Find(&bson.M{"userid": sid}).One(&ouser)
+	if err != nil {
+		return err
+	}
+	//更改内容o
+	ouser.SetPassword(newpwd)
+	ouser.UpdateTime = time.Now()
+
+	err = c.Update(&bson.M{"_id": ouser.ObjectId}, ouser)
+	if err != nil {
+		return err
+	}
+	return nil
+}

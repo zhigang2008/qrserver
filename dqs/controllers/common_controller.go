@@ -7,6 +7,7 @@ import (
 	//"fmt"
 	log "github.com/cihub/seelog"
 	"net/url"
+	"strings"
 )
 
 type CommonController struct {
@@ -40,6 +41,10 @@ func (this *CommonController) Sign() {
 			log.Infof("[%s(%s)]成功登录", user.UserId, sid)
 			this.SetSession(CURRENTUSER, user)
 			this.SetSession("userName", user.UserName)
+
+			if strings.Contains(toUrl, PAGE_LOGIN) {
+				this.Redirect(PAGE_INDEX, 302)
+			}
 			this.Redirect(toUrl, 302)
 		} else {
 			params.Set("msg", "用户ID/密码不匹配,登录失败")

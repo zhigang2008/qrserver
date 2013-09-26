@@ -7,6 +7,8 @@ import (
 
 const (
 	CURRENTUSER = "StevenCurrentSessionUser"
+	PAGE_INDEX  = "/"
+	PAGE_LOGIN  = "/login"
 )
 
 type BaseController struct {

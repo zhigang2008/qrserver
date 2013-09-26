@@ -7,11 +7,6 @@ import (
 	"github.com/astaxie/beego/context"
 )
 
-const (
-	PAGE_INDEX = "/"
-	PAGE_LOGIN = "/login"
-)
-
 func configInit() {
 	beego.SessionOn = true
 	//错误页面处理

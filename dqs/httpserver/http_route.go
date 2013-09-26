@@ -27,6 +27,8 @@ func routeConfig() {
 	//用户管理
 	beego.RESTRouter("/user", &controllers.UserController{})
 	beego.Router("/user/add", &controllers.UserController{}, "*:ToUserAddPage")
+	beego.Router("/resetpwd", &controllers.UserController{}, "*:ResetPassword")
+	beego.Router("/toresetpwd/:uid", &controllers.UserController{}, "*:ToResetPassword")
 
 	//用户自助
 	beego.Router("/userinfo/:objectid", &controllers.UserSelfController{}, "*:View")

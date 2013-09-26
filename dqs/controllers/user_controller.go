@@ -152,3 +152,50 @@ func (this *UserController) ToUserAddPage() {
 	this.CheckUser()
 	this.TplNames = "useradd.html"
 }
+
+//添加用户页面
+func (this *UserController) ToResetPassword() {
+	uid := this.GetString(":uid")
+	this.CheckUser()
+
+	user := dao.GetUser(uid)
+
+	this.Data["title"] = "重置用户密码"
+	this.Data["author"] = "wangzhigang"
+	this.Data["user"] = user
+
+	this.TplNames = "resetpwd.html"
+}
+
+//重置用户密码
+func (this *UserController) ResetPassword() {
+	answer := JsonAnswer{}
+
+	uid := this.GetString("UserId")
+	oldPwd := this.GetString("oldPwd")
+	newPwd := this.GetString("newPwd")
+
+	user := dao.GetUser(uid)
+
+	if user.ObjectId == "" {
+		answer.Ok = false
+		answer.Msg = "当前用户不存在"
+	} else {
+		if user.CheckPwd(oldPwd) == false {
+			answer.Ok = false
+			answer.Msg = "原始密码不正确"
+		} else {
+			err := dao.ResetUserPassword(uid, newPwd)
+			if err != nil {
+				answer.Ok = false
+				answer.Msg = err.Error()
+			} else {
+				answer.Ok = true
+				answer.Msg = "重置密码成功"
+			}
+		}
+	}
+
+	this.Data["json"] = &answer
+	this.ServeJson()
+}

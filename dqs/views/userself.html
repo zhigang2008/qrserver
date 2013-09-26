@@ -18,15 +18,21 @@
 </div>
 
 <div id="customparams" class="tab-pane " >
-	<form id="userform" class="form-horizontal" role="form" action="#" type="post">
- 	 <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
+
+ 	 <div  class="form-group">
+    <div id="div-update-btn" class="col-sm-offset-2 col-sm-5">
       <button id="btn-update" type="button" class="btn btn-primary">更改信息</button>
       &nbsp;&nbsp;
-      <button id="btn-save" type="button" class="btn btn-warning" style="display:none">保存设置</button>
+      <button id="btn-save" type="button" class="btn btn-warning" style="display:none">保存更改</button>
+      &nbsp;&nbsp;
+    </div>
+    <div class="pull-right col-sm-3">
+    	<button id="btn-resetpwd" type="button" class="btn btn-primary">重置密码</button>  
     </div>
   </div>
-
+  
+  <div id="div-info">
+	<form id="userform" class="form-horizontal" role="form" action="#" type="post">
 	<div class="form-group">
     <label class="col-sm-2 control-label" for="UserId" >用户ID</label>
     <div class="col-sm-6">
@@ -77,7 +83,47 @@
       <p class="help-block"></p>
     </div>
   </div>
-</form>
+ </form>
+</div> <!--end div-info-->
+<!--密码修改-->
+<div id="div-pwd" style="display:none">
+	 <form id="pwdform" class="form-horizontal" role="pwdform" action="#" type="post">
+	 	<div class="form-group">
+	 		<input id="UserId" type="hidden"  name="UserId"  value="{{.UserId}}"  />
+	 	</div>
+	 	<div class="form-group">
+    <label class="col-sm-2 control-label" for="oldPwd" >原始密码</label>
+    <div class="col-sm-6">
+      <input id="oldPwd" type="password" class="form-control" name="oldPwd"  placeholder="正在使用的原始密码"   />
+      <p class="help-block"></p>
+    </div>
+  </div>
+   <div class="form-group">
+    <label class="col-sm-2 control-label" for="newPwd" >新的密码</label>
+    <div class="col-sm-6">
+      <input id="newPwd" type="password" class="form-control" name="newPwd"  placeholder="新密码"   />
+      <p class="help-block">请输入6~16位由数字和字符组成的密码</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="rePwd" >重复密码</label>
+    <div class="col-sm-6">
+      <input id="rePwd" type="password" class="form-control" name="rePwd"  placeholder="重复输入新密码"   />
+      <p class="help-block"></p>
+    </div>
+  </div>
+  <div class="form-group"></div>
+  
+  <div class="form-group">
+    <div class="col-sm-offset-3  btn-group-lg">
+        <button id="btn-pwd-save" type="button" class="btn btn-primary">确&nbsp;&nbsp;定</button>
+        
+        <button type="reset" class="col-sm-offset-2 btn btn-danger">取&nbsp;&nbsp;消</button>
+     </div>
+  </div>
+  </form>
+</div>
+
 </div>
 
 
@@ -121,7 +167,24 @@ $(document).ready(function(){
       maxlength: 50
     }
   }
-});	
+ });
+ //重置密码表单
+	$("#pwdform").validate({
+   rules: {
+     oldPwd: {
+      required: true
+    },
+    newPwd: {
+      required: true,
+      rangelength: [6,16]
+    },
+    rePwd: {
+      required: true,
+      equalTo: newPwd
+    }
+  }
+ });
+  
 
     //设置参数按钮
   var setchange=false;
@@ -129,18 +192,25 @@ $(document).ready(function(){
          $("#btn-save").toggle();
          if(setchange==false){
          	setchange=true;
-         	$("#btn-update").text("取消设置");
+         	$("#btn-update").text("取消更改");
          	$("#userform  :text").attr('disabled',false);
          	$("#userform  :checkbox").attr('disabled',false);
          	$("#userform  :radio").attr('disabled',false);
          	
         }else{
         	setchange=false;
-         	$("#btn-update").text("设置参数");
+         	$("#btn-update").text("更改信息");
          	$("#userform :text").attr('disabled',true);
          	$("#userform :checkbox").attr('disabled',true);
         }
     });
+   
+    $("#btn-resetpwd").bind('click',function(){
+         $("#div-update-btn").toggle();
+         $("#div-info").toggle();
+         $("#div-pwd").toggle();
+    });
+          
    //提交操作
  	$("#btn-save").bind('click', function() {
  		if($("#userform").valid()){
@@ -160,7 +230,7 @@ $(document).ready(function(){
                 }
               },
              error: function(XMLHttpRequest, textStatus, errorThrown) {
-                 showError("失败失败,报告管理员:"+textStatus);
+                 showError("修改失败,报告管理员:"+textStatus);
              }
            });
            
@@ -168,7 +238,33 @@ $(document).ready(function(){
   	      showWarning("请校正填写数据.");
          }
     });
-    
+   //提交操作
+ 	$("#btn-pwd-save").bind('click', function() {
+ 		if($("#pwdform").valid()){
+      $.ajax({
+             type: "POST",
+             url: "/resetpwd",
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             data: $("#pwdform").serialize() ,
+             success: function(json){
+               if(json.Ok==true){
+                    showSuccess("密码修改成功!");
+               	 
+                }else{
+                 showError(json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 showError("密码修改失败,报告管理员:"+textStatus);
+             }
+           });
+           
+           }else{
+  	      showWarning("请校正填写数据.");
+         }
+    });  
 });
 </script> 
  {{end}}
