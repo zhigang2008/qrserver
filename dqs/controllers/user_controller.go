@@ -16,6 +16,9 @@ type UserController struct {
 
 //用户信息列表
 func (this *UserController) Get() {
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	sid := this.GetString(":objectId")
 
 	this.CheckUser()
@@ -65,6 +68,9 @@ func (this *UserController) Get() {
 
 //添加用户
 func (this *UserController) Post() {
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	answer := JsonAnswer{}
 
 	user := models.User{}
@@ -94,6 +100,9 @@ func (this *UserController) Post() {
 
 //更改用户信息
 func (this *UserController) Put() {
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	answer := JsonAnswer{}
 
 	user := models.User{}
@@ -122,6 +131,9 @@ func (this *UserController) Put() {
 
 //删除用户
 func (this *UserController) Delete() {
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	answer := JsonAnswer{}
 	oid := this.GetString(":objectId")
 
@@ -145,6 +157,8 @@ func (this *UserController) Delete() {
 
 //添加用户页面
 func (this *UserController) ToUserAddPage() {
+	//权限检查
+	this.AuthRoles("role_admin")
 
 	this.Data["title"] = "添加用户"
 	this.Data["author"] = "wangzhigang"
@@ -155,6 +169,9 @@ func (this *UserController) ToUserAddPage() {
 
 //添加用户页面
 func (this *UserController) ToResetPassword() {
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	uid := this.GetString(":uid")
 	this.CheckUser()
 

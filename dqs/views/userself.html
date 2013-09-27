@@ -83,6 +83,13 @@
       <p class="help-block"></p>
     </div>
   </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="UserId" >角色</label>
+    <div class="col-sm-6">
+    	<p class="form-control-static">[{{if contain .Roles "role_admin"}}管理员{{end}},{{if contain .Roles "role_user"}} 普通用户 {{end}},{{if contain .Roles "role_visitor"}} 访客 {{end}}]</p>
+      <p class="help-block"></p>
+    </div>
+  </div>
  </form>
 </div> <!--end div-info-->
 <!--密码修改-->
@@ -215,8 +222,8 @@ $(document).ready(function(){
  	$("#btn-save").bind('click', function() {
  		if($("#userform").valid()){
       $.ajax({
-             type: "PUT",
-             url: "/user",
+             type: "Post",
+             url: "/userinfo/update",
              dataType:"json",
              async: true,
              timeout: 60000,

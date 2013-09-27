@@ -95,7 +95,7 @@ func DeleteUser(objectid string) error {
 	return nil
 }
 
-//保存设备参数信息
+//保存用户信息
 func UpdateUser(user *models.User) error {
 	c := GetSession().DB(DatabaseName).C(UserCollection)
 
@@ -125,7 +125,7 @@ func UpdateUser(user *models.User) error {
 	return nil
 }
 
-//保存设备参数信息
+//重置用户密码
 func ResetUserPassword(sid, newpwd string) error {
 	c := GetSession().DB(DatabaseName).C(UserCollection)
 
@@ -137,6 +137,34 @@ func ResetUserPassword(sid, newpwd string) error {
 	}
 	//更改内容o
 	ouser.SetPassword(newpwd)
+	ouser.UpdateTime = time.Now()
+
+	err = c.Update(&bson.M{"_id": ouser.ObjectId}, ouser)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//保存用户信息
+func UpdateUserBySelf(user *models.User) error {
+	c := GetSession().DB(DatabaseName).C(UserCollection)
+
+	ouser := models.User{}
+	//查找用户
+	err := c.Find(&bson.M{"userid": user.UserId}).One(&ouser)
+	if err != nil {
+		return err
+	}
+	//更改内容
+	ouser.UserName = user.UserName
+	ouser.NickName = user.NickName
+	ouser.Email = user.Email
+	ouser.Gender = user.Gender
+	ouser.Phone = user.Phone
+	ouser.Mobile = user.Mobile
+	ouser.Addr = user.Addr
+	ouser.UserTitle = user.UserTitle
 	ouser.UpdateTime = time.Now()
 
 	err = c.Update(&bson.M{"_id": ouser.ObjectId}, ouser)

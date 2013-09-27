@@ -33,3 +33,36 @@ func (this *UserSelfController) View() {
 		this.Redirect("/login", 302)
 	}
 }
+
+//更改用户信息
+func (this *UserSelfController) Update() {
+	//sid := this.GetString(":objectid")
+
+	answer := JsonAnswer{}
+
+	user := models.User{}
+	err := this.ParseForm(&user)
+
+	if err != nil {
+		answer.Ok = false
+		answer.Msg = "数据传递失败:" + err.Error()
+	} else {
+		curUser := this.GetCurrentUser()
+		if curUser.UserId != user.UserId {
+			log.Warnf("用户[%s]试图修改用户[%s]的信息,被禁止", curUser.UserId, user.UserId)
+			this.Abort("404")
+		}
+
+		err = dao.UpdateUserBySelf(&user)
+		if err != nil {
+			answer.Ok = false
+			answer.Msg = "用户更改失败:" + err.Error()
+		} else {
+			answer.Ok = true
+			answer.Msg = "用户更改成功"
+		}
+	}
+
+	this.Data["json"] = &answer
+	this.ServeJson()
+}

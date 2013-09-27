@@ -72,6 +72,10 @@ func (this *DeviceController) Get() {
 
 //添加设备
 func (this *DeviceController) Post() {
+
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	answer := JsonAnswer{}
 
 	device := models.DeviceInfo{}
@@ -106,6 +110,9 @@ func (this *DeviceController) Post() {
 
 //删除设备
 func (this *DeviceController) Delete() {
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	answer := JsonAnswer{}
 	sid := this.GetString(":objectId")
 
@@ -147,6 +154,9 @@ func (this *DeviceController) RefreshDeviceParams() {
 
 //更新设备参数
 func (this *DeviceController) UpdateDeviceParams() {
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	sid := this.GetString(":id")
 	answer := JsonAnswer{}
 
@@ -192,6 +202,9 @@ func (this *DeviceController) UpdateDeviceParams() {
 
 //更新自定义参数
 func (this *DeviceController) UpdateCustomParams() {
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	sid := this.GetString(":id")
 	answer := JsonAnswer{}
 
@@ -225,6 +238,9 @@ func (this *DeviceController) UpdateCustomParams() {
 
 //添加设备页面
 func (this *DeviceController) ToDeviceAddPage() {
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	this.Data["title"] = "添加设备"
 	this.Data["author"] = "wangzhigang"
 	this.CheckUser()

@@ -1,10 +1,10 @@
 package httpserver
 
 import (
-	"dqs/models"
+	//	"dqs/models"
 	"dqs/util"
+	//	"fmt"
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/context"
 )
 
 func configInit() {
@@ -20,16 +20,39 @@ func addTemplateFuncs() {
 	beego.AddFuncMap("seqno", util.GenerateSeqNo)
 	beego.AddFuncMap("purl", util.GenerateParamUrl)
 	beego.AddFuncMap("contain", util.Contain)
+	beego.AddFuncMap("hasrole", util.HasRoles)
 
 }
 
-var checkUser = func(ctx *context.Context) {
-	_, ok := ctx.Input.Session("user").(models.User)
+/*
+var authMap map[string]string
+
+func init() {
+	authMap = make(map[string]string)
+	authMap["post:/device"] = "role_admin"
+	authMap["put:/device"] = "role_admin"
+	authMap["delete:/device"] = "role_admin"
+	authMap["get:/device/add"] = "role_admin"
+	authMap["post:/device/add"] = "role_admin"
+}
+
+var checkAuth = func(ctx *context.Context) {
+
+	fmt.Println(ctx.Input.Uri())
+	fmt.Println(ctx.Input.Url())
+	fmt.Println(ctx.Input.Method())
+
+	u, ok := ctx.Input.Session("StevenCurrentSessionUser").(models.User)
 	if ok {
-		//ctx.Output.res.
+		fmt.Printf("user roles:%s.\n", u.Roles)
+
+	} else {
+		fmt.Println("no user.")
+
 	}
 }
 
 func addFilter() {
-	beego.AddFilter("*", "AfterExec", checkUser)
+	beego.AddFilter("*", "BeforRouter", checkAuth)
 }
+*/

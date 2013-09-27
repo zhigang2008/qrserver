@@ -4,7 +4,13 @@
 <div class="container">
 	 <div class="panel panel-info">
   <!-- Default panel contents -->
-  <div class="panel-heading">重置密码</div>
+  <div class="panel-heading">
+  	<ol class="breadcrumb">
+     <li><a href="/"><span class="glyphicon glyphicon-home"></span>首页</a></li>
+     <li><a href="/user">用户列表</a></li>
+     <li class="active">重置用户密码</li>
+  </ol>
+  </div>
   <div class="panel-body">
   
   <!--提示框-->
@@ -14,14 +20,14 @@
  </div>
  	 <div class="form-group">
     <div class="col-sm-12">
-      <a href="/user" ><span class="label label-primary" >返回用户列表</span></a>
+     
     </div>
   </div>
 <!--密码修改-->
 <div id="div-pwd" >
 	 <form id="pwdform" class="form-horizontal" role="pwdform" action="#" type="post">
 	 	<div class="form-group">
-    <label class="col-sm-2 control-label" for="UserId" >用户</label>
+    <label class="col-sm-2 control-label" for="UserId" >当前用户</label>
     <div class="col-sm-6">
     	<input id="UserId" type="hidden"  name="UserId"  value="{{.UserId}}"  />
       <p class="form-control-static">{{.UserName}}[{{.UserId}}]</p>

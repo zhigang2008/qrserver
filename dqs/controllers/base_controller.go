@@ -45,3 +45,48 @@ func (this *BaseController) GetCurrentUser() models.User {
 	return models.User{}
 
 }
+
+//验证权限
+func (this *BaseController) AuthRoles(roles ...string) {
+	check := false
+
+	if beego.SessionOn {
+		u, ok := this.GetSession(CURRENTUSER).(models.User)
+		if ok {
+			for _, cr := range u.Roles {
+				for _, r := range roles {
+					if cr == r {
+						check = true
+						break
+					}
+				}
+			}
+
+		}
+	}
+
+	if check == false {
+		this.Abort("401")
+	}
+
+}
+
+//验证是否登录
+func (this *BaseController) Authentication() {
+	check := false
+
+	if beego.SessionOn {
+		u, ok := this.GetSession(CURRENTUSER).(models.User)
+		if ok {
+			if u.UserId != "" {
+				check = true
+
+			}
+		}
+	}
+
+	if check == false {
+		this.Abort("401")
+	}
+
+}

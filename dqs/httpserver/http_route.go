@@ -31,7 +31,8 @@ func routeConfig() {
 	beego.Router("/toresetpwd/:uid", &controllers.UserController{}, "*:ToResetPassword")
 
 	//用户自助
-	beego.Router("/userinfo/:objectid", &controllers.UserSelfController{}, "*:View")
+	beego.Router("/userinfo/view/:objectid", &controllers.UserSelfController{}, "*:View")
+	beego.Router("/userinfo/update", &controllers.UserSelfController{}, "*:Update")
 
 	//登录管理
 	beego.Router("/sign", &controllers.CommonController{}, "*:Sign")

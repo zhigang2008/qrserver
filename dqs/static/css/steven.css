@@ -29,3 +29,8 @@ img { max-width: none; }
 .form-group .popover{
 	min-width:150px;
 }
+
+.panel-heading .breadcrumb{
+	background-color:transparent;
+	margin-bottom:0px;
+}

@@ -25,6 +25,9 @@ func (s ByName) Less(i, j int) bool { return s.Files[i].Name() > s.Files[j].Name
 
 //获取日志文件
 func (this *LogsController) Get() {
+	//权限检查
+	this.AuthRoles("role_admin")
+
 	this.Data["title"] = "运行日志"
 	this.Data["author"] = "wangzhigang"
 	this.CheckUser()

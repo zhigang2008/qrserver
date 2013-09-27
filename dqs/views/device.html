@@ -1,12 +1,18 @@
 ﻿{{template "header" .}}
  
+{{$curUser := .CurrentUser}}
 {{with .device}}
 <div class="container">
-	 <div class="panel panel-info">
+		 <div class="panel panel-info">
   <!-- Default panel contents -->
-  <div class="panel-heading">设备详细信息</div>
+  <div class="panel-heading">
+  	<ol class="breadcrumb">
+     <li><a href="/"><span class="glyphicon glyphicon-home"></span>首页</a></li>
+     <li><a href="/device">设备列表</a></li>
+     <li class="active">设备信息</li>
+  </ol>
+  </div>
   <div class="panel-body">
-  
   <!--提示框-->
   <div  id="msg" class="alert alert-success alert-dismissable" style="display:none">
      <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
@@ -28,11 +34,13 @@
  <form id="setparamform" class="form-horizontal" role="form" action="/deviceparams/update/{{.SensorId}}" type="post">
  	 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
+    	{{if hasrole $curUser.Roles "role_admin"}}
       <button id="refreshparams" type="button" class="btn btn-success">重新读取</button>
       &nbsp;&nbsp;
       <button id="setparams" type="button" class="btn btn-primary">设置参数</button>
       &nbsp;&nbsp;
       <button id="setsave" type="button" class="btn btn-warning" style="display:none">保存设置</button>
+      {{end}}
     </div>
   </div>
 {{with .SetParams}}
@@ -231,9 +239,11 @@
 	<form id="customparamform" class="form-horizontal" role="form" action="/customparams/update/{{.SensorId}}" type="post">
  	 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
+      {{if hasrole $curUser.Roles "role_admin"}}
       <button id="setparams2" type="button" class="btn btn-primary">设置参数</button>
       &nbsp;&nbsp;
       <button id="setsave2" type="button" class="btn btn-warning" style="display:none">保存设置</button>
+      {{end}}
     </div>
   </div>
 	{{with .CustomParams}}
