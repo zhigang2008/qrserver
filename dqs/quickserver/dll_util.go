@@ -23,6 +23,7 @@ type dllUtil struct {
 	p_parseFlashData      *syscall.Proc
 	p_GenerateReadParam   *syscall.Proc
 	p_sendStr             *syscall.Proc
+	//p_parseRecvFlashData  *syscall.Proc
 }
 
 //初始化数据处理器
@@ -36,6 +37,7 @@ func init() {
 	DllUtil.p_GenerateSetParam = DllUtil.dll.MustFindProc("GenerateSetParam")
 	DllUtil.p_parseFlashData = DllUtil.dll.MustFindProc("parseFlashData")
 	DllUtil.p_GenerateReadParam = DllUtil.dll.MustFindProc("GenerateReadParam")
+	//DllUtil.p_parseRecvFlashData = DllUtil.dll.MustFindProc("parseRecvFlashData")
 	//CRC校验用
 	DllUtil.p_sendStr = DllUtil.dll.MustFindProc("sendStr")
 
@@ -76,6 +78,32 @@ func (dp *dllUtil) ParseFlashData(rec []byte, deviceId string) (readData [240]in
 //生成参数读取命令
 func (dp *dllUtil) GenerateReadParam(param string) ([]byte, error) {
 	p := []byte(param + "g")
+	p = append(p, 0)
+
+	ret := make([]byte, 20)
+
+	ok, _, err := dp.p_GenerateReadParam.Call(
+		uintptr(unsafe.Pointer(&p[0])),
+		uintptr(unsafe.Pointer(&ret[0])))
+	if ok == 1 {
+
+		rett := []byte{}
+		//截取真正的数据
+		for _, v := range ret {
+			if v == 0 {
+				break
+			}
+			rett = append(rett, v)
+		}
+		return rett, nil
+	} else {
+		return nil, err //errors.New("调用dll解析读取参数失败")
+	}
+}
+
+//生成地形波读取命令
+func (dp *dllUtil) GenerateFlashReadParam(param string) ([]byte, error) {
+	p := []byte(param + "r")
 	p = append(p, 0)
 
 	ret := make([]byte, 20)
@@ -200,3 +228,18 @@ func (dp *dllUtil) CheckCRCCode(cstr []byte) bool {
 	}
 
 }
+
+/*
+//DLL解析波形图返回的数据
+func (dp *dllUtil) ParseRecvFlashData(rec []byte) (r bool, ret []float32, err error) {
+	ret = []float32{}
+
+	ok, _, _ := dp.p_parseRecvFlashData.Call(
+		uintptr(unsafe.Pointer(&rec[0])),
+		uintptr(unsafe.Pointer(&ret)))
+	if ok != 1 {
+		return false, ret, errors.New("DLL解析设备的设置参数失败")
+	}
+	return true, ret, nil
+}
+*/

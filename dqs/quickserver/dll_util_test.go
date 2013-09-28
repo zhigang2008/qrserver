@@ -41,3 +41,20 @@ func TestCheckCRCCode(t *testing.T) {
 	}
 	*/
 }
+
+func TestParseFlashData(t *testing.T) {
+
+	du := DllUtil
+	str := "FFSI30001001rB700000020080512142801SI30001001117300000380600000130924080512142837012000000000000000000000B70000000f230f230f230f230f230f230f230f230f230f2301f230f230f230f230f230f230f230f230f230f2302f230f230f230f230f230f230f230f230f230f23012340D"
+	ret, frame, err := du.ParseFlashData([]byte(str), "SI30001001")
+	fmt.Println(frame)
+	fmt.Println(ret)
+	fmt.Println(err)
+	/*if string(ret) != "30f6" {
+		t.Error("fail")
+
+	} else {
+		t.Log("OK")
+	}
+	*/
+}

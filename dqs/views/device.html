@@ -207,29 +207,57 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="DA1">DA输出1</label>
+    <label class="col-sm-2 control-label" for="DA1" >DA输出1</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="DA1" name="DA1" placeholder="DA1" value="{{.DA1}}" disabled>
+      <label class="radio-inline">
+         <input type="radio"  name="DA1" value="1" {{if compare .DA1  1}}  checked {{end}} disabled /> 
+         <span class="label label-success">启用</span>
+      </label>
+      <label class="checkbox-inline">
+         <input type="radio"  name="DA1" value="0"  {{if compare .DA1 0 }} checked {{end}} disabled /> 
+         <span class="label label-default">停用</span>
+      </label>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="DA2">DA输出2</label>
+ </div>
+ <div class="form-group">
+    <label class="col-sm-2 control-label" for="DA2" >DA输出2</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="DA2" name="DA2"  placeholder="DA2" value="{{.DA2}}" disabled>
+      <label class="radio-inline">
+         <input type="radio"  name="DA2" value="1" {{if compare .DA2  1}}  checked {{end}} disabled /> 
+         <span class="label label-success">启用</span>
+      </label>
+      <label class="checkbox-inline">
+         <input type="radio"  name="DA2" value="0"  {{if compare .DA2 0 }} checked {{end}} disabled /> 
+         <span class="label label-default">停用</span>
+      </label>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="IO1">IO输出1</label>
+ </div>
+ <div class="form-group">
+    <label class="col-sm-2 control-label" for="IO1" >IO输出1</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="IO1" name="IO1" placeholder="IO1" value="{{.IO1}}" disabled>
+      <label class="radio-inline">
+         <input type="radio"  name="IO1" value="1" {{if compare .IO1  1}}  checked {{end}} disabled /> 
+         <span class="label label-success">启用</span>
+      </label>
+      <label class="checkbox-inline">
+         <input type="radio"  name="IO1" value="0"  {{if compare .IO1 0 }} checked {{end}} disabled /> 
+         <span class="label label-default">停用</span>
+      </label>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="IO2">IO输出2</label>
+ </div>
+ <div class="form-group">
+    <label class="col-sm-2 control-label" for="IO2" >IO输出2</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="IO2" name="IO2" placeholder="IO2" value="{{.IO2}}" disabled>
+      <label class="radio-inline">
+         <input type="radio"  name="IO2" value="1" {{if compare .IO2  1}}  checked {{end}} disabled /> 
+         <span class="label label-success">启用</span>
+      </label>
+      <label class="checkbox-inline">
+         <input type="radio"  name="IO2" value="0"  {{if compare .IO2 0 }} checked {{end}} disabled /> 
+         <span class="label label-default">停用</span>
+      </label>
     </div>
-  </div>
+ </div>
 {{end}}
  </form>
 </div> <!--end deviceparams-->
@@ -260,17 +288,24 @@
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetQixian">网络流量</label>
+  <label class="col-sm-2 control-label" for="NetTraffic">网络流量</label>
     <div class="col-sm-6">
       <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic" value="{{.NetTraffic}}" disabled>
     </div>
   </div>
-   <div class="form-group">
-  <label class="col-sm-2 control-label" for="NotUse">是否禁用</label>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="NotUse" >是否禁用</label>
     <div class="col-sm-6">
-      <input id="NotUse" type="text" class="form-control" name="NotUse"  placeholder="Disabled" value="{{.NotUse}}" disabled>
+      <label class="radio-inline">
+         <input type="radio"  name="NotUse" value="false" {{if compare .NotUse  false}}  checked {{end}} disabled /> 
+         <span class="label label-success">活动</span>
+      </label>
+      <label class="checkbox-inline">
+         <input type="radio"  name="NotUse" value="true"  {{if .NotUse }} checked {{end}} disabled /> 
+         <span class="label label-default">停用</span>
+      </label>
     </div>
-  </div>
+ </div>
 	{{end}}	
 </form>
 </div>
@@ -281,6 +316,10 @@
 </div> <!--end panel-->
 </div>
 {{template "scripts"}}
+<script src="/static/js/validate.min.js"></script>
+<script src="/static/js/validate.additional-methods.min.js"></script>
+<script src="/static/js/validate.messages_zh.js"></script>
+<script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
 <script src="/static/js/tab.js"></script>
 <script>
 	 //进度条
@@ -347,10 +386,12 @@ $(document).ready(function(){
          	setchange=true;
          	$("#setparams").text("取消设置");
          	$("#setparamform  :text").attr('disabled',false);
+         	$("#setparamform  :radio").attr('disabled',false);
         }else{
         	setchange=false;
          	$("#setparams").text("设置参数");
          	$("#setparamform :text").attr('disabled',true);
+         	$("#setparamform :radio").attr('disabled',true);
         }
     });
 
@@ -373,16 +414,19 @@ $(document).ready(function(){
          	setchange2=true;
          	$("#setparams2").text("取消设置");
          	$("#customparamform  :text").attr('disabled',false);
+         	$("#customparamform  :radio").attr('disabled',false);
          }else{
         	setchange2=false;
          	$("#setparams2").text("设置参数");
          	$("#customparamform  :text").attr('disabled',true);
+         	$("#customparamform  :radio").attr('disabled',true);
         }
     });
   
  //设备参数表单提交
     	$("#setsave").bind('click', function() {
-      $.ajax({
+       if($("#setparamform").valid()){
+      	$.ajax({
              type: "POST",
              url: "/deviceparams/update/{{.SensorId}}",
              dataType:"json",
@@ -401,10 +445,12 @@ $(document).ready(function(){
                  showError("更改失败,报告管理员:"+textStatus);
              }
            });
+      }
     });
    //自定义参数表单提交 
     $("#setsave2").bind('click', function() {
-      $.ajax({
+      if($("#customparamform").valid()){
+      	$.ajax({
              type: "POST",
              url: "/customparams/update/{{.SensorId}}",
              dataType:"json",
@@ -422,7 +468,83 @@ $(document).ready(function(){
                  showError("保存失败,报告管理员:"+textStatus);
              }
            });
+         }
     });
+    
+//表单校验
+ $("#customparamform").validate({
+   rules: {
+    NetQixian: {
+      number: true
+    },
+    NetTraffic: {
+      number: true
+    },
+    NotUse: {
+      required: true
+    }
+  }
+});	
+
+$("#setparamform").validate({
+   rules: {
+     SensorId: {
+      required: true,
+      alphanumeric:true,
+      minlength: 10,
+      maxlength:10
+    },
+    SiteName: {
+      required: true,
+      maxlength:15
+    },
+    Longitude: {
+      required: true,
+      number: true
+    },
+    Latitude: {
+      required: true,
+      number: true
+    },
+    SiteType: {
+      required: true
+    },
+    ObserveObject: {
+      required: true
+    },
+    Period: {
+      number: true
+    },
+    RegionCode: {
+      minlength: 7,
+      maxlength:7
+    },
+    Custom1: {
+      alphanumeric:true
+    },
+    Custom2: {
+      alphanumeric:true
+    },
+    PGATrgThreshold: {
+      number:true
+    },
+    SITrgThreshold: {
+      number:true
+    },
+    ReserveTrgThreshold: {
+      number:true
+    },
+    PGAAlertThreshold: {
+      number:true
+    },
+    SIAlertThreshold: {
+      number:true
+    },
+    ReserveAlertThreshold: {
+      number:true
+    }
+  }
+});	
 
  });
 </script>
