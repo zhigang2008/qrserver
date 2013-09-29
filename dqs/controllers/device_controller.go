@@ -136,8 +136,10 @@ func (this *DeviceController) Delete() {
 
 //重新获取设备参数
 func (this *DeviceController) RefreshDeviceParams() {
-	sid := this.GetString(":id")
-	err := quickserver.CommandRead(sid)
+	sid := this.GetString("id")
+	remote := this.GetString("remote")
+
+	err := quickserver.CommandRead(sid, remote)
 	answer := JsonAnswer{}
 	if err != nil {
 		answer.Ok = false
@@ -157,7 +159,8 @@ func (this *DeviceController) UpdateDeviceParams() {
 	//权限检查
 	this.AuthRoles("role_admin")
 
-	sid := this.GetString(":id")
+	sid := this.GetString("id")
+	remote := this.GetString("remote")
 	answer := JsonAnswer{}
 
 	//判断设备编号
@@ -169,7 +172,7 @@ func (this *DeviceController) UpdateDeviceParams() {
 			answer.Msg = "读取失败:" + err.Error()
 		} else {
 			//发送控制指令
-			err = quickserver.CommandSet(sid, quickserver.SensorInfo2RetData(&params))
+			err = quickserver.CommandSet(sid, remote, quickserver.SensorInfo2RetData(&params))
 			if err != nil {
 				answer.Ok = false
 				answer.Msg = "控制命令执行失败:" + err.Error()

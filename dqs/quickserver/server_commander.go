@@ -7,8 +7,8 @@ import (
 )
 
 //发送设备参数读取指令
-func CommandRead(id string) error {
-	connP := GetConnection(id)
+func CommandRead(id, remote string) error {
+	connP := GetConnection(remote)
 	if connP != nil {
 		command, err := DllUtil.GenerateReadParam(id)
 		if err == nil {
@@ -22,12 +22,12 @@ func CommandRead(id string) error {
 
 				//读取客户端反馈
 				c := make(chan []byte)
-				AddCommand(id, c)
+				AddCommand(remote, "G", c)
 				back := <-c
 
 				fmt.Printf("back=%s\n", back)
 				//取消控制命令
-				DeleteCommand(id)
+				DeleteCommand(remote, "G")
 
 				//进行数据校验
 				if len(back) < 11 {
@@ -37,7 +37,7 @@ func CommandRead(id string) error {
 				if string(backid) != id || (back[10] != 'g' && back[10] != 'G') {
 					log.Warn("接收到的数据与发送目标不匹配")
 					//重新发送数据
-					CommandRead(id)
+					CommandRead(id, remote)
 				} else {
 					//进行数据处理
 					err1 := dataProcessor.ProcessStatusData(back)
@@ -59,8 +59,8 @@ func CommandRead(id string) error {
 }
 
 //发送参数设置指令
-func CommandSet(id string, params *RetData) error {
-	connP := GetConnection(id)
+func CommandSet(id, remote string, params *RetData) error {
+	connP := GetConnection(remote)
 	//fmt.Println(params)
 
 	if connP != nil {
@@ -75,12 +75,12 @@ func CommandSet(id string, params *RetData) error {
 
 				//读取客户端反馈
 				c := make(chan []byte)
-				AddCommand(id, c)
+				AddCommand(remote, "S", c)
 				back := <-c
 
 				fmt.Printf("back=%s\n", back)
 				//取消控制命令
-				DeleteCommand(id)
+				DeleteCommand(remote, "S")
 
 				//进行数据校验
 				if len(back) < 11 {
@@ -91,7 +91,7 @@ func CommandSet(id string, params *RetData) error {
 				if string(backid) != id || (back[10] != 's' && back[10] != 'S') {
 					log.Warn("接收到的数据与发送目标不匹配")
 					//重新发送数据
-					CommandSet(id, params)
+					CommandSet(id, remote, params)
 				} else {
 					//进行数据处理
 					ok := DllUtil.ParseSetParam(back)
@@ -115,8 +115,8 @@ func CommandSet(id string, params *RetData) error {
 }
 
 //发送波形图数据读取指令
-func CommandFlashRead(id string, params *RetData) error {
-	connP := GetConnection(id)
+func CommandFlashRead(id, remote string, params *RetData) error {
+	connP := GetConnection(remote)
 	if connP != nil {
 		command, err := DllUtil.GenerateFlashReadParam(id)
 		if err == nil {
@@ -130,7 +130,7 @@ func CommandFlashRead(id string, params *RetData) error {
 
 				//读取客户端反馈
 				c := make(chan []byte)
-				AddCommand(id, c)
+				AddCommand(remote, "R", c)
 				back := <-c
 
 				fmt.Printf("back=%s\n", back)
@@ -138,7 +138,7 @@ func CommandFlashRead(id string, params *RetData) error {
 				//TODO 读取75帧数据,
 
 				//取消控制命令
-				DeleteCommand(id)
+				DeleteCommand(remote, "R")
 
 				//进行数据校验
 				if len(back) < 13 {
@@ -148,7 +148,7 @@ func CommandFlashRead(id string, params *RetData) error {
 				if string(backid) != id || (back[12] != 'r' && back[12] != 'R') {
 					log.Warn("接收到的数据与发送目标不匹配")
 					//重新发送数据
-					CommandRead(id)
+					CommandFlashRead(id, remote, params)
 				} else {
 					//进行数据处理
 					//err1 := dataProcessor.ProcessStatusData(back)

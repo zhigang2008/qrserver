@@ -11,6 +11,7 @@ import (
 	"net"
 	//"runtime"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -124,8 +125,11 @@ func receiver(server *Server, conn net.Conn) {
 	ClientNum++
 	log.Infof("当前建立连接的设备:%d", ClientNum)
 
-	//获取一个数据处理器
-	//dataProcessor := NewDataProcessor(server.dataManager)
+	//存储会话connection
+	if sessionSaved == false {
+		saveConnection(remoteHost, &conn)
+		sessionSaved = true
+	}
 
 	for {
 		n, err1 := conn.Read(buf)
@@ -138,30 +142,20 @@ func receiver(server *Server, conn net.Conn) {
 			}
 			deviceId = string(buf[0:10])
 
-			//存储会话connection
-			if sessionSaved == false {
-				saveConnection(deviceId, &conn)
-				sessionSaved = true
-			}
-
 			//数据处理
 			log.Info(string(buf[0:n]))
-			//判断是否有控制命令等待返回数据
-			c, ok := hasCommand(deviceId)
-			if ok == true {
-				c <- buf[0:n]
-			} else {
-				go dataProcessor.DataProcess(buf[0:n], remoteHost)
-			}
+
+			go dataProcessor.DataProcess(buf[0:n], remoteHost, &conn)
 
 		case io.EOF: //当对方断开连接时触发该方法
 			log.Warnf("远程终端[%s]已断开连接: %s \n", remoteHost, err1)
 			ClientNum--
 			//设备下线
 			if deviceId != "" {
-				removeConnection(deviceId)
+
 				dataProcessor.DeviceOffline(deviceId)
 			}
+			removeConnection(remoteHost)
 
 			log.Infof("当前建立连接的设备:%d", ClientNum)
 			return
@@ -170,9 +164,10 @@ func receiver(server *Server, conn net.Conn) {
 			ClientNum--
 			//设备下线
 			if deviceId != "" {
-				removeConnection(deviceId)
 				dataProcessor.DeviceOffline(deviceId)
 			}
+			removeConnection(remoteHost)
+
 			log.Infof("当前建立连接的设备:%d", ClientNum)
 			return
 		}
@@ -213,23 +208,23 @@ func GetConnection(id string) *net.Conn {
 }
 
 //设置控制命令
-func AddCommand(id string, c chan []byte) {
+func AddCommand(id, ctype string, c chan []byte) {
 	mut.Lock()
 	defer mut.Unlock()
 
-	CommandPool[id] = c
+	CommandPool[id+strings.ToUpper(ctype)] = c
 }
 
 //会话连接池移除会话
-func DeleteCommand(id string) {
+func DeleteCommand(id, ctype string) {
 	mut.Lock()
 	defer mut.Unlock()
-	delete(CommandPool, id)
+	delete(CommandPool, id+strings.ToUpper(ctype))
 }
 
 //判断是否有控制命令等待返回
-func hasCommand(id string) (chan []byte, bool) {
-	val, ok := CommandPool[id]
+func hasCommand(id, ctype string) (chan []byte, bool) {
+	val, ok := CommandPool[id+strings.ToUpper(ctype)]
 	if ok {
 		fmt.Printf("has command :%x\n", val)
 		return val, true

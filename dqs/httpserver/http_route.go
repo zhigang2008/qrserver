@@ -19,8 +19,8 @@ func routeConfig() {
 	//添加设备页面
 	beego.Router("/device/add", &controllers.DeviceController{}, "*:ToDeviceAddPage")
 	//设备参数
-	beego.Router("/deviceparams/refresh/:id", &controllers.DeviceController{}, "*:RefreshDeviceParams")
-	beego.Router("/deviceparams/update/:id", &controllers.DeviceController{}, "*:UpdateDeviceParams")
+	beego.Router("/deviceparams/refresh", &controllers.DeviceController{}, "*:RefreshDeviceParams")
+	beego.Router("/deviceparams/update", &controllers.DeviceController{}, "*:UpdateDeviceParams")
 	//设备自定义参数
 	beego.Router("/customparams/update/:id", &controllers.DeviceController{}, "*:UpdateCustomParams")
 

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	log "github.com/cihub/seelog"
+	"net"
 	"time"
 )
 
@@ -29,7 +30,7 @@ func NewDataProcessor(dm *DataManager) *DataProcessor {
 }
 
 //解析数据
-func (dp *DataProcessor) DataProcess(content []byte, remote string) (err error) {
+func (dp *DataProcessor) DataProcess(content []byte, remote string, conn *net.Conn) (err error) {
 	log.Info("Begin process data")
 
 	fmt.Printf("设备:%s\n", content[0:10])
@@ -42,10 +43,23 @@ func (dp *DataProcessor) DataProcess(content []byte, remote string) (err error) 
 		dp.ProcessFlashData(content)
 	case 'z', 'Z': //设备注册
 		dp.DeviceRegister(&content, remote)
+		dp.sendStatusReadCommand(string(content[0:10]), conn)
 	case 'g', 'G': //状态及参数设定
-		dp.ProcessStatusData(content)
+		//判断是否有控制命令等待返回数据
+		c, ok := hasCommand(remote, "G")
+		if ok == true {
+			c <- content
+		} else {
+			dp.ProcessStatusData(content)
+		}
 	case 'r', 'R': //地形波读取
 		fmt.Println("波形信息读取")
+	case 's', 'S': //设置参数
+		//判断是否有控制命令等待返回数据
+		c, ok := hasCommand(remote, "S")
+		if ok == true {
+			c <- content
+		}
 	default:
 		fmt.Println("无效数据")
 	}
@@ -146,4 +160,19 @@ func (dp *DataProcessor) ResetAllDeviceStatus() {
 		log.Warnf("所有设备状态重置失败:[%s]", err.Error())
 	}
 	log.Infof("所有设备状态重置为offline")
+}
+
+//发送状态读取命令
+func (dp *DataProcessor) sendStatusReadCommand(deviceid string, connP *net.Conn) {
+	command, err := DllUtil.GenerateReadParam(deviceid)
+	if err == nil {
+		//发送控制命令
+		_, err0 := (*connP).Write(command)
+
+		if err0 != nil {
+			log.Warnf("向[%s]设备发送状态读取指令失败:%s", deviceid, err0.Error())
+		} else {
+			log.Infof("向[%s]设备发送状态读取指令成功:%d", deviceid)
+		}
+	}
 }

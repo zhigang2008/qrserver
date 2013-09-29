@@ -321,6 +321,7 @@
 <script src="/static/js/validate.messages_zh.js"></script>
 <script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
 <script src="/static/js/tab.js"></script>
+<script src="/static/js/bootbox.min.js"></script>
 <script>
 	 //进度条
     var p=10;
@@ -357,7 +358,7 @@ $(document).ready(function(){
     $('#refreshparams').bind('click', function() {
       $.ajax({
              type: "GET",
-             url: "/deviceparams/refresh/{{.SensorId}}",
+             url: "/deviceparams/refresh?id={{.SensorId}}&&remote={{.RemoteAddr}}",
              dataType:"json",
              async: true,
              timeout: 60000,
@@ -365,8 +366,9 @@ $(document).ready(function(){
              success: function(json){
                if(json.Ok==true){
                	//读取成功后,刷新页面获取最新数据
-               	 alert("成功读取");
-               	 window.location.reload(true)
+               	 bootbox.alert("参数读取成功",function(){
+               	     window.location.reload(true);
+                  });
                 }else{
                 	showError(json.Msg)
                 }
@@ -428,7 +430,7 @@ $(document).ready(function(){
        if($("#setparamform").valid()){
       	$.ajax({
              type: "POST",
-             url: "/deviceparams/update/{{.SensorId}}",
+             url: "/deviceparams/update?id={{.SensorId}}&&remote={{.RemoteAddr}}",
              dataType:"json",
              async: true,
              timeout: 60000,
@@ -516,8 +518,8 @@ $("#setparamform").validate({
       number: true
     },
     RegionCode: {
-      minlength: 7,
-      maxlength:7
+      minlength: 6,
+      maxlength:6
     },
     Custom1: {
       alphanumeric:true
