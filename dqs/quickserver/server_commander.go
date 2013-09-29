@@ -151,14 +151,18 @@ func CommandFlashRead(id, remote string, params *RetData) error {
 					CommandFlashRead(id, remote, params)
 				} else {
 					//进行数据处理
-					//err1 := dataProcessor.ProcessStatusData(back)
+					ret, frame, err1 := DllUtil.ParseFlashData(back, string(backid))
 					//TODO 进行波形图处理
 
-					/*if err1 != nil {
+					if err1 != nil {
 						return errors.New("读取数据更新失败:" + err1.Error())
 
+					} else {
+						fmt.Println(frame)
+						fmt.Println(ret)
+
 					}
-					*/
+
 				}
 
 			}
