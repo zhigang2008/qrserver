@@ -5,6 +5,7 @@ import (
 	"dqs/util"
 	//"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
+	"time"
 )
 
 type AuditController struct {
@@ -52,6 +53,9 @@ func (this *AuditController) List() {
 	begintime := this.GetString("begintime")
 	if begintime != "" {
 		pagination.AddParams("begintime", begintime)
+	} else {
+		now := time.Now()
+		pagination.AddParams("begintime", now.Format(dao.AuditTimeLayout))
 	}
 	endtime := this.GetString("endtime")
 	if begintime != "" {

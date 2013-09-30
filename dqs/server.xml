@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Server>
 	<!--服务端监听地址,置空则监听该服务器上所有可用的IP地址 -->
-	<Host></Host>
-	<!--监听端口,默认是7777 -->
-	<Port>8083</Port>
+	<Host>192.168.0.43</Host>
+	<!--监听端口,默认是8083 -->
+	<Port>8089</Port>
 	<!--TCP类型,支持tcp4与tcp6 -->
 	<Type>tcp4</Type>
 	<!--数据库配置 -->

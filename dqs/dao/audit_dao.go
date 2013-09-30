@@ -6,7 +6,24 @@ import (
 	//"labix.org/v2/mgo"
 	"fmt"
 	"labix.org/v2/mgo/bson"
+	"time"
 )
+
+const (
+	AuditTimeLayout = "2006-01-02"
+)
+
+var Local *time.Location
+
+func init() {
+	l, err := time.LoadLocation("Local")
+	if err == nil {
+		Local = l
+		fmt.Println(Local)
+	} else {
+		fmt.Println("init:" + err.Error())
+	}
+}
 
 //添加审计日志
 func AddAuditLog(audit models.AuditLog) bool {
@@ -39,19 +56,28 @@ func AuditList(p *util.Pagination) error {
 	if actcontent != nil {
 		v, ok := actcontent.(string)
 		if ok {
-			content := "/" + v + "/"
-			m["actcontent"] = bson.M{"$regex": content}
+			regex := bson.RegEx{v, "i"}
+			m["actcontent"] = bson.M{"$regex": regex}
 		}
 	}
+
+	timeparam := bson.M{}
 	if begintime != nil {
-		m["acttime"] = bson.M{"$gte": begintime}
+		sbtime, ok := begintime.(string)
+		if ok {
+			btime, _ := time.ParseInLocation(AuditTimeLayout, sbtime, Local)
+			timeparam["$gte"] = btime
+		}
 	}
 	if endtime != nil {
-		m["acttime"] = bson.M{"$lte": endtime}
+		setime, ok := endtime.(string)
+		if ok {
+			etime, _ := time.ParseInLocation(AuditTimeLayout, setime, Local)
+			etime = etime.Add(time.Hour * 24)
+			timeparam["$lt"] = etime
+		}
 	}
-	if begintime != nil && endtime != nil {
-		m["acttime"] = bson.M{"$gte": begintime, "$lte": endtime}
-	}
+	m["acttime"] = timeparam
 
 	for k, v := range m {
 		fmt.Printf("[%s]=[%s]", k, v)

@@ -10,7 +10,7 @@ import (
 const (
 	configFile  = "server.xml"
 	defaultHost = ""
-	defaultPort = 7777
+	defaultPort = 8083
 	defaultType = "tcp4"
 	TCP4        = "tcp4"
 	TCP6        = "tcp6"
