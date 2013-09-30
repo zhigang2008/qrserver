@@ -35,6 +35,8 @@ func routeConfig() {
 	beego.Router("/userinfo/update", &controllers.UserSelfController{}, "*:Update")
 	beego.Router("/userinfo/resetpwd", &controllers.UserSelfController{}, "*:ResetPassword")
 
+	//审计日志
+	beego.Router("/audit", &controllers.AuditController{}, "*:List")
 	//登录管理
 	beego.Router("/sign", &controllers.CommonController{}, "*:Sign")
 	beego.Router("/signout", &controllers.CommonController{}, "*:SignOut")

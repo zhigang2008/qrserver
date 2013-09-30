@@ -4,6 +4,7 @@ import (
 	"dqs/models"
 	"dqs/util"
 	//"labix.org/v2/mgo"
+	"fmt"
 	"labix.org/v2/mgo/bson"
 )
 
@@ -21,9 +22,40 @@ func AddAuditLog(audit models.AuditLog) bool {
 func AuditList(p *util.Pagination) error {
 	c := GetSession().DB(DatabaseName).C(AuditCollection)
 	audits := []models.AuditLog{}
+
 	//构造查询参数
 	m := bson.M{}
+	userid := p.QueryParams["userid"]
+	actcontent := p.QueryParams["actcontent"]
+	begintime := p.QueryParams["begintime"]
+	endtime := p.QueryParams["endtime"]
 
+	fmt.Println(userid)
+	fmt.Println(userid)
+
+	if userid != nil {
+		m["userid"] = userid
+	}
+	if actcontent != nil {
+		v, ok := actcontent.(string)
+		if ok {
+			content := "/" + v + "/"
+			m["actcontent"] = bson.M{"$regex": content}
+		}
+	}
+	if begintime != nil {
+		m["acttime"] = bson.M{"$gte": begintime}
+	}
+	if endtime != nil {
+		m["acttime"] = bson.M{"$lte": endtime}
+	}
+	if begintime != nil && endtime != nil {
+		m["acttime"] = bson.M{"$gte": begintime, "$lte": endtime}
+	}
+
+	for k, v := range m {
+		fmt.Printf("[%s]=[%s]", k, v)
+	}
 	//查询总数
 	query := c.Find(&m).Sort("acttime")
 	count, err := query.Count()
