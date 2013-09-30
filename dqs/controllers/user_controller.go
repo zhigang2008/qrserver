@@ -91,6 +91,8 @@ func (this *UserController) Post() {
 		} else {
 			answer.Ok = true
 			answer.Msg = "保存成功"
+			//audit
+			this.AuditLog("添加用户["+user.UserId+"]", true)
 		}
 	}
 
@@ -122,6 +124,8 @@ func (this *UserController) Put() {
 		} else {
 			answer.Ok = true
 			answer.Msg = "用户更改成功"
+			//audit
+			this.AuditLog("更改用户信息["+user.UserId+"]", true)
 		}
 	}
 
@@ -145,6 +149,8 @@ func (this *UserController) Delete() {
 		} else {
 			answer.Ok = true
 			answer.Msg = "删除成功"
+			//audit
+			this.AuditLog("删除用户["+oid+"]", true)
 		}
 	} else {
 		answer.Ok = false
@@ -186,10 +192,11 @@ func (this *UserController) ToResetPassword() {
 
 //重置用户密码
 func (this *UserController) ResetPassword() {
-	answer := JsonAnswer{}
+	//权限检查
+	this.AuthRoles("role_admin")
 
+	answer := JsonAnswer{}
 	uid := this.GetString("UserId")
-	oldPwd := this.GetString("oldPwd")
 	newPwd := this.GetString("newPwd")
 
 	user := dao.GetUser(uid)
@@ -198,19 +205,17 @@ func (this *UserController) ResetPassword() {
 		answer.Ok = false
 		answer.Msg = "当前用户不存在"
 	} else {
-		if user.CheckPwd(oldPwd) == false {
+		err := dao.ResetUserPassword(uid, newPwd)
+		if err != nil {
 			answer.Ok = false
-			answer.Msg = "原始密码不正确"
+			answer.Msg = err.Error()
 		} else {
-			err := dao.ResetUserPassword(uid, newPwd)
-			if err != nil {
-				answer.Ok = false
-				answer.Msg = err.Error()
-			} else {
-				answer.Ok = true
-				answer.Msg = "重置密码成功"
-			}
+			answer.Ok = true
+			answer.Msg = "重置密码成功"
+			//audit
+			this.AuditLog("重置用户密码["+user.UserId+"]", true)
 		}
+
 	}
 
 	this.Data["json"] = &answer

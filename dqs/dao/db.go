@@ -15,6 +15,7 @@ const (
 	defaultDataCollection   = "data"   //默认数据Collection
 	defaultDeviceCollection = "device" //默认设备Collection
 	defaultUserCollection   = "user"   //默认用户Collection
+	defaultAuditCollection  = "audit"  //默认审计Collection
 )
 
 //全局信息
@@ -25,6 +26,7 @@ var (
 	DataCollection   string
 	DeviceCollection string
 	UserCollection   string
+	AuditCollection  string
 )
 
 //初始化数据库连接
@@ -42,6 +44,7 @@ func Init(host string, port int, dbname, datacol, devicecol, usercol string) (er
 	DataCollection = defaultDataCollection
 	DeviceCollection = defaultDeviceCollection
 	UserCollection = defaultUserCollection
+	AuditCollection = defaultAuditCollection
 
 	if dbname != "" {
 		DatabaseName = dbname

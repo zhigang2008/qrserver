@@ -101,6 +101,7 @@ func (this *DeviceController) Post() {
 		} else {
 			answer.Ok = true
 			answer.Msg = "保存成功"
+			this.AuditLog("添加设备["+device.SensorId+"]", true)
 		}
 	}
 
@@ -124,6 +125,7 @@ func (this *DeviceController) Delete() {
 		} else {
 			answer.Ok = true
 			answer.Msg = "删除成功"
+			this.AuditLog("删除设备["+sid+"]", true)
 		}
 	} else {
 		answer.Ok = false
@@ -195,6 +197,8 @@ func (this *DeviceController) UpdateDeviceParams() {
 					answer.Ok = true
 					answer.Msg = "成功"
 				}
+				//audit
+				this.AuditLog("更新设备参数["+device.SensorId+"]", true)
 			}
 		}
 	}
@@ -231,6 +235,8 @@ func (this *DeviceController) UpdateCustomParams() {
 			} else {
 				answer.Ok = true
 				answer.Msg = "成功"
+				//audit
+				this.AuditLog("更新设备自定义参数["+device.SensorId+"]", true)
 			}
 		}
 	}

@@ -1,8 +1,11 @@
 package controllers
 
 import (
+	"dqs/dao"
 	"dqs/models"
 	"github.com/astaxie/beego"
+	"strings"
+	"time"
 )
 
 const (
@@ -87,6 +90,32 @@ func (this *BaseController) Authentication() {
 
 	if check == false {
 		this.Abort("401")
+	}
+
+}
+
+//进行审计记录
+func (this *BaseController) AuditLog(cont string, status bool) {
+	audit := models.AuditLog{}
+	audit.ActTime = time.Now()
+	audit.ActType = models.ActOperation
+	audit.ActContent = cont
+	audit.Status = status
+	remote := this.Ctx.Request.RemoteAddr
+	pos := strings.Index(remote, ":")
+	audit.RemoteAddr = remote
+	if pos > 0 {
+		audit.RemoteAddr = remote[0:pos]
+	}
+
+	if beego.SessionOn {
+		u, ok := this.GetSession(CURRENTUSER).(models.User)
+		if ok {
+			audit.UserId = u.UserId
+			audit.UserName = u.UserName
+			//增加审计记录
+			dao.AddAuditLog(audit)
+		}
 	}
 
 }
