@@ -58,7 +58,7 @@ func (this *AuditController) List() {
 		pagination.AddParams("begintime", now.Format(dao.AuditTimeLayout))
 	}
 	endtime := this.GetString("endtime")
-	if begintime != "" {
+	if endtime != "" {
 		pagination.AddParams("endtime", endtime)
 	}
 

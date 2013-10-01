@@ -18,9 +18,9 @@
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+            <span class="icon-bar">ss</span>
+            <span class="icon-bar">sss</span>
+            <span class="icon-bar">sss</span>
           </button>
           <a class="navbar-brand" href="/"><b>地震烈度速报平台</b></a>
         </div>
@@ -61,15 +61,23 @@
             <li><a href="/signout" data-toggle="tooltip"  data-placement="bottom" title="注销"><span class="glyphicon glyphicon-log-out"></span></a></li>
          </ul>
           {{else}}
-          <form id="signform" action="/sign" method="post" class="navbar-form navbar-right">
-            <div class="form-group">
-              <input type="text" name="SignId" placeholder="用户ID/Email/手机" class="form-control">
+          <div class="col-lg-6 navbar-right">
+          <form id="signform" action="/sign" method="post" class="navbar-form ">
+            <div class="col-lg-5">
+            	<div class="input-group" >
+               <span class="input-group-addon">用户</span>
+               <input type="text" name="SignId" placeholder="ID/Email/手机" class="form-control">
+             </div>
             </div>
-            <div class="form-group">
+            <div class="col-lg-5">
+            	<div class="input-group">
+              <span class="input-group-addon">密码</span>
               <input type="password" name="Password" placeholder="密码" class="form-control">
+             </div>
             </div>
-            <button type="submit" class="btn btn-success">登陆</button>
+              <button type="submit" class="btn btn-success">登陆</button>
           </form>
+        </div>
           {{end}}
         </div><!--/.navbar-collapse -->
       </div>

@@ -37,17 +37,21 @@
       </div>
      
       <form id="loginform" class="form-horizontal" role="form" action="/sign" method="post">
-        <!--隐藏,跳转地址-->
-        <input type="hidden" name="tourl" value="{{.tourl}}" > 
-        <p class="help-block"></p>
         <div class="form-group">
-         <div class="col-sm-offset-3 col-sm-5">
+        	<!--隐藏,跳转地址-->
+          <input type="hidden" name="tourl" value="{{.tourl}}" > 
+           <p class="help-block"></p>
+        </div>
+        <div class="form-group">
+         <label class="col-sm-3 control-label" for="SignId">登陆ID:</label>
+         <div class="col-sm-5">
           <input type="text" id="SignId" name="SignId" class="form-control" placeholder="用户ID/ Email/ 手机号" autofocus>
-         <p class="help-block">您可以使用注册的用户ID、email、手机号进行登录</p>
+          <p class="help-block">您可以使用注册的用户ID、email、手机号进行登录</p>
         </div>
        </div>
         <div class="form-group">
-         <div class="col-sm-offset-3 col-sm-5">
+         <label class="col-sm-3 control-label" for="password">密码:</label>
+         <div class=" col-sm-5">
           <input type="password" id="Password" name="Password" class="form-control" placeholder="Password">
           <p class="help-block"></p>
         </div>

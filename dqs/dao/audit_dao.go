@@ -47,9 +47,6 @@ func AuditList(p *util.Pagination) error {
 	begintime := p.QueryParams["begintime"]
 	endtime := p.QueryParams["endtime"]
 
-	fmt.Println(userid)
-	fmt.Println(userid)
-
 	if userid != nil {
 		m["userid"] = userid
 	}
@@ -79,9 +76,6 @@ func AuditList(p *util.Pagination) error {
 	}
 	m["acttime"] = timeparam
 
-	for k, v := range m {
-		fmt.Printf("[%s]=[%s]", k, v)
-	}
 	//查询总数
 	query := c.Find(&m).Sort("acttime")
 	count, err := query.Count()
