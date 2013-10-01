@@ -47,9 +47,10 @@
 	 		<td>{{.Email}}</td>
 	 		<td>
 	 			{{range $ri,$rv:=.Roles}}
-	 			 {{if compare $rv "role_admin"}}管理员,{{end}}
+	 			 {{if compare $rv "role_admin"}}系统管理员,{{end}}
 	 			 {{if compare $rv "role_user"}}普通用户,{{end}}
-	 			 {{if compare $rv "role_visitor"}}访客,{{end}}
+	 			 {{if compare $rv "role_device"}}设备管理员,{{end}}
+	 			 {{if compare $rv "role_report"}}速报管理员,{{end}}
 	 			{{end}}
 	 		</td>
 	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</td>

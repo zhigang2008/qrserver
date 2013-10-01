@@ -74,7 +74,7 @@ func (this *DeviceController) Get() {
 func (this *DeviceController) Post() {
 
 	//权限检查
-	this.AuthRoles("role_admin")
+	this.AuthRoles("role_admin", "role_device")
 
 	answer := JsonAnswer{}
 
@@ -88,6 +88,7 @@ func (this *DeviceController) Post() {
 	if err != nil {
 		answer.Ok = false
 		answer.Msg = "数据传递失败:" + err.Error()
+		log.Warnf("添加设备-解析参数失败:%s", err.Error())
 	} else {
 		device.SetParams = setParams
 		device.CustomParams = customParams
@@ -98,9 +99,12 @@ func (this *DeviceController) Post() {
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = "设备添加失败:" + err.Error()
+			log.Warnf("添加设备失败[%s]:%s", device.SensorId, err.Error())
 		} else {
 			answer.Ok = true
 			answer.Msg = "保存成功"
+
+			log.Infof("添加设备成功[%s]", device.SensorId)
 			this.AuditLog("添加设备["+device.SensorId+"]", true)
 		}
 	}
@@ -112,7 +116,7 @@ func (this *DeviceController) Post() {
 //删除设备
 func (this *DeviceController) Delete() {
 	//权限检查
-	this.AuthRoles("role_admin")
+	this.AuthRoles("role_admin", "role_device")
 
 	answer := JsonAnswer{}
 	sid := this.GetString(":objectId")
@@ -122,9 +126,12 @@ func (this *DeviceController) Delete() {
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = "设备删除失败:" + err.Error()
+			log.Warnf("删除设备失败[%s]:%s", sid, err.Error())
 		} else {
 			answer.Ok = true
 			answer.Msg = "删除成功"
+
+			log.Infof("删除设备成功[%s]", sid)
 			this.AuditLog("删除设备["+sid+"]", true)
 		}
 	} else {
@@ -146,10 +153,12 @@ func (this *DeviceController) RefreshDeviceParams() {
 	if err != nil {
 		answer.Ok = false
 		answer.Msg = "读取失败:" + err.Error()
+		log.Warnf("读取设备参数失败[%s]:%s", sid, err.Error())
 
 	} else {
 		answer.Ok = true
 		answer.Msg = "成功"
+		log.Infof("获取设备参数成功[%s]", sid)
 	}
 	this.Data["json"] = &answer
 	this.ServeJson()
@@ -159,7 +168,7 @@ func (this *DeviceController) RefreshDeviceParams() {
 //更新设备参数
 func (this *DeviceController) UpdateDeviceParams() {
 	//权限检查
-	this.AuthRoles("role_admin")
+	this.AuthRoles("role_admin", "role_device")
 
 	sid := this.GetString("id")
 	remote := this.GetString("remote")
@@ -172,12 +181,14 @@ func (this *DeviceController) UpdateDeviceParams() {
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = "读取失败:" + err.Error()
+			log.Warnf("更新设备参数-读取参数失败[%s]:%s", sid, err.Error())
 		} else {
 			//发送控制指令
 			err = quickserver.CommandSet(sid, remote, quickserver.SensorInfo2RetData(&params))
 			if err != nil {
 				answer.Ok = false
 				answer.Msg = "控制命令执行失败:" + err.Error()
+				log.Warnf("更新设备参数-发送控制命令失败[%s]:%s", sid, err.Error())
 			} else {
 				answer.Ok = true
 				answer.Msg = "成功"
@@ -193,10 +204,12 @@ func (this *DeviceController) UpdateDeviceParams() {
 				if err != nil {
 					answer.Ok = false
 					answer.Msg = "设备数据已更新,数据库保存未成功.请等待设备上报数据"
+					log.Warnf("更新设备参数成功-数据库保存失败[%s]:%s", sid, err.Error())
 				} else {
 					answer.Ok = true
 					answer.Msg = "成功"
 				}
+				log.Infof("更新设备参数成功[%s]", sid)
 				//audit
 				this.AuditLog("更新设备参数["+device.SensorId+"]", true)
 			}
@@ -210,7 +223,7 @@ func (this *DeviceController) UpdateDeviceParams() {
 //更新自定义参数
 func (this *DeviceController) UpdateCustomParams() {
 	//权限检查
-	this.AuthRoles("role_admin")
+	this.AuthRoles("role_admin", "role_device")
 
 	sid := this.GetString(":id")
 	answer := JsonAnswer{}
@@ -222,6 +235,7 @@ func (this *DeviceController) UpdateCustomParams() {
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = "读取失败:" + err.Error()
+			log.Warnf("更新设备额外参数-参数解析失败[%s]:%s", sid, err.Error())
 		} else {
 			//执行保存操作
 			device := models.DeviceInfo{}
@@ -232,9 +246,12 @@ func (this *DeviceController) UpdateCustomParams() {
 			if err != nil {
 				answer.Ok = false
 				answer.Msg = "数据保存失败:" + err.Error()
+				log.Warnf("更新设备额外参数-保存失败[%s]:%s", sid, err.Error())
 			} else {
 				answer.Ok = true
 				answer.Msg = "成功"
+
+				log.Infof("更新设备自定义参数成功[%s]", sid)
 				//audit
 				this.AuditLog("更新设备自定义参数["+device.SensorId+"]", true)
 			}
@@ -248,7 +265,7 @@ func (this *DeviceController) UpdateCustomParams() {
 //添加设备页面
 func (this *DeviceController) ToDeviceAddPage() {
 	//权限检查
-	this.AuthRoles("role_admin")
+	this.AuthRoles("role_admin", "role_device")
 
 	this.Data["title"] = "添加设备"
 	this.Data["author"] = "wangzhigang"

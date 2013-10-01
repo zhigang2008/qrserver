@@ -86,7 +86,7 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="UserId" >角色</label>
     <div class="col-sm-6">
-    	<p class="form-control-static">[{{if contain .Roles "role_admin"}}管理员{{end}},{{if contain .Roles "role_user"}} 普通用户 {{end}},{{if contain .Roles "role_visitor"}} 访客 {{end}}]</p>
+    	<p class="form-control-static">[{{if contain .Roles "role_admin"}}系统管理员{{end}}{{if contain .Roles "role_device"}},设备管理员,{{end}}{{if contain .Roles "role_report"}},速报管理员{{end}}{{if contain .Roles "role_user"}},普通用户{{end}}]</p>
       <p class="help-block"></p>
     </div>
   </div>
@@ -122,7 +122,7 @@
   <div class="form-group"></div>
   
   <div class="form-group">
-    <div class="col-sm-offset-3  btn-group-lg">
+    <div class="col-sm-offset-3  btn-group-default">
         <button id="btn-pwd-save" type="button" class="btn btn-primary">确&nbsp;&nbsp;定</button>
         
         <button type="reset" class="col-sm-offset-2 btn btn-danger">取&nbsp;&nbsp;消</button>
@@ -187,7 +187,7 @@ $(document).ready(function(){
     },
     rePwd: {
       required: true,
-      equalTo: newPwd
+      equalTo: "#newPwd"
     }
   }
  });
@@ -258,7 +258,6 @@ $(document).ready(function(){
              success: function(json){
                if(json.Ok==true){
                     showSuccess("密码修改成功!");
-               	 
                 }else{
                  showError(json.Msg);
                 }

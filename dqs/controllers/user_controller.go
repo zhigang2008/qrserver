@@ -88,11 +88,15 @@ func (this *UserController) Post() {
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = "用户添加失败:" + err.Error()
+			log.Warnf("添加用户[%s]失败:%s", user.UserId, err.Error())
 		} else {
 			answer.Ok = true
 			answer.Msg = "保存成功"
+
+			log.Infof("成功添加用户[%s]", user.UserId)
 			//audit
 			this.AuditLog("添加用户["+user.UserId+"]", true)
+
 		}
 	}
 
@@ -121,9 +125,12 @@ func (this *UserController) Put() {
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = "用户更改失败:" + err.Error()
+			log.Warnf("更改用户[%s]失败:%s", user.UserId, err.Error())
 		} else {
 			answer.Ok = true
 			answer.Msg = "用户更改成功"
+
+			log.Infof("成功更改用户信息[%s]", user.UserId)
 			//audit
 			this.AuditLog("更改用户信息["+user.UserId+"]", true)
 		}
@@ -146,9 +153,12 @@ func (this *UserController) Delete() {
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = "用户删除失败:" + err.Error()
+			log.Warnf("删除用户[%s]失败:%s", oid, err.Error())
 		} else {
 			answer.Ok = true
 			answer.Msg = "删除成功"
+
+			log.Infof("成功删除用户[%s]", oid)
 			//audit
 			this.AuditLog("删除用户["+oid+"]", true)
 		}
@@ -209,9 +219,12 @@ func (this *UserController) ResetPassword() {
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = err.Error()
+			log.Warnf("重置用户密码失败[%s]:%s", user.UserId, err.Error())
 		} else {
 			answer.Ok = true
 			answer.Msg = "重置密码成功"
+
+			log.Infof("成功重置用户密码[%s]", user.UserId)
 			//audit
 			this.AuditLog("重置用户密码["+user.UserId+"]", true)
 		}

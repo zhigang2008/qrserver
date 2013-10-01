@@ -31,7 +31,7 @@ func (this *AuditController) List() {
 	}
 	pagesize, err2 := this.GetInt("pagesize")
 	if err2 != nil {
-		pagination.PageSize = 20
+		pagination.PageSize = 10
 	} else {
 		pagination.PageSize = int(pagesize)
 	}

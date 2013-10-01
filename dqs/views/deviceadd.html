@@ -32,27 +32,27 @@
      </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="SonsorId" >传感器编号</label>
+    <label class="col-sm-2 control-label" for="SensorId" >传感器编号*</label>
     <div class="col-sm-6">
-      <input id="SensorId" type="text" class="form-control" name="SensorId"  placeholder="SensorId" value="{{.SensorId}}" required />
+      <input id="SensorId" type="text" class="form-control" name="SensorId"  placeholder="SensorId" value="{{.SensorId}}"  />
       <p class="help-block"></p>
     </div>
     <div class="col-sm-2"></div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="SiteName">站点名称</label>
+    <label class="col-sm-2 control-label" for="SiteName">站点名称*</label>
     <div class="col-sm-6">
       <input type="text" class="form-control" id="SiteName" name="SiteName" placeholder="SiteName" value="{{.SiteName}}" />
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="Longitude">经度</label>
+    <label class="col-sm-2 control-label" for="Longitude">经度*</label>
     <div class="col-sm-6">
       <input type="text" class="form-control" id="Longitude" name="Longitude" placeholder="Longitude" value="{{.Longitude}}" />
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="Latitude">纬度</label>
+    <label class="col-sm-2 control-label" for="Latitude">纬度*</label>
     <div class="col-sm-6">
       <input type="text" class="form-control" id="Latitude" name="Latitude" placeholder="Latitude" value="{{.Latitude}}" />
     </div>
@@ -60,25 +60,58 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SiteType">场地类型</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="SiteType" name="SiteType" placeholder="SiteType" value="{{.SiteType}}" />
+      <!--<input type="text" class="form-control" id="SiteType" name="SiteType" placeholder="SiteType" value="{{.SiteType}}" />-->
+      <select class="form-control" id="SiteType" name="SiteType">
+        <option value="1">场地一</option>
+        <option value="2">场地二</option>
+        <option value="3">场地三</option>
+        <option value="4">场地四</option>
+        <option value="5">场地五</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="ObserveObject">观测对象</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="ObserveObject" name="ObserveObject" placeholder="ObserveObject" value="{{.ObserveObject}}" />
+      <!--<input type="text" class="form-control" id="ObserveObject" name="ObserveObject" placeholder="ObserveObject" value="{{.ObserveObject}}" />-->
+      <select class="form-control" id="ObserveObject" name="ObserveObject">
+        <option value="1">对象一</option>
+        <option value="2">对象二</option>
+        <option value="3">对象三</option>
+        <option value="4">对象四</option>
+        <option value="5">对象五</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Accelerometer">加速度计型号</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Accelerometer" name="Accelerometer" placeholder="Accelerometer" value="{{.Accelerometer}}" />
+      <!--<input type="text" class="form-control" id="Accelerometer" name="Accelerometer" placeholder="Accelerometer" value="{{.Accelerometer}}" />
+      -->
+      <select class="form-control" id="Accelerometer" name="Accelerometer">
+        <option value="1">加速度一型</option>
+        <option value="2">加速度二型</option>
+        <option value="3">加速度三型</option>
+        <option value="4">加速度四型</option>
+        <option value="5">加速度五型</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Direction">安装方向</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Direction"  name="Direction" placeholder="Direction" value="{{.Direction}}" />
+      <label class="radio-inline">
+        <input type="radio" name="Direction"   value="1" checked> 上
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="Direction"   value="2" > 下
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="Direction"   value="3" > 左
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="Direction"   value="4" > 右
+      </label>
     </div>
   </div>
   <div class="form-group">
@@ -224,28 +257,35 @@
 <div class="form-group">
 	<label class="col-sm-2 control-label" for="NetType">网络类型</label>
     <div class="col-sm-6">
-      <input id="NetType" type="text" class="form-control" name="NetType"  placeholder="NetType" value="{{.NetType}}" />
+      <!--<input id="NetType" type="text" class="form-control" name="NetType"  placeholder="NetType"  />-->
+      <label class="radio-inline">
+        <input type="radio" name="NetType"   value="3G" checked> 3G
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="NetType"   value="NET" > 有线
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="NetType"   value="WIFI" > WIFI
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="NetType"   value="GPRS" > GPRS
+      </label>
     </div>
   </div>
    <div class="form-group">
   <label class="col-sm-2 control-label" for="NetQixian">网络期限</label>
     <div class="col-sm-6">
-      <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" value="{{.NetQixian}}" />
+      <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" />
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetQixian">网络流量</label>
+  <label class="col-sm-2 control-label" for="NetTraffic">网络流量</label>
     <div class="col-sm-6">
-      <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic" value="{{.NetTraffic}}" />
+      <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic"  />
     </div>
   </div>
-   <div class="form-group">
-  <label class="col-sm-2 control-label" for="NotUse">是否禁用</label>
-    <div class="col-sm-6">
-      <input id="NotUse" type="text" class="form-control" name="NotUse"  placeholder="true/false" value="{{.NotUse}}" />
-    </div>
-  </div>
-
+  <!--是否禁用-->
+     <input id="NotUse" type="hidden" name="NotUse"  value="false" />
 </form>
 
 </div> <!--end panel-body-->
@@ -257,21 +297,48 @@
 <script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
 <script>
  $(document).ready(function() {	
+ 	//校验
   var form = $("#deviceform");
-  form.validate(
-  /* {
-  	   errorPlacement: function(error, element) {
-          error.appendTo( element.parent("div").next("div") );
-      },
-	    highlight: function(label) {
-	    	$(label).closest('.form-group').addClass('has-error');
-	    },
-	    unhighlight: function(label) {
-	    	$(label).closest('.form-group').removeClass('has-error');
-	    }
-	  }
-	  */
-	  );	
+  form.validate({
+    rules: {
+    SensorId: {
+      required: true,
+      minlength: 10,
+      maxlength: 10
+    },
+    SiteName: {
+      required: true,
+      alphanumeric: true
+    },
+    Longitude: {
+      required: true,
+      number: true
+    },
+    Latitude: {
+      required: true,
+      number: true
+    },
+    SiteType: {
+      required: true
+    },
+    Period: {
+      number: true
+    },
+    RegionCode: {
+    	digits:true,
+      minlength: 6,
+      maxlength: 6
+    },
+    NetQixian: {
+      number: true
+    },
+    NetTraffic: {
+      number: true
+    }
+   }
+   
+  });	
+  
   
   //提交操作
  	$("#savedevice").bind('click', function() {

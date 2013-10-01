@@ -99,14 +99,18 @@
    <div class="form-group">
     <label class="col-sm-2 control-label" for="Roles" >角色</label>
     <div class="col-sm-6">
-      <label class="checkbox-inline">
-         <input type="checkbox"  name="Roles" value="role_admin" {{if contain .Roles "role_admin"}} checked {{end}} disabled /> 管理员
-      </label>
+      
       <label class="checkbox-inline">
          <input type="checkbox"  name="Roles" value="role_user"  {{if contain .Roles "role_user"}} checked {{end}} disabled /> 普通用户
       </label>
       <label class="checkbox-inline">
-          <input type="checkbox" name="Roles" value="role_visitor" {{if contain .Roles "role_visitor"}} checked {{end}} disabled /> 访客
+          <input type="checkbox" name="Roles" value="role_device" {{if contain .Roles "role_device"}} checked {{end}} disabled /> 设备管理员
+      </label>
+      <label class="checkbox-inline">
+         <input type="checkbox"  name="Roles" value="role_report" {{if contain .Roles "role_report"}} checked {{end}} disabled /> 速报管理员
+      </label>
+      <label class="checkbox-inline">
+         <input type="checkbox"  name="Roles" value="role_admin" {{if contain .Roles "role_admin"}} checked {{end}} disabled /> 系统管理员
       </label>
     </div>
  </div>

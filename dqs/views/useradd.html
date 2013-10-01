@@ -31,21 +31,21 @@
      </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="UserId" >用户ID</label>
+    <label class="col-sm-2 control-label" for="UserId" >用户ID*</label>
     <div class="col-sm-6">
       <input id="UserId" type="text" class="form-control" name="UserId"  placeholder="UserId"  />
       <p class="help-block"></p>
     </div>
   </div>
  <div class="form-group">
-    <label class="col-sm-2 control-label" for="UserName" >真实姓名</label>
+    <label class="col-sm-2 control-label" for="UserName" >真实姓名*</label>
     <div class="col-sm-6">
       <input id="UserName" type="text" class="form-control" name="UserName"  placeholder="UserName"  />
       <p class="help-block"></p>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="Email" >Email</label>
+    <label class="col-sm-2 control-label" for="Email" >Email*</label>
     <div class="col-sm-6">
       <input id="Email" type="text" class="form-control" name="Email"  placeholder="Email"  />
       <p class="help-block"></p>
@@ -82,14 +82,18 @@
    <div class="form-group">
     <label class="col-sm-2 control-label" for="Roles" >角色</label>
     <div class="col-sm-6">
-      <label class="checkbox-inline">
-         <input type="checkbox"  name="Roles" value="role_admin"> 管理员
-      </label>
+      
       <label class="checkbox-inline">
          <input type="checkbox"  name="Roles" value="role_user" checked> 普通用户
       </label>
       <label class="checkbox-inline">
-          <input type="checkbox" name="Roles" value="role_visitor"> 访客
+         <input type="checkbox"  name="Roles" value="role_device" >设备管理员
+      </label>
+      <label class="checkbox-inline">
+         <input type="checkbox"  name="Roles" value="role_report" >速报管理员
+      </label>
+      <label class="checkbox-inline">
+         <input type="checkbox"  name="Roles" value="role_admin"> 系统管理员
       </label>
     </div>
   </div>
