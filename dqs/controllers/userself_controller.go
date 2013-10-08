@@ -28,6 +28,7 @@ func (this *UserSelfController) View() {
 	if sesUser.UserId == u.UserId {
 		this.Data["user"] = u
 		this.TplNames = "userself.html"
+		this.Render()
 	} else {
 		log.Warnf("用户[%s]试图修改[%s]信息,被禁止", sesUser.UserId, u.UserId)
 		this.Redirect("/login", 302)

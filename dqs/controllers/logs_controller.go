@@ -52,4 +52,5 @@ func (this *LogsController) Get() {
 	}
 
 	this.TplNames = "logs.html"
+	this.Render()
 }

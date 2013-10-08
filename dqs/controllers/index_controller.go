@@ -14,4 +14,5 @@ func (this *MainController) Get() {
 
 	this.CheckUser()
 	this.TplNames = "index.html"
+	this.Render()
 }

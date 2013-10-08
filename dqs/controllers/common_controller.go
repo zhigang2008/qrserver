@@ -85,6 +85,7 @@ func (this *CommonController) Login() {
 	this.Data["tourl"] = this.GetString("tourl")
 
 	this.TplNames = "login.html"
+	this.Render()
 }
 
 //进行审计记录

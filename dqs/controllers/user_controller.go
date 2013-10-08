@@ -64,6 +64,7 @@ func (this *UserController) Get() {
 		this.Data["pagedata"] = pagination
 		this.TplNames = "userlist.html"
 	}
+	this.Render()
 }
 
 //添加用户
@@ -181,6 +182,7 @@ func (this *UserController) ToUserAddPage() {
 
 	this.CheckUser()
 	this.TplNames = "useradd.html"
+	this.Render()
 }
 
 //添加用户页面
@@ -198,6 +200,7 @@ func (this *UserController) ToResetPassword() {
 	this.Data["user"] = user
 
 	this.TplNames = "resetpwd.html"
+	this.Render()
 }
 
 //重置用户密码

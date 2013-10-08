@@ -18,4 +18,5 @@ func (this *AnalyzeController) Get() {
 	this.Data["author"] = "wangzhigang"
 	this.CheckUser()
 	this.TplNames = "analyze.html"
+	this.Render()
 }

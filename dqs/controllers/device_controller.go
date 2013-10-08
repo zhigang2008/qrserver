@@ -26,7 +26,6 @@ func (this *DeviceController) Get() {
 		this.Data["device"] = dao.GetDevice(sid)
 
 		this.TplNames = "device.html"
-
 	} else { //列表
 		this.Data["title"] = "设备列表"
 		this.Data["author"] = "wangzhigang"
@@ -68,6 +67,7 @@ func (this *DeviceController) Get() {
 		this.Data["pagedata"] = pagination
 		this.TplNames = "devicelist.html"
 	}
+	this.Render()
 }
 
 //添加设备
@@ -271,4 +271,5 @@ func (this *DeviceController) ToDeviceAddPage() {
 	this.Data["author"] = "wangzhigang"
 	this.CheckUser()
 	this.TplNames = "deviceadd.html"
+	this.Render()
 }

@@ -47,4 +47,6 @@ func (this *AlarmController) Get() {
 
 	this.Data["pagedata"] = pagination
 	this.TplNames = "alarmlist.html"
+	this.Render()
+
 }

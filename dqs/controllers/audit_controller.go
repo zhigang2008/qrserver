@@ -71,4 +71,5 @@ func (this *AuditController) List() {
 
 	this.Data["pagedata"] = pagination
 	this.TplNames = "audit.html"
+	this.Render()
 }

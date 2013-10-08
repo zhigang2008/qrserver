@@ -17,4 +17,5 @@ func (this *ReportController) Get() {
 	this.Data["author"] = "wangzhigang"
 	this.CheckUser()
 	this.TplNames = "report.html"
+	this.Render()
 }
