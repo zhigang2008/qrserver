@@ -1,35 +1,75 @@
 ﻿ {{template "header" .}}
- <div class="jumbotron">
+
+<!-- <div class="jumbotron">
       <div class="container">
         <h2><span class="glyphicon glyphicon-chevron-right"></span>欢迎使用地震烈度速报平台</h2>
         <p>地震烈度速报平台是用来........</p>
         <p><a class="btn btn-primary btn-lg">了解更多 &raquo;</a></p>
       </div>
-    </div>
-
-<div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>传感器设计</h2>
-          <p>传感器采用Modbus协议...</p>
-          <p>户外作业...</p>
-          <p><a class="btn btn-default" href="#">详细内容 &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>软件体系</h2>
-          <p>整合GIS图形....</p>
-          <p>高并发.高可用....</p>
-          <p><a class="btn btn-default" href="#">详细内容 &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>研发团队</h2>
-          <p>地壳应力研究所</p>
-          <p>关于我们</p>
-          <p><a class="btn btn-default" href="#">了解更多 &raquo;</a></p>
-        </div>
  </div>
- 
+-->
+  <div class="container">
+   <div id="map" style="width:100%;height:550px;border:#F6F6F6 solid 1px;"></div>
+  </div>
+
 {{template "scripts"}}
+<script language="javascript" src="http://webapi.amap.com/maps?v=1.1&key=c20526727f55a9fb7c6f8e27c7825a79"></script>
+<script language="javascript">
+var mapObj,tool,view,scale;
+
+//添加观测点
+function addMarker(sid,dname,lng,lat){
+	//构建点对象
+	var marker = new AMap.Marker({
+		id:sid,//唯一ID
+		position:new AMap.LngLat(lng,lat), //基点位置
+		icon:"http://api.amap.com/webapi/static/Images/marker_sprite.png", //marker图标，直接传递地址url
+		offset:{x:-8,y:-34} //相对于基点的位置
+	});
+	mapObj.addOverlays(marker);//将点添加到地图
+
+	var info = [];
+	info.push("<b>&nbsp;&nbsp;"+sid+"</b>");
+	info.push("&nbsp;&nbsp;"+dname+"&nbsp;&nbsp;");
+	info.push("&nbsp;&nbsp;["+lng+","+lat+"]&nbsp;&nbsp;");
+	
+	var inforWindow = new AMap.InfoWindow({
+		offset:new AMap.Pixel(-100,-96),
+		content:info.join("<br />")
+	});
+	mapObj.bind(marker,"click",function(e){
+		inforWindow.open(mapObj,marker.getPosition());
+	});
+	
+	mapObj.setCenter(marker.getPosition());
+}
+
+//初始化加载
+$(document).ready(function() {
+	mapObj = new AMap.Map("map",{
+		center:new AMap.LngLat(116.392936,39.919479)
+	});
+	mapObj.plugin(["AMap.ToolBar","AMap.OverView,AMap.Scale"],function(){
+		//加载工具条
+		tool = new AMap.ToolBar({
+			direction:false,
+			ruler:false,
+			autoPosition:false//禁止自动定位
+		});
+		mapObj.addControl(tool);
+		//加载鹰眼
+		view = new AMap.OverView({visible:false});
+		mapObj.addControl(view);
+		//加载比例尺
+		scale = new AMap.Scale();
+		mapObj.addControl(scale);
+	});
+	
+	//加载设备列表
+	{{range $i,$v:=.devices}} 
+	 addMarker("{{.SensorId}}","{{.SetParams.SiteName}}",{{.SetParams.Longitude}},{{.SetParams.Latitude}});
+	{{end}}
+});
+</script>
 
 {{template "footer"}}

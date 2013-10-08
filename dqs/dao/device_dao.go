@@ -9,6 +9,21 @@ import (
 	"time"
 )
 
+//获取所有设备列表
+func GetAllDevices() ([]models.DeviceInfo, error) {
+	c := GetSession().DB(DatabaseName).C(DeviceCollection)
+	devices := []models.DeviceInfo{}
+	//构造查询参数
+	m := bson.M{}
+
+	//查询总数
+	err := c.Find(&m).All(&devices)
+	if err != nil {
+		return devices, err
+	}
+	return devices, nil
+}
+
 //设备列表
 func DeviceList(p *util.Pagination) error {
 	c := GetSession().DB(DatabaseName).C(DeviceCollection)
