@@ -69,6 +69,7 @@ $(document).ready(function() {
 	{{range $i,$v:=.devices}} 
 	 addMarker("{{.SensorId}}","{{.SetParams.SiteName}}",{{.SetParams.Longitude}},{{.SetParams.Latitude}});
 	{{end}}
+	mapObj.setFitView();
 });
 </script>
 
