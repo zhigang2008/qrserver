@@ -10,6 +10,7 @@
 <script language="javascript" src="http://webapi.amap.com/maps?v=1.2&key=c20526727f55a9fb7c6f8e27c7825a79"></script>
 <script language="javascript">
 var mapObj,tool,view,scale;
+var sites=[];
 
 //添加观测点
 function addMarker(sid,dname,lng,lat){
@@ -38,19 +39,29 @@ function addMarker(sid,dname,lng,lat){
 	//mapObj.setCenter(marker.getPosition());
 }
 
+//重置观测点
+function resetMarker(sid){
+	var marker = mapObj.getOverlays(sid);
+	marker.setIcon("/static/image/marker-blue.png");
+	mapObj.updateOverlay(marker);
+}
 //更新观测点
 function updateMarker(sid){
 	var marker = mapObj.getOverlays(sid);
-	marker.icon="/static/image/marker-red.png";
+	marker.setIcon("/static/image/star.gif");
 	mapObj.updateOverlay(marker);
 }
 
 //定时获取报警信息
 function queryAlarm(){
 	$.getJSON("/realtime_alarm?time=5", function(data){
-   $.each(data.items, function(i,item){
-   	 //updateMarker(item.SensorId);
-   	 alert(item.SensorId);
+		//重置所有站点状态
+		$.each(sites,function(i,item){
+			resetMarker(item);
+		});
+		//更新报警信息
+   $.each(data, function(i,item){
+   	   updateMarker(item.SensorId);
    });
   });
 }
@@ -83,12 +94,13 @@ $(document).ready(function() {
 	//加载设备列表
 	{{range $i,$v:=.devices}} 
 	 addMarker("{{.SensorId}}","{{.SetParams.SiteName}}",{{.SetParams.Longitude}},{{.SetParams.Latitude}});
+	 sites.push("{{.SensorId}}");
 	{{end}}
 	mapObj.setFitView();
+});
 	
 	//执行定时查询
 	setInterval("queryAlarm()",60000); 
-});
 </script>
 
 {{template "footer"}}
