@@ -10,12 +10,14 @@ func routeConfig() {
 
 	beego.Router("/", &controllers.MainController{})
 
-	beego.Router("/alarm", &controllers.AlarmController{})
 	beego.Router("/loglist", &controllers.LogsController{})
 	beego.Router("/analyze", &controllers.AnalyzeController{})
 	beego.Router("/report", &controllers.ReportController{})
 	beego.RESTRouter("/device", &controllers.DeviceController{})
 
+	//报警
+	beego.Router("/alarm", &controllers.AlarmController{}, "*:Get")
+	beego.Router("/realtime_alarm", &controllers.AlarmController{}, "*:GetRealtimeAlarm")
 	//添加设备页面
 	beego.Router("/device/add", &controllers.DeviceController{}, "*:ToDeviceAddPage")
 	//设备参数

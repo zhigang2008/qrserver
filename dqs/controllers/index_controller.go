@@ -19,6 +19,7 @@ func (this *MainController) Get() {
 	if err != nil {
 		log.Warnf("获取所有设备列表失败:%s", err.Error())
 	}
+
 	this.Data["devices"] = devices
 	this.TplNames = "index.html"
 	this.Render()

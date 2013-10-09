@@ -50,3 +50,21 @@ func (this *AlarmController) Get() {
 	this.Render()
 
 }
+
+//实时报警信息列表
+func (this *AlarmController) GetRealtimeAlarm() {
+
+	timestep, err := this.GetInt("time")
+	if err != nil {
+		timestep = 5
+	}
+	//执行查询
+	alarmlist, err2 := dao.GetRealtimeAlarm(timestep)
+	if err2 != nil {
+		log.Warnf("查询实时报警信息失败:%s", err2.Error())
+	}
+
+	this.Data["json"] = alarmlist
+	this.ServeJson()
+
+}

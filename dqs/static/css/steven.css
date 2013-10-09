@@ -34,3 +34,9 @@ img { max-width: none; }
 	background-color:transparent;
 	margin-bottom:0px;
 }
+/*调整高德地图显示*/
+.mcjt * {
+	-webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
