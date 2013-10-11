@@ -19,7 +19,9 @@ func routeConfig() {
 	beego.Router("/alarm", &controllers.AlarmController{}, "*:Get")
 	beego.Router("/realtime_alarm", &controllers.AlarmController{}, "*:GetRealtimeAlarm")
 	//添加设备页面
-	beego.Router("/device/add", &controllers.DeviceController{}, "*:ToDeviceAddPage")
+	beego.Router("/adddevice", &controllers.DeviceController{}, "*:ToDeviceAddPage")
+	//设备定位
+	beego.Router("/location/:id", &controllers.DeviceController{}, "*:DeviceLocation")
 	//设备参数
 	beego.Router("/deviceparams/refresh", &controllers.DeviceController{}, "*:RefreshDeviceParams")
 	beego.Router("/deviceparams/update", &controllers.DeviceController{}, "*:UpdateDeviceParams")

@@ -5,7 +5,7 @@ import (
 	"dqs/models"
 	"dqs/quickserver"
 	"dqs/util"
-	//"github.com/astaxie/beego"
+	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 	"time"
 )
@@ -271,5 +271,31 @@ func (this *DeviceController) ToDeviceAddPage() {
 	this.Data["author"] = "wangzhigang"
 	this.CheckUser()
 	this.TplNames = "deviceadd.html"
+	this.Render()
+}
+
+//设备定位
+func (this *DeviceController) DeviceLocation() {
+	sid := this.GetString(":id")
+	this.Data["title"] = "设备定位"
+	this.Data["author"] = "wangzhigang"
+	this.CheckUser()
+	device := models.DeviceInfo{}
+	//单个设备查询
+	if sid != "" {
+		device = dao.GetDevice(sid)
+	}
+	this.Data["device"] = device
+
+	usegis, err := beego.AppConfig.Bool("map.gis")
+	if err != nil {
+		usegis = false
+		log.Warnf("无法从配置文件中获取gis启用信息.将使用地图模式.")
+	}
+	if usegis {
+		this.TplNames = "location-gis.html"
+	} else {
+		this.TplNames = "location.html"
+	}
 	this.Render()
 }

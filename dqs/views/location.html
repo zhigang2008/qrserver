@@ -1,0 +1,105 @@
+﻿ {{template "header" .}}
+
+<div style="background-color:#eee;padding:10px 0px;">
+ <div class="container">
+   <div id="map" style="width:100%;height:550px;border:#F6F6F6 solid 1px;"></div>
+ </div>
+</div>
+
+{{template "scripts"}}
+<script language="javascript" src="http://webapi.amap.com/maps?v=1.2&key=c20526727f55a9fb7c6f8e27c7825a79"></script>
+<script language="javascript">
+var mapObj,tool,view,scale;
+
+//添加观测点
+function addMarker(sid,dname,lng,lat){
+	//构建点对象
+	var marker = new AMap.Marker({
+		id:sid,//唯一ID
+		position:new AMap.LngLat(lng,lat), //基点位置
+		icon:"/static/image/marker-blue.png", //marker图标，直接传递地址url
+		offset:{x:-8,y:-34} //相对于基点的位置
+	});
+	mapObj.addOverlays(marker);//将点添加到地图
+
+	var info = [];
+	info.push("<b>&nbsp;&nbsp;"+sid+"</b>");
+	info.push("&nbsp;&nbsp;"+dname);
+	info.push("&nbsp;&nbsp;["+lng+","+lat+"]");
+	info.push("{{if hasrole .CurrentUser.Roles "role_admin" "role_device"}}&nbsp;&nbsp;<a href='/device/"+sid+"' target='_blank'>[详细信息]</a>{{end}}&nbsp;&nbsp;<a href='/alarm?sensorid="+sid+"' target='_blank'>[报警信息]</a>");
+		
+	var inforWindow = new AMap.InfoWindow({
+		offset:new AMap.Pixel(8,-30),
+		content:info.join("<br />")
+	});
+	mapObj.bind(marker,"click",function(e){
+		inforWindow.open(mapObj,marker.getPosition());
+	});
+	//mapObj.setCenter(marker.getPosition());
+}
+
+//重置观测点
+function resetMarker(sid){
+	var marker = mapObj.getOverlays(sid);
+	marker.setIcon("/static/image/marker-blue.png");
+	mapObj.updateOverlay(marker);
+}
+//更新观测点
+function updateMarker(sid){
+	var marker = mapObj.getOverlays(sid);
+	marker.setIcon("/static/image/star.gif");
+	mapObj.updateOverlay(marker);
+}
+
+//定时获取报警信息
+function queryAlarm(){
+	$.getJSON("/realtime_alarm?time=5", function(data){
+		//重置所有站点状态
+		$.each(sites,function(i,item){
+			resetMarker(item);
+		});
+		//更新报警信息
+   $.each(data, function(i,item){
+   	   updateMarker(item.SensorId);
+   });
+  });
+}
+
+//初始化加载
+$(document).ready(function() {
+	mapObj = new AMap.Map("map",{
+		//defaultLayer: new AMap.TileLayer.Satellite({ zIndex: 5 }),
+		center:new AMap.LngLat(105.84628,32.43544)
+	});
+	mapObj.plugin(["AMap.ToolBar","AMap.OverView,AMap.Scale","AMap.MapType"],function(){
+		//加载工具条
+		tool = new AMap.ToolBar({
+			direction:true,
+			ruler:true,
+			autoPosition:false//禁止自动定位
+		});
+		mapObj.addControl(tool);
+		//加载鹰眼
+		view = new AMap.OverView({visible:true});
+		mapObj.addControl(view);
+		//加载比例尺
+		scale = new AMap.Scale();
+		mapObj.addControl(scale);
+		//地图类型切换
+		type= new AMap.MapType({defaultType:0});
+		mapObj.addControl(type);	
+	
+	});
+	//加载设备列表
+	{{with .device}} 
+	 addMarker("{{.SensorId}}","{{.SetParams.SiteName}}",{{.SetParams.Longitude}},{{.SetParams.Latitude}});
+	{{end}}
+	
+	mapObj.setFitView();
+});
+	
+	//执行定时查询
+	//setInterval("queryAlarm()",60000); 
+</script>
+
+{{template "footer"}}

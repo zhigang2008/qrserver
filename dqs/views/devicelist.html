@@ -54,7 +54,8 @@
 	 		<td>{{.CustomParams.NotUse}}</td>
 	 		<td>{{.RemoteAddr}}</td>
 	 		<td style="font-size:120%">
-	 			<a href="/alarm?sensorid={{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="报警信息"><span class="glyphicon glyphicon-bell"></span></a>
+	 			<a href="/alarm?sensorid={{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="报警信息"><span class="glyphicon glyphicon-bell"></span></a> / 
+	 			<a href="/location/{{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="设备定位"><span class="glyphicon glyphicon-globe"></span></a>
        {{if hasrole $curUser.Roles "role_admin" "role_device"}}
 	 			 / <a href="/device/{{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="详细信息"><span class="glyphicon glyphicon-cog"></span></a> /
 	 			<a href="javascript:DeleteDevice('{{.Id.Hex}}','{{.SensorId}}');" data-toggle="tooltip" data-placement="bottom" title="删除"><span class="glyphicon glyphicon-remove"></span></a> 
