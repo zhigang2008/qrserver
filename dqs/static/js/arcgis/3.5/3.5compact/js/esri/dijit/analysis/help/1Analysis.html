@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="./css/analysis.css">
+    <script type="text/javascript">
+        function init() {
+            if (window.location.hash) {
+                var parentDiv, nodes, i, helpId;
+                helpId = window.location.hash.substring(1);
+                parentDiv = document.getElementById("topics");
+                nodes = parentDiv.children;
+                for(i=0; i < nodes.length; i++) {
+                    if(nodes[i].id !== helpId) {
+                        nodes[i].style.display ="none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="topics">
+   <div id="SummarizeData">
+        <p>(ALPHA: INTERNAL ONLY)</p>
+        <div><h2>Summarizing Data</h2></div>
+        <div>
+      <p>To better understand spatial relationships in data, we can summarize features 
+        that meet specified spatial criteria. 
+        These tools allow total counts, lengths, areas and attributes to be summarized by defined areas.
+      </p>
+      <p>For example, we may want to better understand what is happening in different areas (e.g. the total green space within different cities) 
+        or what is happening nearby (e.g. area of each vegetation type in the 5-20m riparian zone 
+        from the river) or even simply learn how much there is within an area (e.g. schools within a neighborhood).
+      </p>
+            Solutions:
+            <table>
+                <thead></thead>
+                <tr>
+                    <td>
+                        Aggregate Points
+                        <div class="aggregateHelpIcon"></div>
+                    </td>
+                    <td>
+                        Summarize Nearby
+                        <div class="summarizeHelpIcon"></div>
+                    </td>
+                    <td>
+                        Summarize Within
+                        <div class="sumnearbyHelpIcon"></div>
+                    </td>                    
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="AggregatePoints">
+        <p>(ALPHA: INTERNAL ONLY)</p>
+        <div><h2>Aggregate Points</h2></div>
+            <div>
+            <p>
+         <p>Aggregate points allows you to aggregate or count the total number
+of points that fall within specified polygons or areas. Additionally, you can calculate various statistics such as Sum,
+Mean, Min, Max, etc for attributes contained in your points
+layer.
+         </p>
+            </p>
+            <br/>
+        </div>
+    </div>
+    <div id="SummarizeNearby">
+        <p>(ALPHA: INTERNAL ONLY)</p>
+        <div><h2>Coming Soon</h2></div>
+            <div>
+            <p>
+         <p>
+
+         </p>
+            </p>
+            <br/>
+        </div>
+    </div>
+    <div id="SummarizeWithin">
+        <p>(ALPHA: INTERNAL ONLY)</p>
+        <div><h2>Coming Soon</h2></div>
+            <div>
+            <p>
+         <p>
+
+         </p>
+            </p>
+            <br/>
+        </div>
+    </div>
+    <div id="FindLocations">
+        <p>(ALPHA: INTERNAL ONLY)</p>
+        <div><h2>Coming Soon</h2></div>
+            <div>
+            <p>
+         <p>
+
+         </p>
+            </p>
+            <br/>
+        </div>
+    </div>
+    <div id="DataEnrichement">
+        <p>(ALPHA: INTERNAL ONLY)</p>
+        <div><h2>Coming Soon</h2></div>
+            <div>
+            <p>
+         <p>
+
+         </p>
+            </p>
+            <br/>
+        </div>
+    </div>
+    <div id="GetRoutes">
+        <p>(ALPHA: INTERNAL ONLY)</p>
+        <div><h2>Coming Soon</h2></div>
+            <div>
+            <p>
+         <p>
+
+         </p>
+            </p>
+            <br/>
+        </div>
+    </div>    
+    <div id="AnalyzePatterns">
+        <p>(ALPHA: INTERNAL ONLY)</p>
+        <div><h2>Coming Soon</h2></div>
+            <div>
+            <p>
+         <p>
+
+         </p>
+            </p>
+            <br/>
+        </div>
+    </div>   
+     <div id="UseProximity">
+        <p>(ALPHA: INTERNAL ONLY)</p>
+        <div><h2>Coming Soon</h2></div>
+            <div>
+            <p>
+         <p>
+
+         </p>
+            </p>
+            <br/>
+        </div>
+    </div>    
+    <div id="ManageData">
+        <p>(ALPHA: INTERNAL ONLY)</p>
+        <div><h2>Coming Soon</h2></div>
+            <div>
+            <p>
+         <p>
+
+         </p>
+            </p>
+            <br/>
+        </div>
+    </div>
+ </div>
+</html>

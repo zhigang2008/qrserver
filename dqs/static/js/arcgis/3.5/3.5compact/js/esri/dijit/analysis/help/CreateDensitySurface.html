@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="Stylesheet" href="css/analysis.css" />
+    <script type="text/javascript">
+        function init() {
+            if (window.location.hash) {
+                var parentDiv, nodes, i, helpId;
+                helpId = window.location.hash.substring(1);
+                parentDiv = document.getElementById("topics");
+                nodes = parentDiv.children;
+                for(i=0; i < nodes.length; i++) {
+                    if(nodes[i].id !== helpId) {
+                        nodes[i].style.display ="none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="topics">
+    <div id="toolDescription", class="regularsize">
+        <p><a href="http://links.esri.com/performing-analysis-online" target="blank">(BETA)</a></p>
+        <h2>CreateDensitySurface</h2><p/>
+        <h2></h2>
+        <hr/>
+    <p>Density analysis takes known quantities of some phenomenon and
+spreads them across the landscape based on the quantity that is
+measured at each location.  For example, you might have a point value for each town representing the total number of people in the town, but you want to learn more about the spread of population over the region. Since all the people in each town do not live at the population point, by calculating density, you can create a surface showing the predicted distribution of the population throughout the landscape.
+    </p>
+    </div>
+    <!--Parameter divs for each param-->
+    <div id="">
+        <div><h2></h2></div>
+        <hr/>
+        <div>
+            <p>
+            </p>
+        </div>
+    </div>
+</div>
+</html>

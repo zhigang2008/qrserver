@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="Stylesheet" href="css/analysis.css" />
+    <script type="text/javascript">
+        function init() {
+            if (window.location.hash) {
+                var parentDiv, nodes, i, helpId;
+                helpId = window.location.hash.substring(1);
+                parentDiv = document.getElementById("topics");
+                nodes = parentDiv.children;
+                for(i=0; i < nodes.length; i++) {
+                    if(nodes[i].id !== helpId) {
+                        nodes[i].style.display ="none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="topics">
+    <div id="toolDescription", class="regularsize">
+        <p><a href="http://links.esri.com/performing-analysis-online" target="blank">(BETA)</a></p>
+        <h2>CreateInterpolatedSurface</h2><p/>
+        <h2></h2>
+        <hr/>
+    <p>Predicts the values between known points to
+create a continuous surface of values. Four methods are offered:
+kriging, inverse distance weighting, natural neighbors, and local
+polynomial.
+    </p>
+    <p>A new layer is created showing the predicted surface.  With
+kriging and local polynomial methods, a second layer showing prediction errors is also created.
+    </p>
+    </div>
+    <!--Parameter divs for each param-->
+    <div id="">
+        <div><h2></h2></div>
+        <hr/>
+        <div>
+            <p>
+            </p>
+        </div>
+    </div>
+</div>
+</html>

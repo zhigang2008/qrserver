@@ -1,0 +1,19 @@
+/*
+ COPYRIGHT 2009 ESRI
+
+ TRADE SECRETS: ESRI PROPRIETARY AND CONFIDENTIAL
+ Unpublished material - all rights reserved under the
+ Copyright Laws of the United States and applicable international
+ laws, treaties, and conventions.
+
+ For additional information, contact:
+ Environmental Systems Research Institute, Inc.
+ Attn: Contracts and Legal Services Department
+ 380 New York Street
+ Redlands, California, 92373
+ USA
+
+ email: contracts@esri.com
+ */
+//>>built
+define("esri/layers/StreamLayer",["dojo/_base/declare","dojo/_base/lang","dojo/_base/connect","dojo/_base/array","dojo/has","esri/kernel","esri/graphic","esri/geometry/jsonUtils","esri/layers/FeatureLayer","esri/layers/PurgeOptions"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){var _b=_1([_9],{declaredClass:"esri.layers.StreamLayer",constructor:function(_c,_d){this.purgeOptions=new _a(this,_d.purgeOptions||{});this.registerConnectEvents("esri.layers.StreamLayer",{"connect":true,"disconnect":true,"message":true,"remove":true});},_initLayer:function(_e,io){this.inherited(arguments);if(_e){if(_e.layerDefinition){this.purgeOptions=new _a(this,this._params.purgeOptions||{});this.socketUrl=this._params.socketUrl||_e.layerDefinition.socketUrl||undefined;}else{this.socketUrl=this._params.socketUrl||_e.socketUrl||undefined;}if(this._map&&this.socketUrl&&!this._connected){this.connect(this.socketUrl);}}},_setMap:function(){if(this.socketUrl&&!this._connected){this.connect(this.socketUrl);}return this.inherited(arguments);},_unsetMap:function(_f,_10){_4.forEach(this._connects,_3.disconnect);if(this._connected){this.disconnect();}this._map=null;},add:function(_11){this.inherited(arguments);},remove:function(_12){this.inherited(arguments);},refresh:function(){this._purge();},destroy:function(){this.disconnect();this.inherited(arguments);},connect:function(_13){var _14=this;if(!this._connected){this.socket=new WebSocket(_13);this.socket.onopen=function(){_14._connected=true;_14.onConnect();_14._bind();};this.socket.onclose=function(m){if(this._connected){this._connected=false;this.onDisconnect();}};}},disconnect:function(){this.socket.close();this._connected=false;this.onDisconnect();},onMessage:function(){},onRemove:function(){},onConnect:function(){},onDisconnect:function(){},_purge:function(){if(this.purgeOptions.displayCount&&this.graphics.length>this.purgeOptions.displayCount){var i;for(i=0;i<(this.graphics.length-this.purgeOptions.displayCount);i++){this.remove(this.graphics[0]);this.onRemove({graphic:graphic});}}},_bind:function(){var _15=this;this.socket.onmessage=function(m){_15._onMessage(JSON.parse(m.data));};},_onMessage:function(_16){var _17=this;var _18={"create":function(f){_17._create(f);},"update":function(f){_17._update(f);},"delete":function(f){_17._delete(f);}};if(_16.type){_18[_16.type](_16.feature);}else{this._create(_16);}},_create:function(_19){var _1a=this;function add(f){var _1b=new _7(f);_1a.add(_1b);_1a.refresh();_1a.onMessage({type:"create",graphic:_1b});};if(_19.length){_19.forEach(function(f){if(f&&f.geometry){add(f);}});}else{if(_19&&_19.geometry){add(_19);}}},_delete:function(_1c){var _1d=this;var id=_1c[_1d.objectIdField]||_1c.attributes[_1d.objectIdField];var _1e=false;this.graphics.forEach(function(g){if(g.attributes[_1d.objectIdField]===id){_1e=g;}});if(_1e){this.remove(_1e);_1d.onMessage({type:"delete",graphic:_1e});}},_update:function(_1f){var _20=this;var _21=false;this.graphics.forEach(function(g){if(g.attributes[_20.objectIdField]===_1f.attributes[_20.objectIdField]){_21=g;}});if(_21){if(_1f.attributes){_21.setAttributes(_1f.attributes);}if(_1f.geometry){_21.setGeometry(new _8.fromJson(_1f.geometry));}_20.onMessage({type:"update",graphic:_21});}}});if(_5("extend-esri")){_2.setObject("layers.StreamLayer",_b,_6);}return _b;});

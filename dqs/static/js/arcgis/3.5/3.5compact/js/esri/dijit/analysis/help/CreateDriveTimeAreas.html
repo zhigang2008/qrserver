@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="Stylesheet" href="css/analysis.css" />
+    <script type="text/javascript">
+        function init() {
+            if (window.location.hash) {
+                var parentDiv, nodes, i, helpId;
+                helpId = window.location.hash.substring(1);
+                parentDiv = document.getElementById("topics");
+                nodes = parentDiv.children;
+                for(i=0; i < nodes.length; i++) {
+                    if(nodes[i].id !== helpId) {
+                        nodes[i].style.display ="none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="topics">
+    <div id="toolDescription", class="regularsize">
+        <h2>CreateDriveTimeAreas</h2><p/>
+        <h2><img src="./images/GUID-3D8369E6-59DB-4004-A422-30C398397311-web.png"></h2>
+        <hr/>
+    <p>Create Drive Time Areas generates drive time areas around
+locations i.e. defines areas that could be reached within a
+specified travel time.
+    </p>
+    <p>A new layer will be created showing drive time
+areas.
+    </p>
+    <p>
+        <ul>
+            <li>How can I find the market areas that a business covers?
+            </li>
+            <li>I want to analyze emergency response times to understand if a town's population is safe if a fire breaks out .
+            </li>
+        </ul>
+        
+    </p>
+    </div>
+    <!--Parameter divs for each param-->
+    <div id="">
+        <div><h2></h2></div>
+        <hr/>
+        <div>
+            <p>
+            </p>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="Stylesheet" href="css/analysis.css" />
+    <script type="text/javascript">
+        function init() {
+            if (window.location.hash) {
+                var parentDiv, nodes, i, helpId;
+                helpId = window.location.hash.substring(1);
+                parentDiv = document.getElementById("topics");
+                nodes = parentDiv.children;
+                for(i=0; i < nodes.length; i++) {
+                    if(nodes[i].id !== helpId) {
+                        nodes[i].style.display ="none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="topics">
+    <div id="toolDescription", class="largesize">
+        <p><a href="http://links.esri.com/performing-analysis-online" target="blank">(BETA)</a></p>
+        <h2>FindHotSpots</h2><p/>
+        <h2></h2>
+        <hr/>
+    <p>This tool will analyze incident data (such as crimes, traffic accidents, and trees) or the values associated with features (such as the number of people in each census tract or total sales for retail stores).  It finds statistically significant spatial clusters of high values (hot spots) and low values (cold spots).  For incident data, hot spots are locations with lots of incidents.
+    </p>
+    <p>Hot spots are shown in red on the output map layer; cold spots appear blue.  The darkest red features indicate the strongest clustering of high values or incident densities; we are 99 percent confident that the clustering associated with these features could not be the result of random chance.  Similarly, the darkest blue features are associated with the strongest spatial clustering of low values and the lowest incident densities.  Features that are beige are not part of a statistically significant cluster; the spatial pattern associated with these features could very likely be the result of random processes and random chance.   
+    </p>
+    <p>Some examples of the questions you can answer using this tool include:
+        <ul>
+            <li>Where are test scores consistently high?
+                
+
+            </li>
+            <li>Where are
+kitchen fires a larger than expected proportion of all residential
+fires?
+                
+
+
+            </li>
+            <li>Where do peak intensities occur?
+                
+
+            </li>
+            <li>In which
+locations should we allocate more
+of our resources?
+                
+
+            </li>
+        </ul>
+        
+    </p>
+    </div>
+    <!--Parameter divs for each param-->
+    <div id="AnalysisFieldPoly">
+        <div><h2>Choose an analysis field</h2></div>
+        <hr/>
+        <div>
+            <p>Select a numeric field to be analyzed. The field you select might represent:
+            </p>
+            <ul>
+                <li>counts (such as the number of traffic accidents)
+                </li>
+                <li>rates (such as the number of crimes per square mile)
+                </li>
+                <li>averages (such as the mean math test score)
+                </li>
+                <li>indices (such as a customer satisfaction score)
+                </li>
+            </ul>
+            
+        </div>
+    </div>
+    <div id="AnalysisFieldPoint">
+        <div><h2>Choose an analysis field</h2></div>
+        <hr/>
+        <div>
+            <p>Select NO ANALYSIS FIELD if you want the hot spot results to be based on incident densities only. Alternatively, select a numeric field to be analyzed. The field you select might represent: 
+  
+
+            </p>
+            <ul>
+                <li>counts (such as the number of traffic accidents)
+                </li>
+                <li>rates (such as the number of crimes per square mile)
+                </li>
+                <li>averages (such as the mean math test score)
+                </li>
+                <li>indices (such as a customer satisfaction score)
+                </li>
+            </ul>
+            
+        </div>
+    </div>
+    <div id="BoundingPolygonLayer">
+        <div><h2>Define where incidents are possible</h2></div>
+        <hr/>
+        <div>
+            <p>Select a layer (or draw the areas) that defines where incidents could have occurred.  For example, if you are analyzing boating accidents in a harbor, the outline of the harbor might provide a good representation of where accidents could occur.  When no bounding areas are provided, only locations with at least one incident will be included in the analysis.  You will only be prompted for these bounding areas when the analysis layer is points and no analysis field is given.
+            </p>
+        </div>
+    </div>
+    <div id="AggregationPolygonLayer">
+        <div><h2>Provide aggregation areas for summing incidents</h2></div>
+        <hr/>
+        <div>
+            <p>Select the area layer (administrative units, for example) to be analyzed.  The number of incidents that fall within each area feature will be counted.  Each area and its associated incident count will then be analyzed.  You will only be prompted for an area layer when the analysis layer is points and no analysis field is given.
+            </p>
+        </div>
+    </div>
+    <div id="OutputLayerName">
+        <div><h2>Result layer name</h2></div>
+        <hr/>
+        <div>
+            <p>The output layer will contain the results of this analysis and show you where statistically significant clusters of either high or low values or incident counts are found. The default  name is based on the analysis type and the input layer name. If the layer already exists you will be asked to confirm if you want to overwrite it.
+            </p>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,0 +1,36 @@
+<div data-dojo-attach-point="_renderingRuleContainer" class="esriRenderingRuleContainer">
+  <table class="esriRenderingRuleTable">
+    <tbody>
+      <col class="esriRenderingRuleRenderer"/>
+      <col class="esriRenderingRuleBandCombination"/>
+      <tr>
+        <td>
+          <label data-dojo-attach-point="rendererLabel">${_i18n.widgets.renderingRule.rendererLabelTitle}</label>
+        </td>
+        <td>
+          <div data-dojo-attach-point="rasterFunctionList" data-dojo-type="dijit/form/FilteringSelect" class="esriRenderingRuleRasterFunctionList">
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label data-dojo-attach-point="bandIdsLabel">${_i18n.widgets.renderingRule.bandCombinationLabelTitle}</label>
+        </td>
+        <td>
+          <div data-dojo-attach-point="bandIdsRedList" data-dojo-type="dijit/form/FilteringSelect" class="esriRenderingRuleBandIdsRedList">
+          </div>
+          <div data-dojo-attach-point="bandIdsGreenList" data-dojo-type="dijit/form/FilteringSelect" class="esriRenderingRuleBandIdsGreenList">
+          </div>
+          <div data-dojo-attach-point="bandIdsBlueList" data-dojo-type="dijit/form/FilteringSelect" class="esriRenderingRuleBandIdsBlueList">
+          </div>         
+        </td>
+      </tr>
+      <tr>
+        <td/>
+        <td>
+          <div data-dojo-attach-point="msgLabel" class="esriRenderingRuleMsgLabel"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

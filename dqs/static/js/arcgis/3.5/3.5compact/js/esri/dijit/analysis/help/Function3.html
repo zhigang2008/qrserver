@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="Stylesheet" href="css/analysis.css" />
+    <script type="text/javascript">
+        function init() {
+            if (window.location.hash) {
+                var parentDiv, nodes, i, helpId;
+                helpId = window.location.hash.substring(1);
+                parentDiv = document.getElementById("topics");
+                nodes = parentDiv.children;
+                for(i=0; i < nodes.length; i++) {
+                    if(nodes[i].id !== helpId) {
+                        nodes[i].style.display ="none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="topics">
+    <div id="toolDescription", class="largesize">
+        <p><a href="http://links.esri.com/performing-analysis-online" target="blank">(BETA)</a></p>
+        <h2>Function3</h2><p/>
+        <h2></h2>
+        <hr/>
+    <p>This is the summary for our third function. I have added this sentence to test conref following.
+
+    </p>
+    <p>Quisque leo augue,
+        <img src="./images/GUID-0ADA4EEB-0E5F-49E0-AC79-8C27F5E1237C-web.png" alt="A test image"> hendrerit quis aliquam at, adipiscing ut ligula.
+    </p>
+    <table>
+    <tr><td colspan="3"><hr size="1" noshade="noshade"></td></tr>
+    <tr><td valign="baseline"><img src="./images/note.png"></td><td valign="baseline"><h2>Note:&ensp;</h2></td>
+    <td valign="baseline">
+        <p>Default note, with one paragraph.
+        </p>
+    </td></tr>
+    <tr><td colspan="3"><hr size="1" noshade="noshade"></td></tr>
+    </table>
+    <p>This is a paragraph with a draft-
+        comment in the middle.
+    </p>
+    <table>
+    <tr><td colspan="3"><hr size="1" noshade="noshade"></td></tr>
+    <tr><td valign="baseline"><img src="./images/tip.png"></td><td valign="baseline"><h2>Tip:&ensp;</h2></td>
+    <td valign="baseline">
+        <p>Tip note, first paragraph.
+        </p>
+        <p>Second paragraph of tip note, with 
+            <i>italics</i>.
+        </p>
+    </td></tr>
+    <tr><td colspan="3"><hr size="1" noshade="noshade"></td></tr>
+    </table>
+    <p>
+        <b>This</b> is a paragraph that starts with one word in bold, and has a word in
+        <i>italics</i> in the middle. It also has special characters that could be interpreted as &lt;b&gt;bold text&lt;/b&gt;.
+    </p>
+    <p>Here is a paragraph with an unordered bullet list.
+        <ul>
+            <li>List item one.
+            </li>
+            <li>List item two. has italics at the 
+                <i>end.</i>
+            </li>
+            <li>List item three has 
+                <b>bold</b> in the middle.
+            </li>
+        </ul>
+         This is some text with
+        <b>esri_uicontrol</b>,  at the end of the bullet list paragraph.
+    </p>
+    <p>The paragraph AFTER this one is all a conref about LAS datasets. 
+        
+    </p>
+    <p>Is it possible to conref something smaller - 
+        <ul>
+            <li>.bil&mdash;Esri BIL
+                
+
+            </li>
+            <li>.bip&mdash;Esri BIP
+                
+
+            </li>
+            <li>.bsq&mdash;Esri BSQ
+                
+
+            </li>
+            <li>.dat&mdash;ENVI DAT
+                
+
+            </li>
+            <li>.img&mdash;ERDAS IMAGINE
+                
+
+            </li>
+            <li>.png&mdash;PNG
+                
+
+            </li>
+            <li>.tif&mdash;TIFF
+                
+
+
+            </li>
+        </ul>
+        
+    </p>
+    <p>When a LAS dataset is specified as input, all the data points in the LAS files it references will be processed.
+    </p>
+    <p>Here is a video link 
+        <a href="./media/515-gis-services-security_480.mp4" target="blank">test MP4 file _downloaded_ from video.arcgis.com (not hosted there).</a> Some text after the link.
+    </p>
+    <p>This paragraph contains an &lt;xref&gt; to a 
+        <a href="http://help.arcgis.com/en/webapi/javascript/arcgis/jstutorials/#intro_firstmap" target="blank">javascript</a> page on help.arcgis.com.
+    </p>
+    <p>Here is an example of a simple external xref pointing to 
+        <a href="http://video.arcgis.com/iframe/522/000000/width/480/0/00:00:00" target="blank">videos.arcgis.com</a>. In this case, I copied only the URL from the embed string.
+    </p>
+    <p>For a more robust solution lets try  using an external xref, but change the otherprops attribute to include all the frameborder, width, and so forth. If the otherprops attribute is set, we will presume that we want it in an iframe. If that isn't specific enough, we can check the otherprops attribute for the presence of the string &quot;frameborder&quot;. For 
+        <iframe src="http://video.arcgis.com/iframe/522/000000/width/480/0/00:00:00"frameborder="0" scrolling="no" width="480" height="270"></iframe>, that was an embeded video using otherprops.
+    </p>
+    </div>
+    <!--Parameter divs for each param-->
+    <div id="parameterName">
+        <div><h2>Parameter One</h2></div>
+        <hr/>
+        <div>
+            <p>Four score and seven years ago, within 7 leagues of the shores of Atlantis, someone used an 
+                <i>esri_fieldname</i> and an
+                <code>esri_path</code>, to create an
+                <b>esri_wintitle</b>.
+            </p>
+            <p>Paragraph two has two hogsheads of it. This sentence has 
+                <code>esri_usertext</code> in it.
+            </p>
+        </div>
+    </div>
+    <div id="someOtherParam">
+        <div><h2>Parameter Two</h2></div>
+        <hr/>
+        <div>
+            <p>Some parameter description text, followed by an esri_enumtable.
+
+            </p>
+            <ul>
+                <li>CHOICEONE &mdash; 
+Text for choice one.
+
+Second paragaraph for choice one, with some
+                    <b>bold</b> in it.
+
+                </li>
+                <li>CHOICETWO &mdash; 
+Text for choice two
+
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</html>

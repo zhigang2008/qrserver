@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="Stylesheet" href="css/analysis.css" />
+    <script type="text/javascript">
+        function init() {
+            if (window.location.hash) {
+                var parentDiv, nodes, i, helpId;
+                helpId = window.location.hash.substring(1);
+                parentDiv = document.getElementById("topics");
+                nodes = parentDiv.children;
+                for(i=0; i < nodes.length; i++) {
+                    if(nodes[i].id !== helpId) {
+                        nodes[i].style.display ="none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="topics">
+    <div id="toolDescription", class="largesize">
+        <p><a href="http://links.esri.com/performing-analysis-online" target="blank">(BETA)</a></p>
+        <h2>ExtractData</h2><p/>
+        <h2></h2>
+        <hr/>
+    <p>Using Extract Data you can select and download data for a specified area of interest. Layers that you select will be added to a zip file or layer package.
+
+    </p>
+    </div>
+    <!--Parameter divs for each param-->
+    <div id="InputLayers">
+        <div><h2>Layers to Extract</h2></div>
+        <hr/>
+        <div>
+            <p>The layers in your table of contents from which  you can extract features.  Layers that are checked are extracted and included in a resulting zip file or layer package.
+
+            </p>
+            
+        </div>
+    </div>
+    <div id="Extent">
+        <div><h2>Study area</h2></div>
+        <hr/>
+        <div>
+            <p>The
+area that defines which features will be included in the output zip file or layer package.  
+ You can choose from the following:
+                <ul>
+                    <li>The current visible extent of your map (
+                        <b>Same as display</b>)
+                    </li>
+                    <li>One of the layers in your table of contents (that contains area features)
+                    </li>
+                    <li>Draw one or more areas to use
+                    </li>
+                </ul>
+                 All features completely within the extent will be extracted.  For  features that cross or intersect the extent boundary but are not completely within the extent, you have two options:
+            </p>
+            <ul>
+                <li>Select features &mdash; 
+Entire features that cross the boundary of the study area will be extracted.
+
+                </li>
+                <li>Clip features &mdash; 
+Only those portions of features that are within the study area will be extracted.
+
+                </li>
+            </ul>
+            
+            
+        </div>
+    </div>
+    <div id="DataFormat">
+        <div><h2>Output data type</h2></div>
+        <hr/>
+        <div>
+            <p>Format of the data that will be extracted and downloaded.  Layer packages will always include file geodatabases.
+            </p>
+        </div>
+    </div>
+    <div id="OutputName">
+        <div><h2>Output file name</h2></div>
+        <hr/>
+        <div>
+            <p>
+                The default result layer name is based on the chosen
+                <b>Output data format</b>.  Choosing either
+                <b>File geodatabase</b> or
+                <b>Shapefile</b> creates a
+                <code>.zip</code> file.    If
+                <b>Layer package</b> is chosen, an
+                <code>.lpk</code> file will be created.
+            </p>
+            <p>If the item already exists you will be asked to confirm if you want to overwrite it.
+            </p>
+            
+        </div>
+    </div>
+</div>
+</html>

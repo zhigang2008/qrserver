@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="Stylesheet" href="css/analysis.css" />
+    <script type="text/javascript">
+        function init() {
+            if (window.location.hash) {
+                var parentDiv, nodes, i, helpId;
+                helpId = window.location.hash.substring(1);
+                parentDiv = document.getElementById("topics");
+                nodes = parentDiv.children;
+                for(i=0; i < nodes.length; i++) {
+                    if(nodes[i].id !== helpId) {
+                        nodes[i].style.display ="none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="topics">
+    <div id="toolDescription", class="regularsize">
+        <p><a href="http://links.esri.com/performing-analysis-online" target="blank">(BETA)</a></p>
+        <h2>Function4</h2><p/>
+        <h2></h2>
+        <hr/>
+    <p>This is the summary for our FORTH function.
+
+    </p>
+    <p>Nullam at tortor dictum felis tincidunt feugiat. In quam massa,
+vehicula vitae auctor et, semper nec neque. Pellentesque quam
+libero, bibendum id tempor vel, imperdiet in eros. Curabitur varius
+adipiscing sapien et luctus. Donec vel tortor vitae magna venenatis
+imperdiet.
+
+    </p>
+    </div>
+    <!--Parameter divs for each param-->
+    <div id="parameter1">
+        <div><h2>The First Parameter</h2></div>
+        <hr/>
+        <div>
+            <p>Some explanatory text for the first parameter.
+            </p>
+        </div>
+    </div>
+    <div id="parameter2">
+        <div><h2>The Second Parameter</h2></div>
+        <hr/>
+        <div>
+            <p>Some explanatory text for the second parameter.
+
+            </p>
+        </div>
+    </div>
+</div>
+</html>

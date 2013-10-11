@@ -1,0 +1,2 @@
+//>>built
+define("xstyle/generate",[],function(){function _1(_2){return {layout:function(_3,_4){return function(_5){for(var i=0;i<_3.length;i++){var _6=_3[i];var _7=_6.selector;var _8=document.createElement("div");_7.replace(/\.([\w-]+)/,function(t,_9){_8.className=_9;});_7.replace(/#([\w-]+)/,function(t,id){_8.id=id;});_6.apply(_8);_5.appendChild(_8);}};},content:function(_a,_b){return function(_c){_c.innerHTML=eval(_a);};},role:"layout"};};var _d=new _1({});_1.layout=_d.layout;_1.content=_d.content;_1.role=_d.role;return _1;});

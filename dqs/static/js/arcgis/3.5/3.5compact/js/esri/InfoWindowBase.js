@@ -1,0 +1,19 @@
+/*
+ COPYRIGHT 2009 ESRI
+
+ TRADE SECRETS: ESRI PROPRIETARY AND CONFIDENTIAL
+ Unpublished material - all rights reserved under the
+ Copyright Laws of the United States and applicable international
+ laws, treaties, and conventions.
+
+ For additional information, contact:
+ Environmental Systems Research Institute, Inc.
+ Attn: Contracts and Legal Services Department
+ 380 New York Street
+ Redlands, California, 92373
+ USA
+
+ email: contracts@esri.com
+ */
+//>>built
+define("esri/InfoWindowBase",["dojo/_base/declare","dojo/_base/lang","dojo/_base/array","dojo/_base/connect","dojo/_base/Deferred","dojo/dom-construct","dojo/has","dijit/registry","esri/kernel","esri/lang","esri/geometry/ScreenPoint"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b){var _c=_1(null,{declaredClass:"esri.InfoWindowBase",constructor:function(){var _d=_2.hitch;this.__set_title=_d(this,this.__set_title);this.__err_title=_d(this,this.__err_title);this.__set_content=_d(this,this.__set_content);this.__err_content=_d(this,this.__err_content);},setMap:function(_e){this.map=_e;},unsetMap:function(_f){delete this.map;},setTitle:function(){},setContent:function(){},show:function(){},hide:function(){},resize:function(){},onShow:function(){},onHide:function(){},place:function(_10,_11){if(_a.isDefined(_10)){if(_2.isObject(_10)){_6.place(_10,_11,"only");}else{_11.innerHTML=_10;}}else{_11.innerHTML="";}},startupDijits:function(_12){this._processDijits(_12);},destroyDijits:function(_13){this._processDijits(_13,true);},_processDijits:function(_14,_15){if(_14&&_14.children.length===1){var _16=_14.children[0];if(_16){var _17=_8.byNode(_16);var _18=_17?[_17]:_8.findWidgets(_16);_3.forEach(_18,function(_19){if(_15){if(_19._started&&!_19._destroyed){try{if(_19.destroyRecursive){_19.destroyRecursive();}else{if(_19.destroy){_19.destroy();}}}catch(ex){console.debug("An error occurred when destroying a widget embedded within InfoWindow: "+ex.message);}}}else{if(!_19._started){try{_19.startup();}catch(ex2){console.debug("An error occurred when starting a widget embedded within InfoWindow: "+ex2.message);}}}});}}},__registerMapListeners:function(){this.__unregisterMapListeners();var map=this.map;this.__handles=[_4.connect(map,"onPan",this,this.__onMapPan),_4.connect(map,"onZoomStart",this,this.__onMapZmStart),_4.connect(map,"onExtentChange",this,this.__onMapExtChg)];},__unregisterMapListeners:function(){var _1a=this.__handles;if(_1a){_3.forEach(_1a,_4.disconnect,_4);this.__handles=null;}},__onMapPan:function(_1b,_1c){this.move(_1c,true);},__onMapZmStart:function(){this.__mcoords=this.mapCoords||this.map.toMap(new _b(this.coords));this.hide(null,true);},__onMapExtChg:function(_1d,_1e,_1f){var map=this.map,_20=this.mapCoords;if(_20){this.show(_20,null,true);}else{var _21;if(_1f){_21=map.toScreen(this.__mcoords);}else{_21=this.coords.offset((_1e&&_1e.x)||0,(_1e&&_1e.y)||0);}this.show(_21,null,true);}},__setValue:function(_22,_23){this[_22].innerHTML="";var dfd="_dfd"+_22,_24=this[dfd];if(_24&&_24.fired===-1){_24.cancel();this[dfd]=null;}if(_a.isDefined(_23)){if(_23 instanceof _5){this[dfd]=_23;_23.addCallbacks(this["__set"+_22],this["__err"+_22]);}else{this.__render(_22,_23);}}},__set_title:function(_25){this._dfd_title=null;this.__render("_title",_25);},__err_title:function(_26){this._dfd_title=null;},__set_content:function(_27){this._dfd_content=null;this.__render("_content",_27);},__err_content:function(_28){this._dfd_content=null;},__render:function(_29,_2a){var _2b=this[_29];this.place(_2a,_2b);if(this.isShowing){this.startupDijits(_2b);if(_29==="_title"&&this._adjustContentArea){this._adjustContentArea();}}}});if(_7("extend-esri")){_9.InfoWindowBase=_c;}return _c;});

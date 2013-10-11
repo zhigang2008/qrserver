@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link rel="Stylesheet" href="css/analysis.css" />
+    <script type="text/javascript">
+        function init() {
+            if (window.location.hash) {
+                var parentDiv, nodes, i, helpId;
+                helpId = window.location.hash.substring(1);
+                parentDiv = document.getElementById("topics");
+                nodes = parentDiv.children;
+                for(i=0; i < nodes.length; i++) {
+                    if(nodes[i].id !== helpId) {
+                        nodes[i].style.display ="none";
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+<div id="topics">
+    <div id="toolDescription", class="largesize">
+        <p><a href="http://links.esri.com/performing-analysis-online" target="blank">(BETA)</a></p>
+        <h2>CreateDrive-TimeAreas</h2><p/>
+        <h2></h2>
+        <hr/>
+    <p>Create Drive-Time Areas shows what areas can be reached within a specified drive time or drive distance. It measures out from one or more points, along roads, to create a layer  that can help you answer questions such as:
+    </p>
+    <p>
+        <ul>
+            <li>Where can I go from here within a 30-minute drive?
+            </li>
+            <li>Where can I go from here within a 30-minute drive at 6:00 p.m. during rush hour?
+            </li>
+            <li>What areas of town can the fire department reach within five minutes? How would fire-response coverage improve by building a new fire station here?
+            </li>
+            <li>What market areas does my business cover? What areas are within 10 miles of my stores?
+            </li>
+        </ul>
+        
+        <table>
+        <tr><td colspan="3"><hr size="1" noshade="noshade"></td></tr>
+        <tr><td valign="baseline"><img src="./images/tip.png"></td><td valign="baseline"><h2>Tip:&ensp;</h2></td>
+        <td valign="baseline">
+            <p>To create areas by measuring straight-line distance&mdash;that is, as the crow flies&mdash;rather than by measuring along roads, use 
+                <a href="GUID-C12E388A-E4D3-431E-BB0A-FCD0D7D6AE03" target="blank">Create Buffers</a>.
+            </p>
+        </td></tr>
+        <tr><td colspan="3"><hr size="1" noshade="noshade"></td></tr>
+        </table>
+    </p>
+    </div>
+    <!--Parameter divs for each param-->
+    <div id="AnalysisLayer">
+        <div><h2>Choose points</h2></div>
+        <hr/>
+        <div>
+            <p>Select an input point layer from the web map. The drive-time areas will be generated around these points.
+            </p>
+        </div>
+    </div>
+    <div id="MeasurementMethod">
+        <div><h2>Measure</h2></div>
+        <hr/>
+        <div>
+            <p>Choose whether to calculate drive-time or drive-distance areas. 
+                <ul>
+                    <li>
+                        <b>Driving Time</b>&mdash;The output areas show how far you can drive within the drive time you specify. The tool calculates the areas assuming average speeds along streets or, if you specify a start time, the estimated speeds given traffic conditions for that time and day.
+                    </li>
+                    <li>
+                        <b>Driving Distance</b>&mdash;The distance you specify is measured along roads.
+                    </li>
+                </ul>
+                
+            </p>
+            <p>In both cases, one-way streets, illegal turns, and so on, are considered in generating the areas. 
+                
+            </p>
+        </div>
+    </div>
+    <div id="BreakValues">
+        <div><h2>Drive time or distance</h2></div>
+        <hr/>
+        <div>
+            <p>Type a drive time or drive distance and specify the units.
+            </p>
+            <p>
+                To create multiple areas of different sizes around each point, type multiple values. Separate the values with spaces. For instance, to find 5-, 10-, and 15-minute drive-time areas, type the following: 5 10 15.
+            </p>
+        </div>
+    </div>
+    <div id="BreakUnits">
+        <div><h2>Measurement Units</h2></div>
+        <hr/>
+        <div>
+            <p>
+                
+            </p>
+            <p>Choose a time or distance unit to help define the size of the areas to create. 
+            </p>
+            <p>If 
+                <b>Measure</b> is set to
+                <b>Driving Time</b>, only time units are shown here, not distance units. To see distance units, set
+                <b>Measure</b> to
+                <b>Driving Distance</b>.
+            </p>
+        </div>
+    </div>
+    <div id="UseTraffic">
+        <div><h2>Use Traffic Conditions</h2></div>
+        <hr/>
+        <div>
+            <p>Choose whether drive-time areas are created by using average speeds or speeds based on changing traffic conditions. By checking this option, you enable the parameters that allow you to specify a time and day of departure.
+            </p>
+            <p>If you choose to use traffic in the analysis, the tool will automatically read the most accurate information available: historical, live, or predictive traffic. Historical traffic stores a record of average travel speeds at different times of the day for each day of a typical week. Live traffic uses near-current travel speeds obtained from sensors in cars and on roads. Predictive traffic uses a mix of live traffic, historical traffic, and other information to make forecasts of travel speeds.
+            </p>
+            <p>Not all regions support historical, live, and predictive traffic. 
+                <a href="HTTP://WWW.ARCGIS.COM/HOME/WEBMAP/VIEWER.HTML?WEBMAP=DB400FB09FCF4C24B1AC046468EC2A49&EXTENT=-142.207,-43.4529,152.0508,70.729" target="blank">See availability.</a>
+            </p>
+            <p>
+                <b>Use Traffic Conditions</b> is enabled when
+                <b>Measure</b> is set to
+                <b>Driving Time</b> and disabled otherwise.
+            </p>
+        </div>
+    </div>
+    <div id="TimeOfDay">
+        <div><h2>Time of Departure</h2></div>
+        <hr/>
+        <div>
+            <p>
+            </p>
+            <p>The time to depart from the input point locations. 
+            </p>
+            <p>Given a constant drive time, the size of a drive-time area can change substantially depending on the departure time and, consequently, traffic. The area tends to be smaller during peak traffic hours and larger in the middle of the night when fewer cars are on the roads.
+            </p>
+            <p>When calculating drive-time areas, the tool accounts for how traffic and travel speeds change throughout the drive. For example,  if you specify a 30-minute drive-time area with a departure time of 8:00 a.m., the travel speeds at the beginning of the trip (that is, near the point of departure) are calculated from 8 o'clock traffic. But as the trip continues and time elapses, traffic for different times of day are referenced. By the end of the 30-minute drive time, near the boundary of the drive-time area, the tool is referencing 8:30 a.m. traffic, not 8:00 a.m. traffic.
+            </p>
+            <p>This parameter is enabled when 
+
+                <b>Measure</b> is set to
+                <b>Driving Time</b> and
+                <b>Use Traffic Conditions</b> is checked.
+            </p>
+        </div>
+    </div>
+    <div id="DayOfWeek">
+        <div><h2>Day of Week</h2></div>
+        <hr/>
+        <div>
+            <p>The day to which the 
+                <b>Time of Departure</b> parameter refers. You can choose a day of the week or
+                <b>Today</b>.
+            </p>
+        </div>
+    </div>
+    <div id="DissolveType">
+        <div><h2>Areas from different input points should</h2></div>
+        <hr/>
+        <div>
+            <p>Choose how shared areas from 
+different input points are handled. They can:
+                <ul>
+                    <li>Overlap&mdash;Drive-time areas from different input points may cover the same road. This is useful when you need to know all the input points that can reach a particular location within the given drive time or distance.
+                    </li>
+                    <li>Dissolve&mdash;All drive-time areas are merged into one, and  no more than one area can cover a particular location. This is useful when all you need to know is that an area can be reached within a given time or distance, but you don't need to know which specific input points can reach the location.
+                    </li>
+                    <li>Split&mdash;The drive-time areas from different input locations that would overlap each other are split in the middle, so they about one another instead. This is useful when you want to see which areas are within a given time or distance of the input points and, at the same time, determine which input point is closest to that area.
+                    </li>
+                </ul>
+                
+            </p>
+        </div>
+    </div>
+    <div id="OutputLayer">
+        <div><h2>Result Layer Name</h2></div>
+        <hr/>
+        <div>
+            <p>
+                The result layer name will be generated by default with the name being based on the analysis type and the layer name of the input features. To change the result layer name, click inside the dialog box to edit.
+            </p>
+            <p>If a layer already exists with the same name, you will be prompted to confirm if you want to overwrite the original layer.
+            </p>
+        </div>
+    </div>
+</div>
+</html>

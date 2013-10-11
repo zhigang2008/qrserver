@@ -46,6 +46,9 @@ func routeConfig() {
 	beego.Router("/signout", &controllers.CommonController{}, "*:SignOut")
 	beego.Router("/login", &controllers.CommonController{}, "*:Login")
 
+	//测试页面
+	beego.Router("/testgis", &controllers.TestController{}, "*:TestGis")
+
 	//静态文件路径
 	beego.SetStaticPath("/logs", "logs")
 	beego.SetStaticPath("/img", "static/img")

@@ -1,0 +1,2 @@
+//>>built
+define("xstyle/jss",[],function(){var _1={}.watch;function _2(_3){return {layout:function(_4,_5){return {render:function(_6){for(var i=0;i<_4.length;i++){var _7=_4[i];var _8=_7.selector.substring(1);var _9=_3.get?_3.get(_8):_3[_8];if(_3.watch!=_1){_3.watch(_8,function(_a,_b,_c){_d(_c);});}function _d(_e){if(_e!==undefined){var _f=document.createElement("div");_7.renderInto(_f);}};_7.renderInto(target);_6.appendChild(target);}},cssText:_5.selector.replace(/\//g,"[data-path=$1]")};}};};return _2;});

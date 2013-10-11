@@ -1,0 +1,2 @@
+//>>built
+define("xstyle/css-builder",[],function(){var _1,_2={};return {load:function(_3,_4,_5,_6){_2[_3]=typeof readFile!="undefined"?readFile(_4.toUrl(_3),"utf-8"):require.nodeRequire("fs").readFileSync(_4.toUrl(_3),"utf-8");_5({});},write:function(_7,_8,_9){if(!_1){_1=true;_9("_css_cache={};");}_9("_css_cache["+JSON.stringify(_8)+"]="+JSON.stringify(_2[_8])+";");}};});
