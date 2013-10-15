@@ -75,6 +75,8 @@ func (this *UserController) Post() {
 	answer := JsonAnswer{}
 
 	user := models.User{}
+	reportset := models.ReportConfig{}
+	this.ParseForm(&reportset)
 	err := this.ParseForm(&user)
 
 	if err != nil {
@@ -82,6 +84,7 @@ func (this *UserController) Post() {
 		answer.Msg = "数据传递失败:" + err.Error()
 	} else {
 		user.Roles = this.GetStrings("Roles")
+		user.ReportSet = reportset
 		user.SetPassword(beego.AppConfig.String("user.default.password"))
 		user.CreateTime = time.Now()
 
@@ -120,6 +123,9 @@ func (this *UserController) Put() {
 		answer.Msg = "数据传递失败:" + err.Error()
 	} else {
 		user.Roles = this.GetStrings("Roles")
+		reportset := models.ReportConfig{}
+		this.ParseForm(&reportset)
+		user.ReportSet = reportset
 		user.UpdateTime = time.Now()
 
 		err = dao.UpdateUser(&user)

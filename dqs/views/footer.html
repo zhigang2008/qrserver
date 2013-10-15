@@ -6,6 +6,14 @@
 	$("*[data-toggle='tooltip']").tooltip();
 	//$("a").tooltip();
 	//$(".btn").tooltip();
+	$('#global-login-show').popover({ 
+    html : true,
+    placement:'bottom',
+    title:'欢迎登录系统',
+    content: function() {
+      return $("#global-login-div").html();
+    }
+});
 </script>
    </body>
 </html>

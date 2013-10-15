@@ -42,13 +42,13 @@ function addMarker(sid,dname,lng,lat){
 //重置观测点
 function resetMarker(sid){
 	var marker = mapObj.getOverlays(sid);
-	marker.setIcon("/static/image/marker-blue.png");
+	marker.icon="/static/image/marker-blue.png";
 	mapObj.updateOverlay(marker);
 }
 //更新观测点
 function updateMarker(sid){
 	var marker = mapObj.getOverlays(sid);
-	marker.setIcon("/static/image/star.gif");
+	marker.icon="/static/image/star.gif";
 	mapObj.updateOverlay(marker);
 }
 

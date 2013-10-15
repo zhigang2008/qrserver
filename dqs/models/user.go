@@ -22,6 +22,13 @@ type User struct {
 	CreateTime time.Time
 	UpdateTime time.Time
 	Roles      []string
+	ReportSet  ReportConfig
+}
+
+//速报接收设置
+type ReportConfig struct {
+	ReportMail  bool //接收邮件速报
+	ReportPhone bool //接收短信速报
 }
 
 //设置密码

@@ -54,6 +54,10 @@ func (this *UserSelfController) Update() {
 			this.Abort("404")
 		}
 
+		reportset := models.ReportConfig{}
+		this.ParseForm(&reportset)
+		user.ReportSet = reportset
+
 		err = dao.UpdateUserBySelf(&user)
 		if err != nil {
 			answer.Ok = false

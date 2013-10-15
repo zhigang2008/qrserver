@@ -128,3 +128,51 @@ func (this *CommonController) auditLogOut(u models.User) {
 	dao.AddAuditLog(audit)
 
 }
+
+//用户注册页面
+func (this *CommonController) Register() {
+	this.Data["title"] = "用户注册"
+	this.TplNames = "register.html"
+	this.Render()
+}
+
+//用户注册
+func (this *CommonController) RegisterSave() {
+	answer := JsonAnswer{}
+	user := models.User{}
+	reportset := models.ReportConfig{}
+	this.ParseForm(&reportset)
+	err := this.ParseForm(&user)
+
+	if err != nil {
+		answer.Ok = false
+		answer.Msg = "数据传递失败:" + err.Error()
+	} else {
+		user.Roles = []string{"role_user"}
+		user.ReportSet = reportset
+		user.CreateTime = time.Now()
+
+		err = dao.AddUser(&user)
+		if err != nil {
+			answer.Ok = false
+			answer.Msg = "用户注册失败:" + err.Error()
+			log.Warnf("注册用户[%s]失败:%s", user.UserId, err.Error())
+		} else {
+			answer.Ok = true
+			answer.Msg = "保存成功"
+
+			log.Infof("用户注册成功[%s]", user.UserId)
+			//audit
+			this.AuditLog("用户注册成功["+user.UserId+"]", true)
+
+			//进行登录
+			this.SetSession(CURRENTUSER, user)
+			this.SetSession("userName", user.UserName)
+			//audit
+			this.auditLogIn(user.UserId, user.UserName, "登录成功", true)
+		}
+	}
+
+	this.Data["json"] = &answer
+	this.ServeJson()
+}

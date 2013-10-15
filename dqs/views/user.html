@@ -84,6 +84,17 @@
     </div>
   </div>
   <div class="form-group">
+    <label class="col-sm-2 control-label" for="Report" >速报接收</label>
+    <div class="col-sm-6">
+      <label class="checkbox-inline">
+         <input type="checkbox"  name="ReportMail" value="true"  {{if .ReportSet.ReportMail }} checked {{end}} disabled /> 邮件速报
+      </label>
+      <label class="checkbox-inline">
+         <input type="checkbox"  name="ReportPhone" value="true"  {{if .ReportSet.ReportPhone }} checked {{end}} disabled /> 手机速报
+      </label>
+    </div>
+ </div>
+  <div class="form-group">
     <label class="col-sm-2 control-label" for="Blocked" >是否禁用</label>
     <div class="col-sm-6">
       <label class="radio-inline">
@@ -99,7 +110,6 @@
    <div class="form-group">
     <label class="col-sm-2 control-label" for="Roles" >角色</label>
     <div class="col-sm-6">
-      
       <label class="checkbox-inline">
          <input type="checkbox"  name="Roles" value="role_user"  {{if contain .Roles "role_user"}} checked {{end}} disabled /> 普通用户
       </label>

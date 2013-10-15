@@ -45,6 +45,8 @@ func routeConfig() {
 	beego.Router("/sign", &controllers.CommonController{}, "*:Sign")
 	beego.Router("/signout", &controllers.CommonController{}, "*:SignOut")
 	beego.Router("/login", &controllers.CommonController{}, "*:Login")
+	beego.Router("/register", &controllers.CommonController{}, "*:Register")
+	beego.Router("/registersave", &controllers.CommonController{}, "*:RegisterSave")
 
 	//测试页面
 	beego.Router("/testgis", &controllers.TestController{}, "*:TestGis")

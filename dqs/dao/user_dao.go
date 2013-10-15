@@ -117,6 +117,7 @@ func UpdateUser(user *models.User) error {
 	ouser.Blocked = user.Blocked
 	ouser.Roles = user.Roles
 	ouser.UpdateTime = user.UpdateTime
+	ouser.ReportSet = user.ReportSet
 
 	err = c.Update(&bson.M{"_id": ouser.ObjectId}, ouser)
 	if err != nil {
@@ -165,6 +166,7 @@ func UpdateUserBySelf(user *models.User) error {
 	ouser.Mobile = user.Mobile
 	ouser.Addr = user.Addr
 	ouser.UserTitle = user.UserTitle
+	ouser.ReportSet = user.ReportSet
 	ouser.UpdateTime = time.Now()
 
 	err = c.Update(&bson.M{"_id": ouser.ObjectId}, ouser)

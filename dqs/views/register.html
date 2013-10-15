@@ -6,8 +6,7 @@
   <div class="panel-heading">
   	<ol class="breadcrumb">
      <li><a href="/"><span class="glyphicon glyphicon-home"></span>首页</a></li>
-     <li><a href="/user">用户列表</a></li>
-     <li class="active">添加用户</li>
+     <li class="active">用户注册</li>
   </ol>
   </div>
   <div class="panel-body">
@@ -25,11 +24,7 @@
 </div>
 -->
  <form id="userform" class="form-horizontal" role="form" action="#" type="post">
- 	 <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <button id="saveuser" type="button" class="btn btn-success btn-lg">保&nbsp;&nbsp;存</button>
-     </div>
-  </div>
+ 	 
   <div class="form-group">
     <label class="col-sm-2 control-label" for="UserId" >用户ID*</label>
     <div class="col-sm-6">
@@ -41,6 +36,20 @@
     <label class="col-sm-2 control-label" for="UserName" >真实姓名*</label>
     <div class="col-sm-6">
       <input id="UserName" type="text" class="form-control" name="UserName"  placeholder="UserName"  />
+      <p class="help-block"></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="Password" >用户密码*</label>
+    <div class="col-sm-6">
+      <input id="Password" type="password" class="form-control" name="Password"  placeholder="新密码"   />
+      <p class="help-block">请输入6~16位由数字和字符组成的密码</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="rePwd" >重复密码*</label>
+    <div class="col-sm-6">
+      <input id="rePwd" type="password" class="form-control" name="rePwd"  placeholder="重复输入新密码"   />
       <p class="help-block"></p>
     </div>
   </div>
@@ -90,23 +99,10 @@
       </label>
     </div>
  </div>
-   <div class="form-group">
-    <label class="col-sm-2 control-label" for="Roles" >角色</label>
-    <div class="col-sm-6">
-      
-      <label class="checkbox-inline">
-         <input type="checkbox"  name="Roles" value="role_user" checked> 普通用户
-      </label>
-      <label class="checkbox-inline">
-         <input type="checkbox"  name="Roles" value="role_device" >设备管理员
-      </label>
-      <label class="checkbox-inline">
-         <input type="checkbox"  name="Roles" value="role_report" >速报管理员
-      </label>
-      <label class="checkbox-inline">
-         <input type="checkbox"  name="Roles" value="role_admin"> 系统管理员
-      </label>
-    </div>
+ <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button id="saveuser" type="button" class="btn btn-success btn-lg">注&nbsp;&nbsp;册</button>
+     </div>
   </div>
 </form>
 
@@ -118,6 +114,7 @@
 <script src="/static/js/validate.additional-methods.min.js"></script>
 <script src="/static/js/validate.messages_zh.js"></script>
 <script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
+<script src="/static/js/bootbox.min.js"></script>
 <script>
  $(document).ready(function() {	
   var form = $("#userform");
@@ -149,6 +146,14 @@
     },
     UserTitle: {
       maxlength: 50
+    },
+    Password: {
+      required: true,
+      rangelength: [6,16]
+    },
+    rePwd: {
+      required: true,
+      equalTo: "#Password"
     }
     
   }
@@ -159,15 +164,16 @@
  		if(form.valid()){
       $.ajax({
              type: "POST",
-             url: "/user",
+             url: "/registersave",
              dataType:"json",
              async: true,
              timeout: 60000,
              data: $("#userform").serialize() ,
              success: function(json){
                if(json.Ok==true){
-                    showSuccess("用户添加成功!");
-               	 
+                    bootbox.alert("注册成功!",function(){
+                   	 window.location.href="/";
+                   });
                 }else{
                  showError(json.Msg);
                 }
