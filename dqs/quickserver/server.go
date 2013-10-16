@@ -37,7 +37,8 @@ type Server struct {
 }
 
 //服务器初始化并启动监听
-func InitAndStart(conf ServerConfig) (err error) {
+func InitAndStart(conf ServerConfig) {
+	var err error
 	server = &Server{
 		serverHost: conf.Host,
 		serverPost: strconv.Itoa(conf.Port),
@@ -56,7 +57,7 @@ func InitAndStart(conf ServerConfig) (err error) {
 	ConnecitonPool = make(map[string]*net.Conn)
 	CommandPool = make(map[string]chan []byte)
 
-	return server.start()
+	go server.start()
 
 }
 
@@ -107,8 +108,8 @@ func (server *Server) start() (err error) {
 	}
 	//}()
 
-	//select {}
-	return
+	select {}
+	//return
 }
 
 //接收数据处理数据
