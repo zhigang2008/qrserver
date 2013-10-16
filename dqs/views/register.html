@@ -28,49 +28,49 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="UserId" >用户ID*</label>
     <div class="col-sm-6">
-      <input id="UserId" type="text" class="form-control" name="UserId"  placeholder="UserId"  />
-      <p class="help-block"></p>
+      <input id="UserId" type="text" class="form-control" name="UserId"  placeholder="用户主ID" autofocus />
+      <p class="help-block">请选择一个易记的名字,此名字将作为登陆主ID.(4~16位英文字母和数字组成)</p>
     </div>
   </div>
  <div class="form-group">
     <label class="col-sm-2 control-label" for="UserName" >真实姓名*</label>
     <div class="col-sm-6">
-      <input id="UserName" type="text" class="form-control" name="UserName"  placeholder="UserName"  />
+      <input id="UserName" type="text" class="form-control" name="UserName"  placeholder="真实姓名"  />
       <p class="help-block"></p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Password" >用户密码*</label>
     <div class="col-sm-6">
-      <input id="Password" type="password" class="form-control" name="Password"  placeholder="新密码"   />
+      <input id="Password" type="password" class="form-control" name="Password"  placeholder="用户密码"   />
       <p class="help-block">请输入6~16位由数字和字符组成的密码</p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="rePwd" >重复密码*</label>
     <div class="col-sm-6">
-      <input id="rePwd" type="password" class="form-control" name="rePwd"  placeholder="重复输入新密码"   />
+      <input id="rePwd" type="password" class="form-control" name="rePwd"  placeholder="重复输入密码"   />
       <p class="help-block"></p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Email" >Email*</label>
     <div class="col-sm-6">
-      <input id="Email" type="text" class="form-control" name="Email"  placeholder="Email"  />
+      <input id="Email" type="text" class="form-control" name="Email"  placeholder="电子邮件"  />
       <p class="help-block"></p>
     </div>
   </div>
    <div class="form-group">
     <label class="col-sm-2 control-label" for="Phone" >电话</label>
     <div class="col-sm-6">
-      <input id="Phone" type="text" class="form-control" name="Phone"  placeholder="Phone"   />
+      <input id="Phone" type="text" class="form-control" name="Phone"  placeholder="电话"   />
       <p class="help-block"></p>
     </div>
   </div>
    <div class="form-group">
     <label class="col-sm-2 control-label" for="Mobile" >手机</label>
     <div class="col-sm-6">
-      <input id="Mobile" type="text" class="form-control" name="Mobile"  placeholder="Mobile"  />
+      <input id="Mobile" type="text" class="form-control" name="Mobile"  placeholder="手机"  />
       <p class="help-block"></p>
     </div>
   </div>
@@ -122,7 +122,8 @@
   rules: {
     UserId: {
       required: true,
-      rangelength: [4, 16]
+      rangelength: [4, 16],
+      alnum:true
     },
     UserName: {
       required: true,
@@ -155,7 +156,6 @@
       required: true,
       equalTo: "#Password"
     }
-    
   }
 });	
   
