@@ -150,6 +150,8 @@ func (this *CommonController) RegisterSave() {
 	} else {
 		user.Roles = []string{"role_user"}
 		user.ReportSet = reportset
+		//密码加密
+		user.SetPassword(user.Password)
 		user.CreateTime = time.Now()
 
 		err = dao.AddUser(&user)
