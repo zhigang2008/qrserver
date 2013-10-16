@@ -293,6 +293,7 @@
 </div>
 {{template "scripts"}}
 <script src="/static/js/validate.min.js"></script>
+<script src="/static/js/validate.additional-methods.min.js"></script>
 <script src="/static/js/validate.messages_zh.js"></script>
 <script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
 <script>
@@ -308,7 +309,7 @@
     },
     SiteName: {
       required: true,
-      alphanumeric: true
+      alnum: true
     },
     Longitude: {
       required: true,
