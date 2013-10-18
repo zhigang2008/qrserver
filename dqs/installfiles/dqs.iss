@@ -67,7 +67,7 @@ Source: "D:\mongodb2.4.4\bin\mongotop.exe"; DestDir: "{app}\database\bin"; Flags
 Source: "E:\go_workspace\src\dqs\init.json"; DestDir: "{app}\database"; Components: database
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\server\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Parameters: "start"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
