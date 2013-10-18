@@ -37,44 +37,44 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "E:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
-Source: "E:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
-Source: "E:\go_workspace\src\dqs\seelog.xml"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
-Source: "E:\go_workspace\src\dqs\server-original.xml"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
-Source: "E:\go_workspace\src\dqs\Socket1.dll"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
-Source: "E:\go_workspace\src\dqs\conf\app-original.conf"; DestDir: "{app}\server\conf"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
-Source: "E:\go_workspace\src\dqs\static\*"; DestDir: "{app}\server\static"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
-Source: "E:\go_workspace\src\dqs\views\*.html"; DestDir: "{app}\server\views"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
+Source: "F:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
+Source: "F:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
+Source: "F:\go_workspace\src\dqs\seelog.xml"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
+Source: "F:\go_workspace\src\dqs\server-original.xml"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
+Source: "F:\go_workspace\src\dqs\Socket1.dll"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
+Source: "F:\go_workspace\src\dqs\conf\app-original.conf"; DestDir: "{app}\server\conf"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
+Source: "F:\go_workspace\src\dqs\static\*"; DestDir: "{app}\server\static"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
+Source: "F:\go_workspace\src\dqs\views\*.html"; DestDir: "{app}\server\views"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: "D:\mongodb2.4.4\GNU-AGPL-3.0"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\README"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\THIRD-PARTY-NOTICES"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\bsondump.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongo.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongod.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongod.pdb"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongodump.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongoexport.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongofiles.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongoimport.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongooplog.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongoperf.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongorestore.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongos.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongos.pdb"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongostat.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb2.4.4\bin\mongotop.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "E:\go_workspace\src\dqs\init.json"; DestDir: "{app}\database"; Components: database
+Source: "D:\mongodb\GNU-AGPL-3.0"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\README"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\THIRD-PARTY-NOTICES"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\bsondump.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongo.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongod.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongod.pdb"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongodump.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongoexport.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongofiles.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongoimport.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongooplog.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongoperf.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongorestore.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongos.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongos.pdb"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongostat.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\mongotop.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "F:\go_workspace\src\dqs\init.json"; DestDir: "{app}\data"; Components: database
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\server\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Parameters: "start"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Parameters: "start"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{app}\server\{#MyAppExeName}"; Parameters: "start"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
-;Filename: "{app}\server\dqs.exe"; Parameters: "install"; WorkingDir: "{app}\server"; Flags: postinstall runascurrentuser shellexec skipifdoesntexist; Description: "安装主程序的系统服务"; Components: main
+;Filename: "{app}\server\{#MyAppExeName}"; Parameters: "install"; WorkingDir: "{app}\server"; Flags: postinstall runascurrentuser shellexec skipifdoesntexist; Description: "安装主程序的系统服务"; Components: main
 ;Filename: "{app}\database\bin\mongod.exe"; Parameters: "--install --serviceName MongoDB --serviceDisplayName ""DQS MongoDB"" --dbpath ""{app}\data"" --dbpath ""{app}\logs\mongodb.log"" --directoryperdb"; WorkingDir: "{app}\database\bin"; Flags: postinstall shellexec skipifdoesntexist; Description: "DQS速报平台 mongodb的服务"; Components: database
 
 [Components]
@@ -105,8 +105,8 @@ Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: string; ValueName: 
 chinese.BeveledLabel=DQS专业团队
 
 [UninstallRun]
-Filename: "{app}\server\dqs.exe"; Parameters: "stop"; WorkingDir: "{app}\server\logs"; Flags: waituntilterminated runhidden shellexec; Components: main
-Filename: "{app}\server\dqs.exe"; Parameters: "remove"; WorkingDir: "{app}\server\logs"; Flags: waituntilterminated runhidden shellexec; Components: main
+Filename: "{app}\server\{#MyAppExeName}"; Parameters: "stop"; WorkingDir: "{app}\server\logs"; Flags: waituntilterminated runhidden shellexec; Components: main
+Filename: "{app}\server\{#MyAppExeName}"; Parameters: "remove"; WorkingDir: "{app}\server\logs"; Flags: waituntilterminated runhidden shellexec; Components: main
 Filename: "{app}\database\bin\mongod.exe"; Parameters: "--remove"; WorkingDir: "{app}\database\bin"; Flags: waituntilterminated shellexec runhidden; Components: database
 
 [InstallDelete]
@@ -221,7 +221,8 @@ var  sampleFile,serverFile,OldString,NewString :string;
      fileLines: TArrayOfString;
      i: Integer;
      httpSampleFile,httpFile :string;
-
+     
+     dbServiceParams :string;
      ErrorCode: Integer;
 
   begin
@@ -305,7 +306,7 @@ var  sampleFile,serverFile,OldString,NewString :string;
     
     
     //系统服务安装
-    if not ShellExec('open', ExpandConstant('{app}\server\{#MyAppExeName}'),'install', ExpandConstant('{app}\server'), SW_SHOW, ewWaitUntilTerminated, ErrorCode) then
+    if not ShellExec('open', ExpandConstant('{app}\server\{#MyAppExeName}'),'install', ExpandConstant('{app}\server'), SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
      begin
        MsgBox('主服务service加载失败,请安装后通过""{app}\server\{#MyAppExeName} install""进行加载.',mbInformation,MB_OK);
      end;
@@ -313,12 +314,14 @@ var  sampleFile,serverFile,OldString,NewString :string;
     //数据库服务
     if IsComponentSelected('database') then
       begin
-        if ShellExec('open', ExpandConstant('{app}\database\bin\mongod.exe'),'--install --serviceName MongoDB --serviceDisplayName ""DQS MongoDB"" --dbpath ""{app}\data"" --dbpath ""{app}\data\logs\mongodb.log"" --directoryperdb', ExpandConstant('{app}\database\bin'), SW_SHOW, ewWaitUntilTerminated, ErrorCode) then 
+        dbServiceParams := '--install --serviceName MongoDB --serviceDisplayName "DQS MongoDB" --dbpath "'+ExpandConstant('{app}\data')+'" --logpath "'+ExpandConstant('{app}\data\logs\mongodb.log')+'" --directoryperdb';
+        //MsgBox(dbServiceParams,mbInformation,MB_OK);
+        if ShellExec('open', ExpandConstant('{app}\database\bin\mongod.exe'),dbServiceParams, ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode) then 
          begin
-          if not ShellExec('open',ExpandConstant('{cmd}'), 'net start MongoDB',ExpandConstant('{app}'), SW_SHOW, ewWaitUntilTerminated, ErrorCode) then
+          if  ShellExec('','net.exe', 'start MongoDB',ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
             begin
             //初始化数据库数据
-                ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'-d dqs -c user init.json', ExpandConstant('{app}\database\bin'), SW_SHOW, ewWaitUntilTerminated, ErrorCode)
+                ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'-d dqs -c user "'+ExpandConstant('{app}\data\init.json')+'"', ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode)
             end;
          end
         else
