@@ -64,9 +64,10 @@ Source: "D:\mongodb2.4.4\bin\mongos.exe"; DestDir: "{app}\database\bin"; Flags: 
 Source: "D:\mongodb2.4.4\bin\mongos.pdb"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
 Source: "D:\mongodb2.4.4\bin\mongostat.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
 Source: "D:\mongodb2.4.4\bin\mongotop.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "E:\go_workspace\src\dqs\init.json"; DestDir: "{app}\database"; Components: database
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: quicklaunchicon
@@ -104,9 +105,12 @@ Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: string; ValueName: 
 chinese.BeveledLabel=DQS专业团队
 
 [UninstallRun]
-Filename: "{app}\server\dqs.exe"; Parameters: "stop"; WorkingDir: "{app}\server"; Flags: waituntilterminated runhidden; Components: main
-Filename: "{app}\server\dqs.exe"; Parameters: "remove"; WorkingDir: "{app}\server\logs"; Flags: waituntilterminated runhidden; Components: main
-Filename: "{app}\database\bin\mongod.exe"; Parameters: "--remove"; WorkingDir: "{app}\database\bin"; Flags: waituntilterminated; Components: database
+Filename: "{app}\server\dqs.exe"; Parameters: "stop"; WorkingDir: "{app}\server\logs"; Flags: waituntilterminated runhidden shellexec; Components: main
+Filename: "{app}\server\dqs.exe"; Parameters: "remove"; WorkingDir: "{app}\server\logs"; Flags: waituntilterminated runhidden shellexec; Components: main
+Filename: "{app}\database\bin\mongod.exe"; Parameters: "--remove"; WorkingDir: "{app}\database\bin"; Flags: waituntilterminated shellexec runhidden; Components: database
+
+[InstallDelete]
+;Type: files; Name: "{app}\database\init.json"; AfterInstall: CurStepChanged
 
 [Code]
 var
@@ -301,19 +305,26 @@ var  sampleFile,serverFile,OldString,NewString :string;
     
     
     //系统服务安装
-    if not ShellExec('', ExpandConstant('{app}\server\{#MyAppExeName}'),'install', ExpandConstant('{app}\server'), SW_SHOW, ewNoWait, ErrorCode) then
+    if not ShellExec('open', ExpandConstant('{app}\server\{#MyAppExeName}'),'install', ExpandConstant('{app}\server'), SW_SHOW, ewWaitUntilTerminated, ErrorCode) then
      begin
-      // handle failure if necessary
+       MsgBox('主服务service加载失败,请安装后通过""{app}\server\{#MyAppExeName} install""进行加载.',mbInformation,MB_OK);
      end;
 
     //数据库服务
-    if  ck_HTTP.Checked then
+    if IsComponentSelected('database') then
       begin
-        if ShellExec('', ExpandConstant('{app}\database\bin\mongod.exe'),'--install --serviceName MongoDB --serviceDisplayName ""DQS MongoDB"" --dbpath ""{app}\data"" --dbpath ""{app}\data\logs\mongodb.log"" --directoryperdb', ExpandConstant('{app}\database'), SW_SHOW, ewNoWait, ErrorCode) then 
+        if ShellExec('open', ExpandConstant('{app}\database\bin\mongod.exe'),'--install --serviceName MongoDB --serviceDisplayName ""DQS MongoDB"" --dbpath ""{app}\data"" --dbpath ""{app}\data\logs\mongodb.log"" --directoryperdb', ExpandConstant('{app}\database\bin'), SW_SHOW, ewWaitUntilTerminated, ErrorCode) then 
          begin
-
-        //初始化数据库数据
-         end;
+          if not ShellExec('open',ExpandConstant('{cmd}'), 'net start MongoDB',ExpandConstant('{app}'), SW_SHOW, ewWaitUntilTerminated, ErrorCode) then
+            begin
+            //初始化数据库数据
+                ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'-d dqs -c user init.json', ExpandConstant('{app}\database\bin'), SW_SHOW, ewWaitUntilTerminated, ErrorCode)
+            end;
+         end
+        else
+          begin
+          MsgBox(SysErrorMessage(ErrorCode),mbInformation,MB_OK);
+          end;
       end;
     
 
