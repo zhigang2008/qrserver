@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Server>
+	<!--server host. you can leave it blank -->
+	<Host>[host]</Host>
+	<!--listener port,default 8083 -->
+	<Port>[port]</Port>
+	<!--TCP type ,it support tcp4 or tcp6 -->
+	<Type>tcp4</Type>
+	<!--database parameter config -->
+	<DataServer>
+		<!--database host,default is localhost(127.0.0.1) -->
+		<Host>[datahost]</Host>
+		<!--database serve port,default 27017 -->
+		<Port>[dataport]</Port>
+		<!--database name,default is 'dqs' -->
+		<DataBaseName>dqs</DataBaseName>
+		<!--data collection,leave it blank. default 'data' -->
+		<DataCollection></DataCollection>
+		<!--device collection,you can leave it blank -->
+		<DeviceCollection></DeviceCollection>
+	</DataServer>
+	<!--if use http server. it can be set to [true|false].default is false -->
+	<HttpServerEnable>[httpenable]</HttpServerEnable>
+	<!--if use CRC check, it can be set to [true|false]. -->
+	<CRC>false</CRC>
+</Server>
