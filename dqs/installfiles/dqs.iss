@@ -7,6 +7,8 @@
 #define MyAppURL "http://www.dqs.org/"
 #define MyAppExeName "dqs.exe"
 #define RegisterName "DqsServer"
+#define ServiceName_server "DQS_Server"
+#define ServiceName_database "DQS_MongoDB"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -64,18 +66,22 @@ Source: "D:\mongodb\bin\mongos.exe"; DestDir: "{app}\database\bin"; Flags: ignor
 Source: "D:\mongodb\bin\mongos.pdb"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
 Source: "D:\mongodb\bin\mongostat.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
 Source: "D:\mongodb\bin\mongotop.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "F:\go_workspace\src\dqs\init.json"; DestDir: "{app}\data"; Components: database
+Source: "F:\go_workspace\src\dqs\installfiles\data\init-user.json"; DestDir: "{app}\data"; Components: database
+Source: "F:\go_workspace\src\dqs\installfiles\data\init-device.json"; DestDir: "{app}\data"; Components: database
+Source: "F:\go_workspace\src\dqs\installfiles\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\server\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Parameters: "start"
+Name: "{group}\运行{#MyAppName}平台"; Filename: "http://localhost"; IconFilename: "{app}\server\static\image\ico_64X64.ico"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Parameters: "start"; Tasks: quicklaunchicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\server\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Parameters: "start"; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\server\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Parameters: "start"; Tasks: quicklaunchicon
 
 [Run]
-Filename: "{app}\server\{#MyAppExeName}"; Parameters: "start"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
+;Filename: "{app}\server\{#MyAppExeName}"; Parameters: "start"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 ;Filename: "{app}\server\{#MyAppExeName}"; Parameters: "install"; WorkingDir: "{app}\server"; Flags: postinstall runascurrentuser shellexec skipifdoesntexist; Description: "安装主程序的系统服务"; Components: main
 ;Filename: "{app}\database\bin\mongod.exe"; Parameters: "--install --serviceName MongoDB --serviceDisplayName ""DQS MongoDB"" --dbpath ""{app}\data"" --dbpath ""{app}\logs\mongodb.log"" --directoryperdb"; WorkingDir: "{app}\database\bin"; Flags: postinstall shellexec skipifdoesntexist; Description: "DQS速报平台 mongodb的服务"; Components: database
+Filename: "{app}\changelog.txt"; WorkingDir: "{app}"; Flags: nowait postinstall shellexec skipifdoesntexist; Description: "查看程序变更信息"
+Filename: "http://localhost"; Flags: nowait shellexec; Description: "打开平台管理页面"
 
 [Components]
 Name: "main"; Description: "主程序(必选)"; Types: compact custom full; Flags: fixed
@@ -107,10 +113,11 @@ chinese.BeveledLabel=DQS专业团队
 [UninstallRun]
 Filename: "{app}\server\{#MyAppExeName}"; Parameters: "stop"; WorkingDir: "{app}\server\logs"; Flags: waituntilterminated runhidden shellexec; Components: main
 Filename: "{app}\server\{#MyAppExeName}"; Parameters: "remove"; WorkingDir: "{app}\server\logs"; Flags: waituntilterminated runhidden shellexec; Components: main
-Filename: "{app}\database\bin\mongod.exe"; Parameters: "--remove"; WorkingDir: "{app}\database\bin"; Flags: waituntilterminated shellexec runhidden; Components: database
+Filename: "{app}\database\bin\mongod.exe"; Parameters: "--remove --serviceName {#ServiceName_database}"; WorkingDir: "{app}\database\bin"; Flags: waituntilterminated shellexec runhidden; Components: database
 
 [InstallDelete]
-;Type: files; Name: "{app}\database\init.json"; AfterInstall: CurStepChanged
+Type: files; Name: "{app}\database\init-user.json"; 
+Type: files; Name: "{app}\database\init-device.json";
 
 [Code]
 var
@@ -314,14 +321,16 @@ var  sampleFile,serverFile,OldString,NewString :string;
     //数据库服务
     if IsComponentSelected('database') then
       begin
-        dbServiceParams := '--install --serviceName MongoDB --serviceDisplayName "DQS MongoDB" --dbpath "'+ExpandConstant('{app}\data')+'" --logpath "'+ExpandConstant('{app}\data\logs\mongodb.log')+'" --directoryperdb';
+        dbServiceParams := '--install --serviceName {#ServiceName_database} --serviceDisplayName "DQS MongoDB" --dbpath "'+ExpandConstant('{app}\data')+'" --logpath "'+ExpandConstant('{app}\data\logs\mongodb.log')+'" --directoryperdb';
         //MsgBox(dbServiceParams,mbInformation,MB_OK);
         if ShellExec('open', ExpandConstant('{app}\database\bin\mongod.exe'),dbServiceParams, ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode) then 
          begin
-          if  ShellExec('','net.exe', 'start MongoDB',ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
+          if  ShellExec('','net.exe', 'start {#ServiceName_database}',ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
             begin
             //初始化数据库数据
-                ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'-d dqs -c user "'+ExpandConstant('{app}\data\init.json')+'"', ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode)
+                ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'-d dqs -c user "'+ExpandConstant('{app}\data\init-user.json')+'"', ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
+                ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'-d dqs -c device "'+ExpandConstant('{app}\data\init-device.json')+'"', ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
+                ShellExec('','net.exe', 'start {#ServiceName_server}',ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
             end;
          end
         else

@@ -17,8 +17,8 @@ var currentPath string
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
-	var name = "DQS Server"
-	var displayName = "地壳所地震速报平台"
+	var name = "DQS_Server"
+	var displayName = "DQS 地壳所地震速报平台"
 	var desc = "这是地震谱烈度速报平台的系统服务"
 
 	var s, err = service.NewService(name, displayName, desc)
