@@ -6,6 +6,7 @@
 #define MyAppPublisher "dqs"
 #define MyAppURL "http://www.dqs.org/"
 #define MyAppExeName "dqs.exe"
+#define MyServerMgrApp "ServerMgr.exe"
 #define RegisterName "DqsServer"
 #define ServiceName_server "DQS_Server"
 #define ServiceName_database "DQS_MongoDB"
@@ -40,7 +41,6 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "F:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
-Source: "F:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
 Source: "F:\go_workspace\src\dqs\seelog.xml"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
 Source: "F:\go_workspace\src\dqs\server-original.xml"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
 Source: "F:\go_workspace\src\dqs\Socket1.dll"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
@@ -66,22 +66,22 @@ Source: "D:\mongodb\bin\mongos.exe"; DestDir: "{app}\database\bin"; Flags: ignor
 Source: "D:\mongodb\bin\mongos.pdb"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
 Source: "D:\mongodb\bin\mongostat.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
 Source: "D:\mongodb\bin\mongotop.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "F:\go_workspace\src\dqs\installfiles\data\init-user.json"; DestDir: "{app}\data"; Components: database
-Source: "F:\go_workspace\src\dqs\installfiles\data\init-device.json"; DestDir: "{app}\data"; Components: database
-Source: "F:\go_workspace\src\dqs\installfiles\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "F:\go_workspace\src\dqs\extendprojects\installfiles\data\init-user.json"; DestDir: "{app}\data"; Components: database
+Source: "F:\go_workspace\src\dqs\extendprojects\installfiles\data\init-device.json"; DestDir: "{app}\data"; Components: database
+Source: "F:\go_workspace\src\dqs\extendprojects\installfiles\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "F:\go_workspace\src\dqs\ServerMgr.exe"; DestDir: "{app}"
 
 [Icons]
-Name: "{group}\运行{#MyAppName}平台"; Filename: "http://localhost"; IconFilename: "{app}\server\static\image\ico_64X64.ico"
+Name: "{group}\{#MyAppName}管理器"; Filename: "{app}\ServerMgr.exe"; WorkingDir: "{app}"; IconFilename: "{app}\ServerMgr.exe"; IconIndex: 0
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\server\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Parameters: "start"; Tasks: desktopicon
-Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\server\{#MyAppExeName}"; IconFilename: "{app}\server\static\image\ico_64X64.ico"; Parameters: "start"; Tasks: quicklaunchicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\ServerMgr.exe"; WorkingDir: "{app}"; IconFilename: "{app}\ServerMgr.exe"; IconIndex: 0; Parameters: "start"; Tasks: desktopicon
 
 [Run]
 ;Filename: "{app}\server\{#MyAppExeName}"; Parameters: "start"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 ;Filename: "{app}\server\{#MyAppExeName}"; Parameters: "install"; WorkingDir: "{app}\server"; Flags: postinstall runascurrentuser shellexec skipifdoesntexist; Description: "安装主程序的系统服务"; Components: main
 ;Filename: "{app}\database\bin\mongod.exe"; Parameters: "--install --serviceName MongoDB --serviceDisplayName ""DQS MongoDB"" --dbpath ""{app}\data"" --dbpath ""{app}\logs\mongodb.log"" --directoryperdb"; WorkingDir: "{app}\database\bin"; Flags: postinstall shellexec skipifdoesntexist; Description: "DQS速报平台 mongodb的服务"; Components: database
 Filename: "{app}\changelog.txt"; WorkingDir: "{app}"; Flags: nowait postinstall shellexec skipifdoesntexist; Description: "查看程序变更信息"
-Filename: "http://localhost"; Flags: nowait shellexec; Description: "打开平台管理页面"
+Filename: "{app}\ServerMgr.exe"; WorkingDir: "{app}"; Flags: nowait shellexec postinstall skipifdoesntexist; Description: "运行{#MyAppName}管理器"
 
 [Components]
 Name: "main"; Description: "主程序(必选)"; Types: compact custom full; Flags: fixed
@@ -93,9 +93,6 @@ Name: "{app}\database\bin"; Components: database
 Name: "{app}\data"; Components: database
 Name: "{app}\data\logs"; Components: database
 Name: "{app}\server\logs"
-
-[INI]
-Filename: "{app}\{#MyAppName}.url"; Section: "InternetShortcut"; Key: "URL"; String: "http://localhost/"
 
 [UninstallDelete]
 Type: files; Name: "{app}\{#MyAppName}.url"
@@ -116,8 +113,8 @@ Filename: "{app}\server\{#MyAppExeName}"; Parameters: "remove"; WorkingDir: "{ap
 Filename: "{app}\database\bin\mongod.exe"; Parameters: "--remove --serviceName {#ServiceName_database}"; WorkingDir: "{app}\database\bin"; Flags: waituntilterminated shellexec runhidden; Components: database
 
 [InstallDelete]
-Type: files; Name: "{app}\database\init-user.json"; 
-Type: files; Name: "{app}\database\init-device.json";
+Type: files; Name: "{app}\data\init-user.json"
+Type: files; Name: "{app}\data\init-device.json"
 
 [Code]
 var
@@ -355,4 +352,26 @@ begin
   appNotExist := false;
   end;   
   Result:= appNotExist
+end;
+
+// 卸载检查
+function InitializeUninstall():Boolean;
+//进程ID
+var appWnd: HWND;
+begin
+  Result := true;
+  //根据窗体名字获取进程ID
+  appWnd := FindWindowByWindowName('地壳所服务平台管理器');
+  if (appWnd <> 0) then
+     begin
+      //进程存在，
+      if MsgBox('平台管理器正在运行,确定进行卸载?', mbConfirmation, MB_YESNO) = IDYES then
+        begin
+          PostMessage(appWnd, 18, 0, 0);       // quit
+        end 
+      else
+        begin
+         Result := false;
+        end;
+      end;
 end;
