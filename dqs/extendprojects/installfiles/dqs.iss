@@ -47,14 +47,14 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 ;[64 bit files]
 Source: "F:\go_workspace\src\dqs\dqs64.exe"; DestDir: "{app}\server"; DestName: "dqs.exe"; Flags: ignoreversion; Components: main; Check: IsWin64
-Source: "F:\go_workspace\src\dqs\Socket64.dll"; DestDir: "{app}\server"; DestName: "Socket.dll"; Flags: ignoreversion; Components: main
-Source: "F:\go_workspace\src\dqs\ServerMgr64.exe"; DestDir: "{app}"; DestName: "ServerMgr.exe"; Flags: ignoreversion; Components: main
+Source: "F:\go_workspace\src\dqs\Socket64.dll"; DestDir: "{app}\server"; DestName: "Socket.dll"; Flags: ignoreversion; Components: main; Check: IsWin64
+Source: "F:\go_workspace\src\dqs\ServerMgr64.exe"; DestDir: "{app}"; DestName: "ServerMgr.exe"; Flags: ignoreversion; Components: main; Check: IsWin64
 Source: "D:\mongodb64\bin\*"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
 ;[32 bit files]
 Source: "F:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion solidbreak; Components: main; Check: not IsWin64
-Source: "F:\go_workspace\src\dqs\Socket.dll"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
-Source: "F:\go_workspace\src\dqs\ServerMgr.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: main
-Source: "D:\mongodb\bin\*"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
+Source: "F:\go_workspace\src\dqs\Socket.dll"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main; Check: not IsWin64
+Source: "F:\go_workspace\src\dqs\ServerMgr.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: main; Check: not IsWin64
+Source: "D:\mongodb\bin\*"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database; Check: not IsWin64
 ;[32&64 bit files]
 Source: "F:\go_workspace\src\dqs\seelog.xml"; DestDir: "{app}\server"; Flags: ignoreversion solidbreak; Components: main
 Source: "F:\go_workspace\src\dqs\server-original.xml"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
@@ -100,7 +100,7 @@ Type: files; Name: "{app}\server\conf\app.conf"
 Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: string; ValueName: "version"; ValueData: "{#MyAppVersion}"; Flags: uninsdeletekey
 Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: dword; ValueName: "database"; ValueData: "1"; Flags: uninsdeletekey; Components: database
 Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: string; ValueName: "installDir"; ValueData: "{app}"; Flags: uninsdeletekey
-Root: "HKLM"; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "DQS Server"; ValueData: "{app}\{#MyServerMgrApp}"; Flags: uninsdeletekey
+Root: "HKLM"; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "DQS Server"; ValueData: """{app}\{#MyServerMgrApp}"""; Flags: uninsdeletekey deletekey
 
 [Messages]
 chinese.BeveledLabel=地壳应力研究所
