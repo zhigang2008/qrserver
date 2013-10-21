@@ -29,7 +29,7 @@ type dllUtil struct {
 //初始化数据处理器
 func init() {
 	DllUtil = dllUtil{}
-	DllUtil.dll = syscall.MustLoadDLL("socket1.dll")
+	DllUtil.dll = syscall.MustLoadDLL("socket.dll")
 	DllUtil.p_parseReadFlashParam = DllUtil.dll.MustFindProc("parseReadFlashParam")
 	DllUtil.p_parseReadSetParam = DllUtil.dll.MustFindProc("parseReadSetParam")
 	DllUtil.p_ParseDelParam = DllUtil.dll.MustFindProc("ParseDelParam")

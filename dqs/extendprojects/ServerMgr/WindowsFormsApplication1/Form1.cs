@@ -33,10 +33,12 @@ namespace WindowsFormsApplication1
         {
 
             e.Cancel = true; // 取消关闭窗体
-
+            
             this.Visible=false;
             this.ShowInTaskbar = false;
             this.mgrNotifyIcon.Visible = true;//显示托盘图标
+            this.mgrNotifyIcon.ShowBalloonTip(1000, "I'm here!", "管理器在此运行", ToolTipIcon.Info);
+            
         }
 
         private void frameMain_Resize(object sender, EventArgs e)
@@ -44,9 +46,10 @@ namespace WindowsFormsApplication1
             if (this.WindowState == FormWindowState.Minimized)
             {
                 this.WindowState = FormWindowState.Minimized;
-                this.Visible = false;
+                //this.Visible = false;
                 this.mgrNotifyIcon.Visible = true;
-
+                this.ShowInTaskbar = true;
+                //this.mgrNotifyIcon.ShowBalloonTip(1000, "I'm here!", "管理器在此运行", ToolTipIcon.Info);
             }
         }
 
@@ -300,7 +303,7 @@ namespace WindowsFormsApplication1
         // 当收到第二个进程的通知时，显示窗体  
         void OnProgramStarted(object state, bool timeout)
         {
-            this.mgrNotifyIcon.ShowBalloonTip(1000, "已经运行", "管理器已经在运行", ToolTipIcon.Info);
+            this.mgrNotifyIcon.ShowBalloonTip(1000, "I'm here!", "管理器已经在运行", ToolTipIcon.Info);
             this.Show();
             //this.Visible = true;
             //this.ShowInTaskbar = true;  //显示在系统任务栏 

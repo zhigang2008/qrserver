@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "地震仪器谱烈度速报平台"
-#define MyAppVersion "1.5"
+#define MyAppVersion "2.0"
 #define MyAppPublisher "dqs"
 #define MyAppURL "http://www.dqs.org/"
 #define MyAppExeName "dqs.exe"
@@ -31,6 +31,11 @@ OutputBaseFilename=setup
 Compression=lzma
 SolidCompression=yes
 ShowLanguageDialog=auto
+AppMutex=dqs_server_instance
+SetupIconFile=F:\go_workspace\src\dqs\extendprojects\installfiles\ico\ico_128X128.ico
+VersionInfoVersion={#MyAppVersion}
+VersionInfoProductVersion={#MyAppVersion}
+ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "chinese"; MessagesFile: "compiler:Languages\chinese.isl"
@@ -40,41 +45,32 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "F:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
+Source: "F:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion 32bit; Components: main
+Source: "F:\go_workspace\src\dqs\dqs64.exe"; DestDir: "{app}\server"; DestName: "dqs.exe"; Flags: ignoreversion 64bit; Components: main
 Source: "F:\go_workspace\src\dqs\seelog.xml"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
+Source: "F:\go_workspace\src\dqs\Socket.dll"; DestDir: "{app}\server"; Flags: ignoreversion 32bit; Components: main
+Source: "F:\go_workspace\src\dqs\Socket64.dll"; DestDir: "{app}\server"; DestName: "Socket.dll"; Flags: ignoreversion 64bit; Components: main
 Source: "F:\go_workspace\src\dqs\server-original.xml"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
-Source: "F:\go_workspace\src\dqs\Socket1.dll"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
 Source: "F:\go_workspace\src\dqs\conf\app-original.conf"; DestDir: "{app}\server\conf"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
 Source: "F:\go_workspace\src\dqs\static\*"; DestDir: "{app}\server\static"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
 Source: "F:\go_workspace\src\dqs\views\*.html"; DestDir: "{app}\server\views"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: "D:\mongodb\GNU-AGPL-3.0"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\README"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\THIRD-PARTY-NOTICES"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\bsondump.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongo.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongod.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongod.pdb"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongodump.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongoexport.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongofiles.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongoimport.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongooplog.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongoperf.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongorestore.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongos.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongos.pdb"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongostat.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-Source: "D:\mongodb\bin\mongotop.exe"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
 Source: "F:\go_workspace\src\dqs\extendprojects\installfiles\data\init-user.json"; DestDir: "{app}\data"; Components: database
 Source: "F:\go_workspace\src\dqs\extendprojects\installfiles\data\init-device.json"; DestDir: "{app}\data"; Components: database
 Source: "F:\go_workspace\src\dqs\extendprojects\installfiles\changelog.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "F:\go_workspace\src\dqs\ServerMgr.exe"; DestDir: "{app}"
+Source: "F:\go_workspace\src\dqs\ServerMgr.exe"; DestDir: "{app}"; Flags: ignoreversion 32bit
+Source: "F:\go_workspace\src\dqs\ServerMgr64.exe"; DestDir: "{app}"; DestName: "ServerMgr.exe"; Flags: ignoreversion 64bit
+;mongodb 32 bit
+Source: "D:\mongodb\GNU-AGPL-3.0"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\README"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\THIRD-PARTY-NOTICES"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
+Source: "D:\mongodb\bin\*"; DestDir: "{app}\database\bin"; Flags: ignoreversion 32bit; Components: database
+Source: "D:\mongodb64\bin\*"; DestDir: "{app}\database\bin"; Flags: ignoreversion 64bit; Components: database
 
 [Icons]
-Name: "{group}\{#MyAppName}管理器"; Filename: "{app}\ServerMgr.exe"; WorkingDir: "{app}"; IconFilename: "{app}\ServerMgr.exe"; IconIndex: 0
+Name: "{group}\{#MyAppName}管理器"; Filename: "{app}\{#MyServerMgrApp}"; WorkingDir: "{app}"; IconFilename: "{app}\{#MyServerMgrApp}"; IconIndex: 0
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\ServerMgr.exe"; WorkingDir: "{app}"; IconFilename: "{app}\ServerMgr.exe"; IconIndex: 0; Parameters: "start"; Tasks: desktopicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyServerMgrApp}"; WorkingDir: "{app}"; IconFilename: "{app}\{#MyServerMgrApp}"; IconIndex: 0;  Tasks: desktopicon
 
 [Run]
 ;Filename: "{app}\server\{#MyAppExeName}"; Parameters: "start"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
@@ -103,9 +99,10 @@ Type: files; Name: "{app}\server\conf\app.conf"
 Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: string; ValueName: "version"; ValueData: "{#MyAppVersion}"; Flags: uninsdeletekey
 Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: dword; ValueName: "database"; ValueData: "1"; Flags: uninsdeletekey; Components: database
 Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: string; ValueName: "installDir"; ValueData: "{app}"; Flags: uninsdeletekey
+Root: "HKLM"; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "DQS Server"; ValueData: "{app}\{#MyServerMgrApp}"; Flags: uninsdeletekey
 
 [Messages]
-chinese.BeveledLabel=DQS专业团队
+chinese.BeveledLabel=地壳应力研究所
 
 [UninstallRun]
 Filename: "{app}\server\{#MyAppExeName}"; Parameters: "stop"; WorkingDir: "{app}\server\logs"; Flags: waituntilterminated runhidden shellexec; Components: main
@@ -229,13 +226,17 @@ var  sampleFile,serverFile,OldString,NewString :string;
      dbServiceParams :string;
      ErrorCode: Integer;
 
+     dbport:string;
+
   begin
   //安装完成,执行配置文件及服务创建
   if CurStep=ssPostInstall then
    begin
     //server配置信息
     sampleFile:= ExpandConstant('{app}\server\server-original.xml');
-    serverFile:= ExpandConstant('{app}\server\server.xml'); 
+    serverFile:= ExpandConstant('{app}\server\server.xml');
+    dbport:=ed_databasePort.Text;
+     
     LoadStringsFromFile(sampleFile, fileLines); 
     
     //host
@@ -325,8 +326,8 @@ var  sampleFile,serverFile,OldString,NewString :string;
           if  ShellExec('','net.exe', 'start {#ServiceName_database}',ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ErrorCode) then
             begin
             //初始化数据库数据
-                ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'-d dqs -c user "'+ExpandConstant('{app}\data\init-user.json')+'"', ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
-                ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'-d dqs -c device "'+ExpandConstant('{app}\data\init-device.json')+'"', ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
+                ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'--port '+dbport+' -d dqs -c user "'+ExpandConstant('{app}\data\init-user.json')+'"', ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
+                ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'--port '+dbport+' -d dqs -c device "'+ExpandConstant('{app}\data\init-device.json')+'"', ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
                 ShellExec('','net.exe', 'start {#ServiceName_server}',ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
             end;
          end
