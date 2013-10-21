@@ -100,7 +100,7 @@ Type: files; Name: "{app}\server\conf\app.conf"
 Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: string; ValueName: "version"; ValueData: "{#MyAppVersion}"; Flags: uninsdeletekey
 Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: dword; ValueName: "database"; ValueData: "1"; Flags: uninsdeletekey; Components: database
 Root: "HKLM"; Subkey: "SOFTWARE\{#RegisterName}"; ValueType: string; ValueName: "installDir"; ValueData: "{app}"; Flags: uninsdeletekey
-Root: "HKLM"; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "DQS Server"; ValueData: """{app}\{#MyServerMgrApp}"""; Flags: uninsdeletekey deletekey
+Root: "HKLM"; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "DQS Server"; ValueData: """{app}\{#MyServerMgrApp}"""; Flags: uninsdeletevalue
 
 [Messages]
 chinese.BeveledLabel=地壳应力研究所
