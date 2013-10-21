@@ -35,6 +35,7 @@ AppMutex=dqs_server_instance
 SetupIconFile=F:\go_workspace\src\dqs\extendprojects\installfiles\ico\ico_128X128.ico
 VersionInfoVersion={#MyAppVersion}
 VersionInfoProductVersion={#MyAppVersion}
+ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
@@ -46,17 +47,11 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 ;[64 bit files]
-Source: "F:\go_workspace\src\dqs\dqs64.exe"; DestDir: "{app}\server"; DestName: "dqs.exe"; Flags: ignoreversion; Components: main; Check: IsWin64
-Source: "F:\go_workspace\src\dqs\Socket64.dll"; DestDir: "{app}\server"; DestName: "Socket.dll"; Flags: ignoreversion; Components: main
-Source: "F:\go_workspace\src\dqs\ServerMgr64.exe"; DestDir: "{app}"; DestName: "ServerMgr.exe"; Flags: ignoreversion; Components: main
-Source: "D:\mongodb64\bin\*"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-;[32 bit files]
-Source: "F:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion solidbreak; Components: main; Check: not IsWin64
-Source: "F:\go_workspace\src\dqs\Socket.dll"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
-Source: "F:\go_workspace\src\dqs\ServerMgr.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: main
-Source: "D:\mongodb\bin\*"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
-;[32&64 bit files]
-Source: "F:\go_workspace\src\dqs\seelog.xml"; DestDir: "{app}\server"; Flags: ignoreversion solidbreak; Components: main
+Source: "F:\go_workspace\src\dqs\dqs64.exe"; DestDir: "{app}\server"; DestName: "dqs.exe"; Flags: ignoreversion 64bit; Components: main;
+Source: "F:\go_workspace\src\dqs\Socket64.dll"; DestDir: "{app}\server"; DestName: "Socket.dll"; Flags: ignoreversion 64bit; Components: main
+Source: "F:\go_workspace\src\dqs\ServerMgr64.exe"; DestDir: "{app}"; DestName: "ServerMgr.exe"; Flags: ignoreversion 64bit; Components: main
+Source: "D:\mongodb64\bin\*"; DestDir: "{app}\database\bin"; Flags: ignoreversion 64bit; Components: database
+Source: "F:\go_workspace\src\dqs\seelog.xml"; DestDir: "{app}\server"; Flags: ignoreversion ; Components: main
 Source: "F:\go_workspace\src\dqs\server-original.xml"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main
 Source: "F:\go_workspace\src\dqs\conf\app-original.conf"; DestDir: "{app}\server\conf"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
 Source: "F:\go_workspace\src\dqs\static\*"; DestDir: "{app}\server\static"; Flags: ignoreversion recursesubdirs createallsubdirs; Components: main
@@ -330,8 +325,6 @@ var  sampleFile,serverFile,OldString,NewString :string;
                 ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'--port '+dbport+' -d dqs -c user "'+ExpandConstant('{app}\data\init-user.json')+'"', ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
                 ShellExec('open', ExpandConstant('{app}\database\bin\mongoimport.exe'),'--port '+dbport+' -d dqs -c device "'+ExpandConstant('{app}\data\init-device.json')+'"', ExpandConstant('{app}\database\bin'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
                 ShellExec('','net.exe', 'start {#ServiceName_server}',ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ErrorCode);
-             //删除初始化脚本
-
             end;
          end
         else
