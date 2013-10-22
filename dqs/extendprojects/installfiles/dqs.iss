@@ -47,12 +47,12 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 ;[64 bit files]
 Source: "F:\go_workspace\src\dqs\dqs64.exe"; DestDir: "{app}\server"; DestName: "dqs.exe"; Flags: ignoreversion; Components: main; Check: IsWin64
-Source: "F:\go_workspace\src\dqs\Socket64.dll"; DestDir: "{app}\server"; DestName: "Socket.dll"; Flags: ignoreversion; Components: main; Check: IsWin64
+Source: "F:\go_workspace\src\dqs\socket64.dll"; DestDir: "{app}\server"; DestName: "socket.dll"; Flags: ignoreversion; Components: main; Check: IsWin64
 Source: "F:\go_workspace\src\dqs\ServerMgr64.exe"; DestDir: "{app}"; DestName: "ServerMgr.exe"; Flags: ignoreversion; Components: main; Check: IsWin64
 Source: "D:\mongodb64\bin\*"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database
 ;[32 bit files]
 Source: "F:\go_workspace\src\dqs\dqs.exe"; DestDir: "{app}\server"; Flags: ignoreversion solidbreak; Components: main; Check: not IsWin64
-Source: "F:\go_workspace\src\dqs\Socket.dll"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main; Check: not IsWin64
+Source: "F:\go_workspace\src\dqs\socket.dll"; DestDir: "{app}\server"; Flags: ignoreversion; Components: main; Check: not IsWin64
 Source: "F:\go_workspace\src\dqs\ServerMgr.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: main; Check: not IsWin64
 Source: "D:\mongodb\bin\*"; DestDir: "{app}\database\bin"; Flags: ignoreversion; Components: database; Check: not IsWin64
 ;[32&64 bit files]
