@@ -1,0 +1,9 @@
+F:\go_workspace\src\dqs\extendprojects\ServerMgr\WindowsFormsApplication1\bin\x64\Debug\ServerMgr.exe
+F:\go_workspace\src\dqs\extendprojects\ServerMgr\WindowsFormsApplication1\bin\x64\Debug\ServerMgr.pdb
+F:\go_workspace\src\dqs\extendprojects\ServerMgr\WindowsFormsApplication1\obj\x64\Debug\ResolveAssemblyReference.cache
+F:\go_workspace\src\dqs\extendprojects\ServerMgr\WindowsFormsApplication1\obj\x64\Debug\WindowsFormsApplication1.frameMain.resources
+F:\go_workspace\src\dqs\extendprojects\ServerMgr\WindowsFormsApplication1\obj\x64\Debug\ServerMgr.Properties.Resources.resources
+F:\go_workspace\src\dqs\extendprojects\ServerMgr\WindowsFormsApplication1\obj\x64\Debug\GenerateResource.read.1.tlog
+F:\go_workspace\src\dqs\extendprojects\ServerMgr\WindowsFormsApplication1\obj\x64\Debug\GenerateResource.write.1.tlog
+F:\go_workspace\src\dqs\extendprojects\ServerMgr\WindowsFormsApplication1\obj\x64\Debug\ServerMgr.exe
+F:\go_workspace\src\dqs\extendprojects\ServerMgr\WindowsFormsApplication1\obj\x64\Debug\ServerMgr.pdb
