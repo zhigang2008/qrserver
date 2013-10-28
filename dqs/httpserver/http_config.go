@@ -21,6 +21,12 @@ func addTemplateFuncs() {
 	beego.AddFuncMap("purl", util.GenerateParamUrl)
 	beego.AddFuncMap("contain", util.Contain)
 	beego.AddFuncMap("hasrole", util.HasRoles)
+	beego.AddFuncMap("rawHTML", util.RawHTML)
+	beego.AddFuncMap("rawCSS", util.RawCSS)
+	beego.AddFuncMap("rawJS", util.RawJS)
+	beego.AddFuncMap("rawJSStr", util.RawJSStr)
+	beego.AddFuncMap("rawURL", util.RawURL)
+	beego.AddFuncMap("rawHTMLAttr", util.RawHTMLAttr)
 
 }
 

@@ -196,7 +196,7 @@ func RetData2SensorInfo(ret *RetData) *SensorInfo {
 //服务器后端传感器对象转化为前端传感器数据
 func SensorInfo2RetData(sensor *SensorInfo) *RetData {
 	r := new(RetData)
-	for i, b := 0, []byte(sensor.SensorId); i < 10; i++ {
+	for i, b := 0, []byte(sensor.SensorId); i < len(sensor.SensorId); i++ {
 		r.SensorId[i] = b[i]
 	}
 	r.SensorId[10] = byte(0)
@@ -214,17 +214,17 @@ func SensorInfo2RetData(sensor *SensorInfo) *RetData {
 	r.Direction = sensor.Direction
 	r.RangeType = sensor.RangeType
 	r.Period = sensor.Period
-	for i, b := 0, []byte(sensor.RegionCode); i < 5; i++ {
+	for i, b := 0, []byte(sensor.RegionCode); i < len(sensor.RegionCode); i++ {
 		r.RegionCode[i] = b[i]
 	}
 	r.RegionCode[5] = byte(0)
 
-	for i, b := 0, []byte(sensor.Custom1); i < 8; i++ {
+	for i, b := 0, []byte(sensor.Custom1); i < len(sensor.Custom1); i++ {
 		r.Custom1[i] = b[i]
 	}
 	r.Custom1[8] = byte(0)
 
-	for i, b := 0, []byte(sensor.Custom2); i < 8; i++ {
+	for i, b := 0, []byte(sensor.Custom2); i < len(sensor.Custom2); i++ {
 		r.Custom2[i] = b[i]
 	}
 	r.Custom2[8] = byte(0)
