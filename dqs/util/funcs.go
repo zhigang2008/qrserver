@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"html/template"
 	"strconv"
 	"strings"
 )
@@ -148,4 +149,24 @@ func HasRoles(userRoles []string, roles ...string) bool {
 		return false
 	}
 	return false
+}
+
+//返回原始html信息
+func RawHTML(text string) template.HTML {
+	return template.HTML(text)
+}
+func RawHTMLAttr(text string) template.HTMLAttr {
+	return template.HTMLAttr(text)
+}
+func RawCSS(text string) template.CSS {
+	return template.CSS(text)
+}
+func RawJS(text string) template.JS {
+	return template.JS(text)
+}
+func RawJSStr(text string) template.JSStr {
+	return template.JSStr(text)
+}
+func RawURL(text string) template.URL {
+	return template.URL(text)
 }

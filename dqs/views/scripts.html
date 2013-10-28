@@ -1,4 +1,4 @@
-﻿//scripts.html
+//scripts.html
 {{define "scripts"}}
     <div class="container">
       <hr>
@@ -9,10 +9,10 @@
     <!-- Bootstrap core JavaScript-->
     <script src="/static/js/jquery.js"></script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>go template不能显示该注释<![endif]-->
+    {{rawHTML "<!--[if lt IE 9]>"}}
     <script src="/static/js/respond.min.js"></script>
     <script src="/static/js/html5.js"></script>
-    
+    {{rawHTML "<![endif]-->"}}
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/steven.js"></script>
     <script src="/static/js/tooltip.js"></script>

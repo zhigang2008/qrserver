@@ -34,5 +34,6 @@ func (this *MainController) Get() {
 	} else {
 		this.TplNames = "index.html"
 	}
+
 	this.Render()
 }
