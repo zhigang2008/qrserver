@@ -51,6 +51,8 @@ func (dp *DataProcessor) DataProcess(content []byte, remote string, conn *net.Co
 			c <- content
 		} else {
 			dp.ProcessStatusData(content)
+			//发送r命令读取波形图
+			dp.sendFlashReadCommand(string(content[0:10]), conn)
 		}
 	case 'r', 'R': //地形波读取
 		fmt.Println("波形信息读取")
@@ -173,6 +175,21 @@ func (dp *DataProcessor) sendStatusReadCommand(deviceid string, connP *net.Conn)
 			log.Warnf("向[%s]设备发送状态读取指令失败:%s", deviceid, err0.Error())
 		} else {
 			log.Infof("向[%s]设备发送状态读取指令成功:%d", deviceid)
+		}
+	}
+}
+
+//发送波形图读取命令
+func (dp *DataProcessor) sendFlashReadCommand(deviceid string, connP *net.Conn) {
+	command, err := DllUtil.GenerateFlashReadParam(deviceid)
+	if err == nil {
+		//发送控制命令
+		_, err0 := (*connP).Write(command)
+
+		if err0 != nil {
+			log.Warnf("向[%s]设备发送波形图读取指令失败:%s", deviceid, err0.Error())
+		} else {
+			log.Infof("向[%s]设备发送波形图读取指令成功:%d", deviceid)
 		}
 	}
 }

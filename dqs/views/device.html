@@ -430,7 +430,7 @@ $(document).ready(function(){
        if($("#setparamform").valid()){
       	$.ajax({
              type: "POST",
-             url: "/deviceparams/update?id={{.SensorId}}&&remote={{.RemoteAddr}}",
+             url: "/deviceparams/update?id={{.SensorId}}&remote={{.RemoteAddr}}",
              dataType:"json",
              async: true,
              timeout: 60000,

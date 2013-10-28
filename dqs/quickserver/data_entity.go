@@ -201,7 +201,7 @@ func SensorInfo2RetData(sensor *SensorInfo) *RetData {
 	}
 	r.SensorId[10] = byte(0)
 
-	for i, b := 0, []byte(sensor.SiteName); i < 10; i++ {
+	for i, b := 0, []byte(sensor.SiteName); i < len(sensor.SiteName); i++ {
 		r.SiteName[i] = b[i]
 	}
 	r.SiteName[10] = byte(0)
