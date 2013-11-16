@@ -79,6 +79,7 @@ type WirelessInfo struct {
 	NetNo       string  //用户号码
 	NetTariff   string  //资费标准
 	NetTraffic  float32 //包月流量
+	StartDate   string  //开卡日期
 	NetQixian   float32 //有效期
 }
 

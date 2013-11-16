@@ -231,6 +231,11 @@ func (this *DeviceController) UpdateCustomParams() {
 	//判断设备编号
 	if sid != "" {
 		params := models.CustomDefineParams{}
+		wirelessParams := models.WirelessInfo{}
+		wireParams := models.WireInfo{}
+
+		this.ParseForm(&wirelessParams)
+		this.ParseForm(&wireParams)
 		err := this.ParseForm(&params)
 		if err != nil {
 			answer.Ok = false
@@ -240,6 +245,9 @@ func (this *DeviceController) UpdateCustomParams() {
 			//执行保存操作
 			device := models.DeviceInfo{}
 			device.SensorId = sid
+			params.WirelessTypeInfo = wirelessParams
+			params.WireTypeInfo = wireParams
+
 			device.CustomParams = params
 
 			err = dao.UpdateDeviceCustomeParams(&device)
