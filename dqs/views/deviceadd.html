@@ -62,11 +62,9 @@
     <div class="col-sm-6">
       <!--<input type="text" class="form-control" id="SiteType" name="SiteType" placeholder="SiteType" value="{{.SiteType}}" />-->
       <select class="form-control" id="SiteType" name="SiteType">
-        <option value="1">场地一</option>
-        <option value="2">场地二</option>
-        <option value="3">场地三</option>
-        <option value="4">场地四</option>
-        <option value="5">场地五</option>
+        <option value="0">土壤</option>
+        <option value="1" selected >软岩石</option>
+        <option value="2">硬岩石</option>
       </select>
     </div>
   </div>
@@ -75,11 +73,8 @@
     <div class="col-sm-6">
       <!--<input type="text" class="form-control" id="ObserveObject" name="ObserveObject" placeholder="ObserveObject" value="{{.ObserveObject}}" />-->
       <select class="form-control" id="ObserveObject" name="ObserveObject">
-        <option value="1">对象一</option>
-        <option value="2">对象二</option>
-        <option value="3">对象三</option>
-        <option value="4">对象四</option>
-        <option value="5">对象五</option>
+        <option value="0">深井</option>
+        <option value="1" selected >自由地表</option>
       </select>
     </div>
   </div>
@@ -89,41 +84,48 @@
       <!--<input type="text" class="form-control" id="Accelerometer" name="Accelerometer" placeholder="Accelerometer" value="{{.Accelerometer}}" />
       -->
       <select class="form-control" id="Accelerometer" name="Accelerometer">
-        <option value="1">加速度一型</option>
-        <option value="2">加速度二型</option>
-        <option value="3">加速度三型</option>
-        <option value="4">加速度四型</option>
-        <option value="5">加速度五型</option>
+        <option value="0">MEMS</option>
+        <option value="1">力平衡</option>
       </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Direction">安装方向</label>
     <div class="col-sm-6">
+      <!--
       <label class="radio-inline">
-        <input type="radio" name="Direction"   value="1" checked> 上
+        <input type="radio" name="Direction"   value="0" checked> 南北向
       </label>
       <label class="radio-inline">
-        <input type="radio" name="Direction"   value="2" > 下
+        <input type="radio" name="Direction"   value="1" > 东西向
       </label>
-      <label class="radio-inline">
-        <input type="radio" name="Direction"   value="3" > 左
-      </label>
-      <label class="radio-inline">
-        <input type="radio" name="Direction"   value="4" > 右
-      </label>
+      -->
+      <select class="form-control" id="Direction" name="Direction">
+        <option value="0">南北向</option>
+        <option value="1">东西向</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="RangeType">量程选择</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="RangeType" name="RangeType" placeholder="RangeType" value="{{.RangeType}}" />
+      <select class="form-control" id="RangeType" name="RangeType">
+        <option value="0">±1.5g</option>
+        <option value="1" selected >±2g</option>
+        <option value="2">±4g</option>
+        <option value="3">±6g</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Period">采样周期</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Period" name="Period" placeholder="Period" value="{{.Period}}" />
+      <select class="form-control" id="Period" name="Period">
+        <option value="0">0.002s</option>
+        <option value="1">0.005s</option>
+        <option value="2" selected >0.01s</option>
+        <option value="3">0.02s</option>
+      </select>
     </div>
   </div>
   <div class="form-group">

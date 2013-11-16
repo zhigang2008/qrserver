@@ -60,8 +60,33 @@ type SensorInfo struct {
 
 //用户自定义数据
 type CustomDefineParams struct {
-	NetType    string
-	NetTraffic float32
-	NetQixian  float32
-	NotUse     bool
+	InstallDate      string       //安装日期
+	Installer        string       //安装人员
+	Contact          string       //联系人
+	Telphone         string       //固话
+	Mobile           string       //移动电话
+	MaintainDate     string       //维护日期
+	MaintainPeole    string       //维护人
+	NetType          string       //网络类型
+	WirelessTypeInfo WirelessInfo //3G类型信息
+	WireTypeInfo     WireInfo     //有线类型信息
+	NotUse           bool
+}
+
+//3G类型的信息
+type WirelessInfo struct {
+	NetOperator string  //3G运营商
+	NetNo       string  //用户号码
+	NetTariff   string  //资费标准
+	NetTraffic  float32 //包月流量
+	NetQixian   float32 //有效期
+}
+
+//有线类型信息
+type WireInfo struct {
+	IPType    string //动态IP-D;静态IP-S
+	IPAddress string //IP地址
+	IPMask    string //子网掩码
+	GateWay   string //网关
+	DNS       string //DNS
 }

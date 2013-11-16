@@ -71,37 +71,61 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SiteType">场地类型</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="SiteType" name="SiteType" placeholder="SiteType" value="{{.SiteType}}" disabled>
+      <!--<input type="text" class="form-control" id="SiteType" name="SiteType" placeholder="SiteType" value="{{.SiteType}}" disabled>-->
+      <select class="form-control" id="SiteType" name="SiteType" disabled >
+        <option value="0" {{if eq .SiteType 0}} selected {{end}} >土壤</option>
+        <option value="1" {{if eq .SiteType 1}} selected {{end}} >软岩石</option>
+        <option value="2" {{if eq .SiteType 2}} selected {{end}} >硬岩石</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="ObserveObject">观测对象</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="ObserveObject" name="ObserveObject" placeholder="ObserveObject" value="{{.ObserveObject}}" disabled>
+      <select class="form-control" id="ObserveObject" name="ObserveObject" disabled >
+        <option value="0" {{if eq .SiteType 0}} selected {{end}} >深井</option>
+        <option value="1" {{if eq .SiteType 1}} selected {{end}} >自由地表</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Accelerometer">加速度计型号</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Accelerometer" name="Accelerometer" placeholder="Accelerometer" value="{{.Accelerometer}}" disabled>
+      <select class="form-control" id="Accelerometer" name="Accelerometer" disabled >
+        <option value="0" {{if eq .SiteType 0}} selected {{end}} >MEMS</option>
+        <option value="1" {{if eq .SiteType 1}} selected {{end}} >力平衡</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Direction">安装方向</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Direction"  name="Direction" placeholder="Direction" value="{{.Direction}}" disabled>
+      <select class="form-control" id="Direction" name="Direction" disabled >
+        <option value="0" {{if eq .SiteType 0}} selected {{end}} >南北向</option>
+        <option value="1" {{if eq .SiteType 1}} selected {{end}} >东西向</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="RangeType">量程选择</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="RangeType" name="RangeType" placeholder="RangeType" value="{{.RangeType}}" disabled>
+      <select class="form-control" id="RangeType" name="RangeType" disabled >
+        <option value="0" {{if eq .SiteType 0}} selected {{end}} >±1.5g</option>
+        <option value="1" {{if eq .SiteType 1}} selected {{end}} >±2g</option>
+        <option value="2" {{if eq .SiteType 2}} selected {{end}} >±4g</option>
+        <option value="3" {{if eq .SiteType 3}} selected {{end}} >±6g</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Period">采样周期</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Period" name="Period" placeholder="Period" value="{{.Period}}" disabled>
+      <select class="form-control" id="Period" name="Period" disabled >
+        <option value="0" {{if eq .SiteType 0}} selected {{end}} >0.002s</option>
+        <option value="1" {{if eq .SiteType 1}} selected {{end}} >0.005s</option>
+        <option value="2" {{if eq .SiteType 2}} selected {{end}} >0.01s</option>
+        <option value="3" {{if eq .SiteType 3}} selected {{end}} >0.02s</option>
+      </select>
     </div>
   </div>
   <div class="form-group">
@@ -125,11 +149,16 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="PGATrigger">PGA触发</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="PGATrigger" name="PGATrigger" placeholder="PGATrigger" value="{{.PGATrigger}}" disabled>
+      <label class="radio-inline">
+        <input type="radio" name="PGATrigger"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> 否
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="PGATrigger"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> 是
+      </label>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="PGATrgThreshold">PGA阀值</label>
+    <label class="col-sm-2 control-label" for="PGATrgThreshold">PGA阀值(cm/s2)</label>
     <div class="col-sm-6">
       <input type="text" class="form-control" id="PGATrgThreshold" name="PGATrgThreshold" placeholder="PGATrgThreshold" value="{{.PGATrgThreshold}}" disabled>
     </div>
@@ -137,11 +166,16 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SITrigger">SI触发</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="SITrigger" name="SITrigger" placeholder="SITrigger" value="{{.SITrigger}}" disabled>
+      <label class="radio-inline">
+        <input type="radio" name="SITrigger"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> 否
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="SITrigger"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> 是
+      </label>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="SITrgThreshold">SI阀值</label>
+    <label class="col-sm-2 control-label" for="SITrgThreshold">SI阀值(cm)</label>
     <div class="col-sm-6">
       <input type="text" class="form-control" id="SITrgThreshold" name="SITrgThreshold" placeholder="SITrgThreshold" value="{{.SITrgThreshold}}" disabled>
     </div>
@@ -149,13 +183,26 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="CombTrigger">组合触发</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="CombTrigger" name="CombTrigger" placeholder="CombTrigger" value="{{.CombTrigger}}" disabled>
+      <label class="radio-inline">
+        <input type="radio" name="CombTrigger"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> 不组合
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="CombTrigger"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> 逻辑"或"
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="CombTrigger"  value="2" {{if eq .SiteType 2}} checked {{end}} disabled> 逻辑"并"
+      </label>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="ReserveTrigger">预留触发</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="ReserveTrigger" name="ReserveTrigger" placeholder="ReserveTrigger" value="{{.ReserveTrigger}}" disabled>
+      <label class="radio-inline">
+        <input type="radio" name="ReserveTrigger"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> 否
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="ReserveTrigger"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> 是
+      </label>
     </div>
   </div>
   <div class="form-group">
@@ -167,11 +214,16 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="PGAAlert">PGA报警</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="PGAAlert" name="PGAAlert" placeholder="PGAAlert" value="{{.PGAAlert}}" disabled>
+      <label class="radio-inline">
+        <input type="radio" name="PGAAlert"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> 否
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="PGAAlert"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> 是
+      </label>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="PGAAlertThreshold">PGA报警阀值</label>
+    <label class="col-sm-2 control-label" for="PGAAlertThreshold">PGA报警阀值(cm/s2)</label>
     <div class="col-sm-6">
       <input type="text" class="form-control" id="PGAAlertThreshold" name="PGAAlertThreshold" placeholder="PGAAlertThreshold" value="{{.PGAAlertThreshold}}" disabled>
     </div>
@@ -179,11 +231,16 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SIAlert">SI报警</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="SIAlert" name="SIAlert"  placeholder="SIAlert" value="{{.SIAlert}}" disabled>
+      <label class="radio-inline">
+        <input type="radio" name="SIAlert"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> 否
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="SIAlert"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> 是
+      </label>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="SIAlertThreshold">SI报警阀值</label>
+    <label class="col-sm-2 control-label" for="SIAlertThreshold">SI报警阀值(cm)</label>
     <div class="col-sm-6">
       <input type="text" class="form-control" id="SIAlertThreshold" name="SIAlertThreshold" placeholder="SIAlertThreshold" value="{{.SIAlertThreshold}}" disabled>
     </div>
@@ -191,13 +248,26 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="CombAlert">组合报警</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="CombAlert" name="CombAlert" placeholder="CombAlert" value="{{.CombAlert}}" disabled>
+      <label class="radio-inline">
+        <input type="radio" name="CombAlert"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> 不组合
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="CombAlert"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> 逻辑"或"
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="CombAlert"  value="2" {{if eq .SiteType 2}} checked {{end}} disabled> 逻辑"并"
+      </label>
     </div>
   </div>	
   <div class="form-group">
     <label class="col-sm-2 control-label" for="ReserveAlert">预留报警</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="ReserveAlert" name="ReserveAlert" placeholder="ReserveAlert" value="{{.ReserveAlert}}" disabled>
+      <label class="radio-inline">
+        <input type="radio" name="ReserveAlert"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> 否
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="ReserveAlert"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> 是
+      </label>
     </div>
   </div>
   <div class="form-group">
@@ -210,12 +280,12 @@
     <label class="col-sm-2 control-label" for="DA1" >DA输出1</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-         <input type="radio"  name="DA1" value="1" {{if compare .DA1  1}}  checked {{end}} disabled /> 
-         <span class="label label-success">启用</span>
+         <input type="radio"  name="DA1" value="1" {{if eq .DA1  1}}  checked {{end}} disabled /> 
+         <span class="label label-success">PGA输出</span>
       </label>
       <label class="checkbox-inline">
-         <input type="radio"  name="DA1" value="0"  {{if compare .DA1 0 }} checked {{end}} disabled /> 
-         <span class="label label-default">停用</span>
+         <input type="radio"  name="DA1" value="0"  {{if eq .DA1 0 }} checked {{end}} disabled /> 
+         <span class="label label-default">SI输出</span>
       </label>
     </div>
  </div>
@@ -223,12 +293,12 @@
     <label class="col-sm-2 control-label" for="DA2" >DA输出2</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-         <input type="radio"  name="DA2" value="1" {{if compare .DA2  1}}  checked {{end}} disabled /> 
-         <span class="label label-success">启用</span>
+         <input type="radio"  name="DA2" value="1" {{if eq .DA2  1}}  checked {{end}} disabled /> 
+         <span class="label label-success">PGA输出</span>
       </label>
       <label class="checkbox-inline">
-         <input type="radio"  name="DA2" value="0"  {{if compare .DA2 0 }} checked {{end}} disabled /> 
-         <span class="label label-default">停用</span>
+         <input type="radio"  name="DA2" value="0"  {{if eq .DA2 0 }} checked {{end}} disabled /> 
+         <span class="label label-default">SI输出</span>
       </label>
     </div>
  </div>
@@ -236,12 +306,12 @@
     <label class="col-sm-2 control-label" for="IO1" >IO输出1</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-         <input type="radio"  name="IO1" value="1" {{if compare .IO1  1}}  checked {{end}} disabled /> 
-         <span class="label label-success">启用</span>
+         <input type="radio"  name="IO1" value="1" {{if eq .IO1  1}}  checked {{end}} disabled /> 
+         <span class="label label-success">无故障</span>
       </label>
       <label class="checkbox-inline">
-         <input type="radio"  name="IO1" value="0"  {{if compare .IO1 0 }} checked {{end}} disabled /> 
-         <span class="label label-default">停用</span>
+         <input type="radio"  name="IO1" value="0"  {{if eq .IO1 0 }} checked {{end}} disabled /> 
+         <span class="label label-default">有故障</span>
       </label>
     </div>
  </div>
@@ -249,12 +319,12 @@
     <label class="col-sm-2 control-label" for="IO2" >IO输出2</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-         <input type="radio"  name="IO2" value="1" {{if compare .IO2  1}}  checked {{end}} disabled /> 
-         <span class="label label-success">启用</span>
+         <input type="radio"  name="IO2" value="1" {{if eq .IO2  1}}  checked {{end}} disabled /> 
+         <span class="label label-success">无故障</span>
       </label>
       <label class="checkbox-inline">
-         <input type="radio"  name="IO2" value="0"  {{if compare .IO2 0 }} checked {{end}} disabled /> 
-         <span class="label label-default">停用</span>
+         <input type="radio"  name="IO2" value="0"  {{if eq .IO2 0 }} checked {{end}} disabled /> 
+         <span class="label label-default">有故障</span>
       </label>
     </div>
  </div>
@@ -276,15 +346,76 @@
   </div>
 	{{with .CustomParams}}
 	 <div class="form-group">
-	<label class="col-sm-2 control-label" for="NetType">网络类型</label>
+	 	<label class="col-sm-2 control-label" for="InstallDate">安装时间</label>
     <div class="col-sm-6">
-      <input id="NetType" type="text" class="form-control" name="NetType"  placeholder="NetType" value="{{.NetType}}" disabled>
+      <input id="InstallDate" type="text" class="form-control" name="InstallDate"  placeholder="yyyy-mm-dd" value="{{.InstallDate}}" disabled>
+    </div>
+  </div>
+  <div class="form-group">
+  <label class="col-sm-2 control-label" for="Installer">安装人员</label>
+    <div class="col-sm-6">
+      <input id="Installer" type="text" class="form-control" name="Installer"  placeholder="Installer" value="{{.Installer}}" disabled>
+    </div>
+  </div>
+  <div class="form-group">
+  <label class="col-sm-2 control-label" for="Contact">联系人</label>
+    <div class="col-sm-6">
+      <input id="Contact" type="text" class="form-control" name="Contact"  placeholder="Contact" value="{{.Contact}}" disabled>
+    </div>
+  </div>
+  <div class="form-group">
+  <label class="col-sm-2 control-label" for="Telphone">固定电话</label>
+    <div class="col-sm-6">
+      <input id="Telphone" type="text" class="form-control" name="Telphone"  placeholder="Telphone" value="{{.Telphone}}" disabled>
+    </div>
+  </div>
+  <div class="form-group">
+	<label class="col-sm-2 control-label" for="Mobile">移动电话</label>
+    <div class="col-sm-6">
+      <input id="Mobile" type="text" class="form-control" name="Mobile"  placeholder="Mobile" value="{{.Mobile}}" disabled>
+    </div>
+  </div>
+  <div class="form-group">
+  <label class="col-sm-2 control-label" for="NetType">网络类型</label>
+    <div class="col-sm-6">
+      <label class="radio-inline">
+         <input type="radio"  name="NetType" value="3G" {{if eq .NetType "3G"}}  checked {{end}} disabled /> 
+         <span class="label label-default">3G网络</span>
+      </label>
+      <label class="checkbox-inline">
+         <input type="radio"  name="NetType" value="有线"  {{if eq .NetType "有线" }} checked {{end}} disabled /> 
+         <span class="label label-default">有线网络</span>
+      </label>
+    </div>
+  </div>
+  {{with .WirelessTypeInfo}}
+  <div class="form-group">
+  <label class="col-sm-2 control-label" for="NetOperator">3G运营商</label>
+    <div class="col-sm-6">
+      <label class="radio-inline">
+         <input type="radio"  name="NetOperator" value="电信" {{if eq .NetOperator  "电信"}}  checked {{end}} disabled /> 
+         <span class="label label-default">电信</span>
+      </label>
+      <label class="checkbox-inline">
+         <input type="radio"  name="NetOperator" value="移动"  {{if eq .NetOperator "移动" }} checked {{end}} disabled /> 
+         <span class="label label-default">移动</span>
+      </label>
+      <label class="radio-inline">
+         <input type="radio"  name="NetOperator" value="联通" {{if eq .NetOperator  "联通"}}  checked {{end}} disabled /> 
+         <span class="label label-default">联通</span>
+      </label>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetQixian">网络期限</label>
+  <label class="col-sm-2 control-label" for="NetTraffic">用户号码</label>
     <div class="col-sm-6">
-      <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" value="{{.NetQixian}}" disabled>
+      <input id="NetNo" type="text" class="form-control" name="NetNo"  placeholder="用户的号码" value="{{.NetNo}}" disabled>
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-2 control-label" for="NetQixian">资费标准</label>
+    <div class="col-sm-6">
+      <input id="NetTariff" type="text" class="form-control" name="NetTariff"  placeholder="资费标准" value="{{.NetTariff}}" disabled>
     </div>
   </div>
    <div class="form-group">
@@ -293,11 +424,18 @@
       <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic" value="{{.NetTraffic}}" disabled>
     </div>
   </div>
+   <div class="form-group">
+  <label class="col-sm-2 control-label" for="NetQixian">网络期限</label>
+    <div class="col-sm-6">
+      <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" value="{{.NetQixian}}" disabled>
+    </div>
+  </div>
+ {{end}}
   <div class="form-group">
     <label class="col-sm-2 control-label" for="NotUse" >是否禁用</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-         <input type="radio"  name="NotUse" value="false" {{if compare .NotUse  false}}  checked {{end}} disabled /> 
+         <input type="radio"  name="NotUse" value="false" {{if eq .NotUse  false}}  checked {{end}} disabled /> 
          <span class="label label-success">活动</span>
       </label>
       <label class="checkbox-inline">
