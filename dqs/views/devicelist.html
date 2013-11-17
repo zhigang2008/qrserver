@@ -57,16 +57,64 @@
 	 			<a href="/alarm?sensorid={{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="报警信息"><span class="glyphicon glyphicon-bell"></span></a> / 
 	 			<a href="/location/{{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="设备定位"><span class="glyphicon glyphicon-globe"></span></a>
        {{if hasrole $curUser.Roles "role_admin" "role_device"}}
-	 			 / <a href="/device/{{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="详细信息"><span class="glyphicon glyphicon-cog"></span></a> /
+	 			 / <a href="/device/{{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="更新设置"><span class="glyphicon glyphicon-cog"></span></a> /
 	 			<a href="javascript:DeleteDevice('{{.Id.Hex}}','{{.SensorId}}');" data-toggle="tooltip" data-placement="bottom" title="删除"><span class="glyphicon glyphicon-remove"></span></a> 
        {{end}}
       </td>
 	 	</tr>
-	  <tr id="{{.SensorId}}" class="success" style="display:none">
-	  	<td class="well col-sm-offset-1" colspan="10">
-	  		{{.SensorId}} <br>
-	  		{{.SetParams.SiteName}} <br>
-	  		{{.RemoteAddr}}<br>
+	 	<!--详细信息(隐藏)-->
+	  <tr id="{{.SensorId}}"  style="display:none">
+	  	<td class="well" colspan="10">
+	  		<table class="table table-condensed">
+	  			<tr class="active">
+	  				<td>编号:{{.SensorId}}</td><td>站点名称:{{.SetParams.SiteName}}</td><td>注册时间:{{dateformat .RegisterTime "2006-01-02 15:04:05"}}</td><td>经度:{{.SetParams.Longitude}}</td><td>纬度:{{.SetParams.Latitude}}</td>
+	  				<td>场地类型:{{if eq .SetParams.SiteType 0}} 土壤 {{end}} {{if eq .SetParams.SiteType 1}} 软岩石 {{end}} {{if eq .SetParams.SiteType 2}} 硬岩石 {{end}} </td>
+	  				<td>观测对象:{{if eq .SetParams.SiteType 0}} 深井 {{end}}{{if eq .SetParams.SiteType 1}} 自由地表 {{end}}</td>
+	  				<td>加速度计型号:{{if eq .SetParams.SiteType 0}} MEMS {{end}}{{if eq .SetParams.SiteType 1}} 力平衡 {{end}}</td>
+	  			</tr>
+	  			{{with .SetParams}}
+	  			<tr class="active">
+	  				<td>安装方向:{{.Direction}}</td><td>量程选择:{{.RangeType}}</td><td>采样周期:{{.Period}}</td>
+	  				<td>行政区划:{{.RegionCode}}</td><td>预留一:{{.Custom1}}</td><td>预留二:{{.Custom2}}</td>
+	  				<td>PGA触发:{{.PGATrigger}}</td><td>PGA阀值:{{.PGATrgThreshold}}</td>
+	  			</tr>
+	  			<tr class="active">
+	  				<td>SI触发:{{.SITrigger}}</td><td>SI阀值:{{.SITrgThreshold}}</td><td>组合触发:{{.CombTrigger}}</td>
+	  				<td>预留触发:{{.ReserveTrigger}}</td><td>预留阀值:{{.ReserveTrgThreshold}}</td><td>PGA报警:{{.PGAAlert}}</td>
+	  				<td>PGA报警阀值:{{.PGAAlertThreshold}}</td><td>SI报警:{{.SIAlert}}</td>
+	  			</tr>
+	  			<tr class="active">
+	  				<td>SI报警阀值:{{.SIAlertThreshold}}</td><td>组合报警:{{.CombAlert}}</td><td>预留报警:{{.ReserveAlert}}</td>
+	  				<td>预留报警阀值:{{.ReserveAlertThreshold}}</td><td>DA1:{{.DA1}}</td><td>DA2:{{.DA2}}</td>
+	  				<td>IO1:{{.IO1}}</td><td>IO2:{{.IO2}}</td>
+	  			</tr>
+	  			{{end}}
+	  			{{with .CustomParams}}
+	  			<tr class="active">
+	  				<td>安装日期:{{.InstallDate}}</td><td>安装人员:{{.Installer}}</td><td>联系人:{{.Contact}}</td>
+	  				<td>固定电话:{{.Telphone}}</td><td>移动电话:{{.Mobile}}</td><td>维护日期:{{.MaintainDate}}</td>
+	  				<td>维护人:{{.MaintainPeole}}</td><td>网络类型:{{.NetType}}</td>
+	  			</tr>
+	  			<!--3G信息-->
+	  			{{if eq .NetType "3G"}}
+	  			 {{with .WirelessTypeInfo}}
+	  			  <tr class="active">
+	  				<td>运营商:{{.NetOperator}}</td><td>用户号码:{{.NetNo}}</td><td>资费标准:{{.NetTariff}}</td>
+	  				<td>包月流量:{{.NetTraffic}}</td><td>开卡日期:{{.StartDate}}</td><td>有效期:{{.NetQixian}}月</td>
+	  				<td>&nbsp;</td><td>&nbsp;</td>
+	  			 </tr>
+	  			 {{end}}
+	  			{{else}}
+	  			 {{with .WireTypeInfo}}
+	  			  <tr class="active">
+	  				 <td>IP类型:{{.IPType}}</td><td>IP地址:{{.IPAddress}}</td><td>子网掩码:{{.IPMask}}</td>
+	  				 <td>网关:{{.GateWay}}</td><td>DNS:{{.DNS}}</td>
+	  				 <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+	  			  </tr>
+	  			 {{end}}
+	  			{{end}}
+	  			{{end}}
+        </table>
 	    </td>	
 	  </tr>
    {{end}}

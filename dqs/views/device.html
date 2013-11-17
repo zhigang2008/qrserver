@@ -47,25 +47,25 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SonsorId">传感器编号</label>
     <div class="col-sm-6">
-      <input id="SensorId" type="text" class="form-control" name="SensorId"  placeholder="SensorId" value="{{.SensorId}}" disabled>
+      <input id="SensorId" type="text" class="form-control" name="SensorId"  placeholder="SensorId" value="{{.SensorId}}" disabled >
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SiteName">站点名称</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="SiteName" name="SiteName" placeholder="SiteName" value="{{.SiteName}}" disabled>
+      <input type="text" class="form-control" id="SiteName" name="SiteName" placeholder="SiteName" value="{{.SiteName}}" disabled >
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Longitude">经度</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Longitude" name="Longitude" placeholder="Longitude" value="{{.Longitude}}" disabled>
+      <input type="text" class="form-control" id="Longitude" name="Longitude" placeholder="Longitude" value="{{.Longitude}}" disabled >
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Latitude">纬度</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Latitude" name="Latitude" placeholder="Latitude" value="{{.Latitude}}" disabled>
+      <input type="text" class="form-control" id="Latitude" name="Latitude" placeholder="Latitude" value="{{.Latitude}}" disabled >
     </div>
   </div>
   <div class="form-group">
@@ -535,15 +535,15 @@ $(document).ready(function(){
     $(document).ajaxStart(function(){
          $("#process-div").show();
          $("#msg").hide();
-         $('#refreshparams').attr('disabled',true);
-         $('#setsave').attr('disabled',true);
-         $('#setsave2').attr('disabled',true);
+         $('#refreshparams').prop('disabled',true);
+         $('#setsave').prop('disabled',true);
+         $('#setsave2').prop('disabled',true);
          processbar();
      }).ajaxStop(function(){
      	   p=10;
-     	   $('#refreshparams').attr('disabled',false);
-     	   $('#setsave').attr('disabled',false); 
-     	   $('#setsave2').attr('disabled',false);   
+     	   $('#refreshparams').prop('disabled',false);
+     	   $('#setsave').prop('disabled',false); 
+     	   $('#setsave2').prop('disabled',false);   
          $("#process-div").hide();
     });
     
@@ -580,21 +580,23 @@ $(document).ready(function(){
          if(setchange==false){
          	setchange=true;
          	$("#setparams").text("取消设置");
-         	$("#setparamform  :text").attr('disabled',false);
-         	$("#setparamform  :radio").attr('disabled',false);
+         	$("#setparamform  :text").prop('disabled',false);
+         	$("#setparamform  :radio").prop('disabled',false);
+         	$("#setparamform  select").prop('disabled',false);
         }else{
         	setchange=false;
          	$("#setparams").text("设置参数");
-         	$("#setparamform :text").attr('disabled',true);
-         	$("#setparamform :radio").attr('disabled',true);
+         	$("#setparamform :text").prop('disabled',true);
+         	$("#setparamform :radio").prop('disabled',true);
+         	$("#setparamform select").prop('disabled',true);
         }
     });
 
   {{else}}
   	$('#nav-tab a:last').tab('show')
   	//不在线,不能执行操作
-    $('#refreshparams').attr('disabled',true); 
-    $('#setparams').attr('disabled',true);  
+    $('#refreshparams').prop('disabled',true); 
+    $('#setparams').prop('disabled',true);  
     
     showWarning("设备未连线,无法进行设备参数的读写操作.仅可以进行自定义参数读写");
     
@@ -608,13 +610,15 @@ $(document).ready(function(){
          if(setchange2==false){
          	setchange2=true;
          	$("#setparams2").text("取消设置");
-         	$("#customparamform  :text").attr('disabled',false);
-         	$("#customparamform  :radio").attr('disabled',false);
+         	$("#customparamform  :text").prop('disabled',false);
+         	$("#customparamform  :radio").prop('disabled',false);
+         	$("#customparamform  select").prop('disabled',false);
          }else{
         	setchange2=false;
          	$("#setparams2").text("设置参数");
-         	$("#customparamform  :text").attr('disabled',true);
-         	$("#customparamform  :radio").attr('disabled',true);
+         	$("#customparamform  :text").prop('disabled',true);
+         	$("#customparamform  :radio").prop('disabled',true);
+         	$("#customparamform  select").prop('disabled',true);
         }
     });
 

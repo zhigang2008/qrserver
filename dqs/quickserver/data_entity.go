@@ -217,7 +217,7 @@ func SensorInfo2RetData(sensor *SensorInfo) *RetData {
 	for i, b := 0, []byte(sensor.RegionCode); i < len(sensor.RegionCode); i++ {
 		r.RegionCode[i] = b[i]
 	}
-	r.RegionCode[5] = byte(0)
+	r.RegionCode[6] = byte(0)
 
 	for i, b := 0, []byte(sensor.Custom1); i < len(sensor.Custom1); i++ {
 		r.Custom1[i] = b[i]
@@ -246,6 +246,7 @@ func SensorInfo2RetData(sensor *SensorInfo) *RetData {
 	r.DA2 = sensor.DA2
 	r.IO1 = sensor.IO1
 	r.IO2 = sensor.IO2
+	fmt.Println(r)
 	return r
 }
 

@@ -61,7 +61,7 @@ func CommandRead(id, remote string) error {
 //发送参数设置指令
 func CommandSet(id, remote string, params *RetData) error {
 	connP := GetConnection(remote)
-	//fmt.Println(params)
+	log.Info(params)
 
 	if connP != nil {
 		command, err := DllUtil.GenerateSetParam(id, params)

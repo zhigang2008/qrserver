@@ -7,7 +7,7 @@ import (
 
 /*func TestGenerateSetParam(t *testing.T) {
 
-	du := dllUtil{}
+	du := dllUtil
 
 	params := "SI12345678"
 	ret := new(RetData)
@@ -26,12 +26,12 @@ import (
 	}
 }
 */
-func TestCheckCRCCode(t *testing.T) {
+func TestSendStr(t *testing.T) {
 
 	du := DllUtil
-	str := "SI30001051a003b1309010721SI300010511037582403091943111132629130901072137000019990452826600284265000000055"
-	ret := du.CheckCRCCode([]byte(str))
-	fmt.Println(ret)
+	str := "SI30001051a003b1309020107SI3000105110375824030919431111326291309020107270000199904528266002603380000000"
+	ret := du.SendStr([]byte(str))
+	fmt.Printf("%s", ret)
 
 	/*if string(ret) != "30f6" {
 		t.Error("fail")
@@ -40,8 +40,10 @@ func TestCheckCRCCode(t *testing.T) {
 		t.Log("OK")
 	}
 	*/
+
 }
 
+/*
 func TestParseFlashData(t *testing.T) {
 
 	du := DllUtil
@@ -50,11 +52,6 @@ func TestParseFlashData(t *testing.T) {
 	fmt.Println(frame)
 	fmt.Println(ret)
 	fmt.Println(err)
-	/*if string(ret) != "30f6" {
-		t.Error("fail")
 
-	} else {
-		t.Log("OK")
-	}
-	*/
 }
+*/
