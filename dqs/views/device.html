@@ -388,12 +388,14 @@
       </label>
     </div>
   </div>
+ 
+ <div class="form-group">
   <!--3G 信息-->
-  <div id="div_3G_info" style="display:{{if eq .NetType "3G"}}block{{else}}none{{end}}">
+  <div id="div_3G_info"  class="well col-sm-offset-2 col-sm-6" style="display:{{if eq .NetType "3G"}}block{{else}}none{{end}}">
   {{with .WirelessTypeInfo}}
   <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetOperator">3G运营商</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="NetOperator">3G运营商</label>
+    <div class="col-sm-9">
       <label class="radio-inline">
          <input type="radio"  name="NetOperator" value="电信" {{if eq .NetOperator  "电信"}}  checked {{end}} disabled /> 
          <span class="label label-success">电信</span>
@@ -409,43 +411,43 @@
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetTraffic">用户号码</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="NetNo">用户号码</label>
+    <div class="col-sm-9">
       <input id="NetNo" type="text" class="form-control" name="NetNo"  placeholder="用户的号码" value="{{.NetNo}}" disabled>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetQixian">资费标准</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="NetTariff">资费标准</label>
+    <div class="col-sm-9">
       <input id="NetTariff" type="text" class="form-control" name="NetTariff"  placeholder="资费标准" value="{{.NetTariff}}" disabled>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetTraffic">包月流量(MB)</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="NetTraffic">包月流量(MB)</label>
+    <div class="col-sm-9">
       <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic" value="{{.NetTraffic}}" disabled>
     </div>
   </div>
   <div class="form-group">
-  <label class="col-sm-2 control-label" for="StartDate">开卡日期</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="StartDate">开卡日期</label>
+    <div class="col-sm-9">
       <input id="StartDate" type="text" class="form-control" name="StartDate"  placeholder="yyyy-mm-dd" value="{{.StartDate}}" disabled>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetQixian">有效期(个月)</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="NetQixian">有效期(个月)</label>
+    <div class="col-sm-9">
       <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" value="{{.NetQixian}}" disabled>
     </div>
   </div>
   {{end}}
  </div>
-  <!--有线网络信息-->
- <div id="div_wire_info"  style="display:{{if eq .NetType "有线"}}block{{else}}none{{end}}">
+ <!--有线网络信息-->
+ <div id="div_wire_info"  class="well col-sm-offset-2 col-sm-6" style="display:{{if eq .NetType "有线"}}block{{else}}none{{end}}">
   {{with .WireTypeInfo}}
   <div class="form-group">
-  <label class="col-sm-2 control-label" for="IPType">IP类型</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="IPType">IP类型</label>
+    <div class="col-sm-9">
       <label class="radio-inline">
          <input type="radio"  name="IPType" value="D" {{if eq .IPType "3G"}}  checked {{end}} disabled /> 
          <span class="label label-success">动态IP</span>
@@ -458,32 +460,32 @@
   </div>
   <!--静态地址-->
   <div class="form-group">
-  <label class="col-sm-2 control-label" for="IPAddress">IP地址</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="IPAddress">IP地址</label>
+    <div class="col-sm-9">
       <input id="IPAddress" type="text" class="form-control" name="IPAddress"  placeholder="IP地址" value="{{.IPAddress}}" disabled>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="IPMask">子网掩码</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="IPMask">子网掩码</label>
+    <div class="col-sm-9">
       <input id="IPMask" type="text" class="form-control" name="IPMask"  placeholder="子网掩码" value="{{.IPMask}}" disabled>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="GateWay">网关</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="GateWay">网关</label>
+    <div class="col-sm-9">
       <input id="GateWay" type="text" class="form-control" name="GateWay"  placeholder="网关地址" value="{{.GateWay}}" disabled>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="DNS">DNS</label>
-    <div class="col-sm-6">
+  <label class="col-sm-3 control-label" for="DNS">DNS</label>
+    <div class="col-sm-9">
       <input id="DNS" type="text" class="form-control" name="DNS"  placeholder="DNS地址" value="{{.DNS}}" disabled>
     </div>
   </div>
  {{end}}
 </div> <!--end div_wire_info-->
-
+</div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="NotUse" >是否禁用</label>
     <div class="col-sm-6">
@@ -687,14 +689,63 @@ $(document).ready(function(){
 //表单校验
  $("#customparamform").validate({
    rules: {
-    NetQixian: {
-      number: true
+    InstallDate: {
+      dateISO: true
+    },
+    Installer: {
+    	chinese:true,
+      maxlength:30
+    },
+    Contact: {
+    	chinese:true,
+      maxlength: 30
+    },
+    Telphone: {
+      phone: true
+    },
+    Mobile: {
+      mobile: true
+    },
+    NetType: {
+      required: true
+    },
+    NetNo: {
+      mobile: true
+    },
+    NetTariff: {
+      maxlength:30
+    },
+    StartDate: {
+      dateISO: true
     },
     NetTraffic: {
       number: true
     },
+    NetQixian: {
+      number: true
+    },
+    IPAddress: {
+      ipv4: true
+    },
+    IPMask: {
+      ipv4: true
+    },
+    GateWay: {
+      ipv4: true
+    },
+    DNS: {
+      ipv4: true
+    },
     NotUse: {
       required: true
+    }
+  },
+  messages:{
+  	InstallDate: {
+      dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
+    },
+    StartDate: {
+      dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
     }
   }
 });	

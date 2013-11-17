@@ -60,7 +60,6 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SiteType">场地类型</label>
     <div class="col-sm-6">
-      <!--<input type="text" class="form-control" id="SiteType" name="SiteType" placeholder="SiteType" value="{{.SiteType}}" />-->
       <select class="form-control" id="SiteType" name="SiteType">
         <option value="0">土壤</option>
         <option value="1" selected >软岩石</option>
@@ -71,7 +70,6 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="ObserveObject">观测对象</label>
     <div class="col-sm-6">
-      <!--<input type="text" class="form-control" id="ObserveObject" name="ObserveObject" placeholder="ObserveObject" value="{{.ObserveObject}}" />-->
       <select class="form-control" id="ObserveObject" name="ObserveObject">
         <option value="0">深井</option>
         <option value="1" selected >自由地表</option>
@@ -81,8 +79,6 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Accelerometer">加速度计型号</label>
     <div class="col-sm-6">
-      <!--<input type="text" class="form-control" id="Accelerometer" name="Accelerometer" placeholder="Accelerometer" value="{{.Accelerometer}}" />
-      -->
       <select class="form-control" id="Accelerometer" name="Accelerometer">
         <option value="0">MEMS</option>
         <option value="1">力平衡</option>
@@ -257,36 +253,140 @@
   </div>
 -->
 <div class="form-group">
-	<label class="col-sm-2 control-label" for="NetType">网络类型</label>
+	 	<label class="col-sm-2 control-label" for="InstallDate">安装时间</label>
     <div class="col-sm-6">
-      <!--<input id="NetType" type="text" class="form-control" name="NetType"  placeholder="NetType"  />-->
+      <input id="InstallDate" type="text" class="form-control" name="InstallDate"  placeholder="yyyy-mm-dd" value="{{.InstallDate}}" >
+    </div>
+  </div>
+  <div class="form-group">
+  <label class="col-sm-2 control-label" for="Installer">安装人员</label>
+    <div class="col-sm-6">
+      <input id="Installer" type="text" class="form-control" name="Installer"  placeholder="Installer" value="{{.Installer}}" >
+    </div>
+  </div>
+  <div class="form-group">
+  <label class="col-sm-2 control-label" for="Contact">联系人</label>
+    <div class="col-sm-6">
+      <input id="Contact" type="text" class="form-control" name="Contact"  placeholder="Contact" value="{{.Contact}}" >
+    </div>
+  </div>
+  <div class="form-group">
+  <label class="col-sm-2 control-label" for="Telphone">固定电话</label>
+    <div class="col-sm-6">
+      <input id="Telphone" type="text" class="form-control" name="Telphone"  placeholder="Telphone" value="{{.Telphone}}" >
+    </div>
+  </div>
+  <div class="form-group">
+	<label class="col-sm-2 control-label" for="Mobile">移动电话</label>
+    <div class="col-sm-6">
+      <input id="Mobile" type="text" class="form-control" name="Mobile"  placeholder="Mobile" value="{{.Mobile}}" >
+    </div>
+  </div>
+  <div class="form-group">
+  <label class="col-sm-2 control-label" for="NetType">网络类型</label>
+    <div class="col-sm-6">
       <label class="radio-inline">
-        <input type="radio" name="NetType"   value="3G" checked> 3G
+         <input type="radio"  name="NetType" value="3G" checked > 
+         <span class="label label-success">3G网络</span>
       </label>
       <label class="radio-inline">
-        <input type="radio" name="NetType"   value="NET" > 有线
+         <input type="radio"  name="NetType" value="有线"  > 
+         <span class="label label-success">有线网络</span>
+      </label>
+    </div>
+  </div>
+  <!--3G 信息-->
+  <div id="div_3G_info" class="well col-sm-offset-2 col-sm-6" style="display:block" >
+  <div class="form-group">
+  <label class="col-sm-3 control-label" for="NetOperator">3G运营商</label>
+    <div class="col-sm-9">
+      <label class="radio-inline">
+         <input type="radio"  name="NetOperator" value="电信" checked  > 
+         <span class="label label-success">电信</span>
       </label>
       <label class="radio-inline">
-        <input type="radio" name="NetType"   value="WIFI" > WIFI
+         <input type="radio"  name="NetOperator" value="移动"    > 
+         <span class="label label-success">移动</span>
       </label>
       <label class="radio-inline">
-        <input type="radio" name="NetType"   value="GPRS" > GPRS
+         <input type="radio"  name="NetOperator" value="联通"   > 
+         <span class="label label-success">联通</span>
       </label>
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetQixian">网络期限</label>
-    <div class="col-sm-6">
-      <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" />
+  <label class="col-sm-3 control-label" for="NetNo">用户号码</label>
+    <div class="col-sm-9">
+      <input id="NetNo" type="text" class="form-control" name="NetNo"  placeholder="用户的号码" >
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-2 control-label" for="NetTraffic">网络流量</label>
-    <div class="col-sm-6">
-      <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic"  />
+  <label class="col-sm-3 control-label" for="NetTariff">资费标准</label>
+    <div class="col-sm-9">
+      <input id="NetTariff" type="text" class="form-control" name="NetTariff"  placeholder="资费标准"  >
     </div>
   </div>
-  <!--是否禁用-->
+   <div class="form-group">
+  <label class="col-sm-3 control-label" for="NetTraffic">包月流量(MB)</label>
+    <div class="col-sm-9">
+      <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic" >
+    </div>
+  </div>
+  <div class="form-group">
+  <label class="col-sm-3 control-label" for="StartDate">开卡日期</label>
+    <div class="col-sm-9">
+      <input id="StartDate" type="text" class="form-control" name="StartDate"  placeholder="yyyy-mm-dd"  >
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-3 control-label" for="NetQixian">有效期(个月)</label>
+    <div class="col-sm-9">
+      <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" value="12" >
+    </div>
+  </div>
+ </div>
+  <!--有线网络信息-->
+ <div id="div_wire_info"  class="well col-md-offset-2 col-sm-6" style="display:none">
+  <div class="form-group">
+  <label class="col-sm-3 control-label" for="IPType">IP类型</label>
+    <div class="col-sm-9">
+      <label class="radio-inline">
+         <input type="radio"  name="IPType" value="D"      /> 
+         <span class="label label-success">动态IP</span>
+      </label>
+      <label class="radio-inline">
+         <input type="radio"  name="IPType" value="S"  checked  /> 
+         <span class="label label-success">静态IP</span>
+      </label>
+    </div>
+  </div>
+  <!--静态地址-->
+  <div class="form-group">
+  <label class="col-sm-3 control-label" for="IPAddress">IP地址</label>
+    <div class="col-sm-9">
+      <input id="IPAddress" type="text" class="form-control" name="IPAddress"  placeholder="IP地址" >
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-3 control-label" for="IPMask">子网掩码</label>
+    <div class="col-sm-9">
+      <input id="IPMask" type="text" class="form-control" name="IPMask"  placeholder="子网掩码" value="255.255.255.0" >
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-3 control-label" for="GateWay">网关</label>
+    <div class="col-sm-9">
+      <input id="GateWay" type="text" class="form-control" name="GateWay"  placeholder="网关地址" value="192.168.0.1" >
+    </div>
+  </div>
+   <div class="form-group">
+  <label class="col-sm-3 control-label" for="DNS">DNS</label>
+    <div class="col-sm-9">
+      <input id="DNS" type="text" class="form-control" name="DNS"  placeholder="DNS地址"  >
+    </div>
+  </div>
+</div> <!--end div_wire_info-->
+ <!--是否禁用-->
      <input id="NotUse" type="hidden" name="NotUse"  value="false" />
 </form>
 
@@ -332,16 +432,87 @@
       minlength: 6,
       maxlength: 6
     },
-    NetQixian: {
-      number: true
+    InstallDate: {
+      dateISO: true
+    },
+    Installer: {
+    	chinese:true,
+      maxlength:30
+    },
+    Contact: {
+    	chinese:true,
+      maxlength: 30
+    },
+    Telphone: {
+      phone: true
+    },
+    Mobile: {
+      mobile: true
+    },
+    NetType: {
+      required: true
+    },
+    NetNo: {
+      mobile: true
+    },
+    NetTariff: {
+      maxlength:30
+    },
+    StartDate: {
+      dateISO: true
     },
     NetTraffic: {
       number: true
+    },
+    NetQixian: {
+      number: true
+    },
+    IPAddress: {
+      ipv4: true
+    },
+    IPMask: {
+      ipv4: true
+    },
+    GateWay: {
+      ipv4: true
+    },
+    DNS: {
+      ipv4: true
+    },
+    NotUse: {
+      required: true
     }
-   }
+   },
+  messages:{
+  	InstallDate: {
+      dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
+    },
+    StartDate: {
+      dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
+    }
+  }
    
   });	
   
+  //3G 有线切换显示 
+  $("input[name='NetType'][type='radio']").bind('change',function(){
+  	$("#div_3G_info").toggle();
+  	$("#div_wire_info").toggle();
+  });
+  
+   $("input[name='IPType'][type='radio']").bind('change',function(){
+  	if(this.value=='D'){
+  	  $("#IPAddress").prop("disabled", true);
+  	  $("#IPMask").prop("disabled", true);
+  	  $("#GateWay").prop("disabled", true);
+  	  $("#DNS").prop("disabled", true);
+    }else{
+    	$("#IPAddress").prop("disabled", false);
+  	  $("#IPMask").prop("disabled", false);
+  	  $("#GateWay").prop("disabled", false);
+  	  $("#DNS").prop("disabled", false);
+    }
+  });
   
   //提交操作
  	$("#savedevice").bind('click', function() {
