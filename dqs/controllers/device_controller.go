@@ -81,7 +81,11 @@ func (this *DeviceController) Post() {
 	device := models.DeviceInfo{}
 	setParams := models.SensorInfo{}
 	customParams := models.CustomDefineParams{}
+	wirelessParams := models.WirelessInfo{}
+	wireParams := models.WireInfo{}
 
+	this.ParseForm(&wirelessParams)
+	this.ParseForm(&wireParams)
 	this.ParseForm(&setParams)
 	this.ParseForm(&customParams)
 	err := this.ParseForm(&device)
@@ -91,6 +95,9 @@ func (this *DeviceController) Post() {
 		log.Warnf("添加设备-解析参数失败:%s", err.Error())
 	} else {
 		device.SetParams = setParams
+		customParams.WirelessTypeInfo = wirelessParams
+		customParams.WireTypeInfo = wireParams
+
 		device.CustomParams = customParams
 		device.UpdateTime = time.Now()
 		device.RegisterTime = time.Now()
