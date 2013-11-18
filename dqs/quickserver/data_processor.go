@@ -55,7 +55,8 @@ func (dp *DataProcessor) DataProcess(content []byte, remote string, conn *net.Co
 			dp.sendFlashReadCommand(string(content[0:10]), conn)
 		}
 	case 'r', 'R': //地形波读取
-		fmt.Println("波形信息读取")
+		//fmt.Println("波形信息读取")
+		dp.ProcessWaveData(content)
 	case 's', 'S': //设置参数
 		//判断是否有控制命令等待返回数据
 		c, ok := hasCommand(remote, "S")
@@ -169,12 +170,12 @@ func (dp *DataProcessor) sendStatusReadCommand(deviceid string, connP *net.Conn)
 	command, err := DllUtil.GenerateReadParam(deviceid)
 	if err == nil {
 		//发送控制命令
-		_, err0 := (*connP).Write(command)
+		n, err0 := (*connP).Write(command)
 
 		if err0 != nil {
 			log.Warnf("向[%s]设备发送状态读取指令失败:%s", deviceid, err0.Error())
 		} else {
-			log.Infof("向[%s]设备发送状态读取指令成功:%d", deviceid)
+			log.Infof("向[%s]设备发送状态读取指令成功:%d", deviceid, n)
 		}
 	}
 }
@@ -184,12 +185,46 @@ func (dp *DataProcessor) sendFlashReadCommand(deviceid string, connP *net.Conn) 
 	command, err := DllUtil.GenerateFlashReadParam(deviceid)
 	if err == nil {
 		//发送控制命令
-		_, err0 := (*connP).Write(command)
+		n, err0 := (*connP).Write(command)
 
 		if err0 != nil {
 			log.Warnf("向[%s]设备发送波形图读取指令失败:%s", deviceid, err0.Error())
 		} else {
-			log.Infof("向[%s]设备发送波形图读取指令成功:%d", deviceid)
+			log.Infof("向[%s]设备发送波形图读取指令成功:%d", deviceid, n)
 		}
 	}
+}
+
+//波形图数据接收
+//处理突发数据
+func (dp *DataProcessor) ProcessWaveData(content []byte) (err error) {
+
+	//进行数据处理
+	id := string(content[0:10])
+
+	if ServerConfigs.CRC {
+		//先进行CRC校验.无效数据直接抛弃.
+		if DllUtil.CheckCRCCode(content) != true {
+			log.Warnf("[%s]设备报警态数据CRC校验失败", id)
+			return errors.New("CRC校验失败,数据非法")
+		}
+	}
+
+	//调用dll解析
+	data, frame, err := DllUtil.ParseFlashData(content[0:len(content)-4], id)
+	if err != nil {
+		log.Warnf("[%s]波形图信息DLL解析失败:%s", id, err.Error())
+		return err
+	}
+	log.Infof("波形图%d帧数据:%d", frame, data)
+	/*//数据转换
+	sData := FlashData2AlarmInfo(data)
+	err = dp.dataManager.FlashDataSave(sData)
+	if err != nil {
+		log.Warnf("[%s]报警信息处理失败:%s", id, err.Error())
+		return err
+	}
+	log.Infof("波形图信息保存成功")
+	*/
+	return nil
 }
