@@ -5,17 +5,49 @@ import (
 	"testing"
 )
 
-/*func TestGenerateSetParam(t *testing.T) {
+/**/
+func TestGenerateSetParam(t *testing.T) {
 
-	du := dllUtil
+	du := DllUtil
 
 	params := "SI12345678"
-	ret := new(RetData)
+	ret := new(SensorInfo)
+	ret.SensorId = "SI12345678"
+	ret.SiteName = "haidian000"
+	ret.Longitude = 15.82629
+	ret.Latitude = 32.43544
+	ret.SiteType = 1
+	ret.ObserveObject = 0
 	ret.Accelerometer = 1
-	ret.CombAlert = 1
+	ret.Direction = 0
+	ret.RangeType = 1
+	ret.Period = 1
+	ret.RegionCode = "510802"
+	ret.Custom1 = "00000000"
+	ret.Custom2 = "00000000"
+	ret.PGATrigger = 1
+	ret.PGATrgThreshold = 22
+	ret.SITrigger = 0
+	ret.SITrgThreshold = 3.2
+	ret.CombTrigger = 0
+	ret.ReserveTrigger = 0
+	ret.ReserveTrgThreshold = 0
+	ret.PGAAlert = 1
+	ret.PGAAlertThreshold = 45
+	ret.SIAlert = 0
+	ret.SIAlertThreshold = 6.7
+	ret.CombAlert = 0
+	ret.ReserveAlert = 0
+	ret.ReserveAlertThreshold = 0
+	ret.DA1 = 0
+	ret.DA2 = 1
+	ret.IO1 = 1
+	ret.IO2 = 1
 
-	r, err := du.GenerateSetParam(params, ret)
-	if err != nil {
+	retdata := SensorInfo2RetData(ret)
+	r, _ := du.GenerateSetParam(params, retdata)
+	fmt.Printf("%s", r)
+	/*if err != nil {
 		if string(r) == "" {
 			t.Log("ok")
 		} else {
@@ -24,8 +56,9 @@ import (
 	} else {
 		t.Error("调用失败")
 	}
+	*/
 }
-*/
+
 func TestSendStr(t *testing.T) {
 
 	du := DllUtil
