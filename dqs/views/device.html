@@ -150,10 +150,10 @@
     <label class="col-sm-2 control-label" for="PGATrigger">PGA触发</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-        <input type="radio" name="PGATrigger"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> <span class="label label-default">否</span>
+        <input type="radio" name="PGATrigger"  value="1" {{if eq .PGATrigger 1}} checked {{end}} disabled> <span class="label label-success">是</span>
       </label>
       <label class="radio-inline">
-        <input type="radio" name="PGATrigger"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> <span class="label label-success">是</span>
+        <input type="radio" name="PGATrigger"  value="0" {{if eq .PGATrigger 0}} checked {{end}} disabled> <span class="label label-default">否</span>
       </label>
     </div>
   </div>
@@ -167,10 +167,10 @@
     <label class="col-sm-2 control-label" for="SITrigger">SI触发</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-        <input type="radio" name="SITrigger"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> <span class="label label-default">否</span>
+        <input type="radio" name="SITrigger"  value="1" {{if eq .SITrigger 1}} checked {{end}} disabled> <span class="label label-success">是</span>
       </label>
       <label class="radio-inline">
-        <input type="radio" name="SITrigger"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> <span class="label label-success">是</span>
+        <input type="radio" name="SITrigger"  value="0" {{if eq .SITrigger 0}} checked {{end}} disabled> <span class="label label-default">否</span>
       </label>
     </div>
   </div>
@@ -184,13 +184,13 @@
     <label class="col-sm-2 control-label" for="CombTrigger">组合触发</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-        <input type="radio" name="CombTrigger"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> 不组合
+        <input type="radio" name="CombTrigger"  value="0" {{if eq .CombTrigger 0}} checked {{end}} disabled> 不组合
       </label>
       <label class="radio-inline">
-        <input type="radio" name="CombTrigger"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> 逻辑"或"
+        <input type="radio" name="CombTrigger"  value="1" {{if eq .CombTrigger 1}} checked {{end}} disabled> 逻辑"或"
       </label>
       <label class="radio-inline">
-        <input type="radio" name="CombTrigger"  value="2" {{if eq .SiteType 2}} checked {{end}} disabled> 逻辑"并"
+        <input type="radio" name="CombTrigger"  value="2" {{if eq .CombTrigger 2}} checked {{end}} disabled> 逻辑"并"
       </label>
     </div>
   </div>
@@ -198,10 +198,10 @@
     <label class="col-sm-2 control-label" for="ReserveTrigger">预留触发</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-        <input type="radio" name="ReserveTrigger"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> <span class="label label-default">否</span>
+        <input type="radio" name="ReserveTrigger"  value="1" {{if eq .ReserveTrigger 1}} checked {{end}} disabled> <span class="label label-success">是</span>
       </label>
       <label class="radio-inline">
-        <input type="radio" name="ReserveTrigger"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> <span class="label label-success">是</span>
+        <input type="radio" name="ReserveTrigger"  value="0" {{if eq .ReserveTrigger 0}} checked {{end}} disabled> <span class="label label-default">否</span>
       </label>
     </div>
   </div>
@@ -215,10 +215,10 @@
     <label class="col-sm-2 control-label" for="PGAAlert">PGA报警</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-        <input type="radio" name="PGAAlert"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> <span class="label label-default">否</span>
+        <input type="radio" name="PGAAlert"  value="1" {{if eq .PGAAlert 1}} checked {{end}} disabled> <span class="label label-success">是</span>
       </label>
       <label class="radio-inline">
-        <input type="radio" name="PGAAlert"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> <span class="label label-success">是</span>
+        <input type="radio" name="PGAAlert"  value="0" {{if eq .PGAAlert 0}} checked {{end}} disabled> <span class="label label-default">否</span>
       </label>
     </div>
   </div>
@@ -232,10 +232,10 @@
     <label class="col-sm-2 control-label" for="SIAlert">SI报警</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-        <input type="radio" name="SIAlert"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> <span class="label label-default">否</span>
+        <input type="radio" name="SIAlert"  value="1" {{if eq .SIAlert 1}} checked {{end}} disabled> <span class="label label-success">是</span>
       </label>
       <label class="radio-inline">
-        <input type="radio" name="SIAlert"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> <span class="label label-success">是</span>
+        <input type="radio" name="SIAlert"  value="0" {{if eq .SIAlert 0}} checked {{end}} disabled> <span class="label label-default">否</span>
       </label>
     </div>
   </div>
@@ -249,13 +249,13 @@
     <label class="col-sm-2 control-label" for="CombAlert">组合报警</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-        <input type="radio" name="CombAlert"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> 不组合
+        <input type="radio" name="CombAlert"  value="0" {{if eq .CombAlert 0}} checked {{end}} disabled> 不组合
       </label>
       <label class="radio-inline">
-        <input type="radio" name="CombAlert"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> 逻辑"或"
+        <input type="radio" name="CombAlert"  value="1" {{if eq .CombAlert 1}} checked {{end}} disabled> 逻辑"或"
       </label>
       <label class="radio-inline">
-        <input type="radio" name="CombAlert"  value="2" {{if eq .SiteType 2}} checked {{end}} disabled> 逻辑"并"
+        <input type="radio" name="CombAlert"  value="2" {{if eq .CombAlert 2}} checked {{end}} disabled> 逻辑"并"
       </label>
     </div>
   </div>	
@@ -263,10 +263,10 @@
     <label class="col-sm-2 control-label" for="ReserveAlert">预留报警</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-        <input type="radio" name="ReserveAlert"  value="0" {{if eq .SiteType 0}} checked {{end}} disabled> <span class="label label-default">否</span>
+        <input type="radio" name="ReserveAlert"  value="1" {{if eq .ReserveAlert 1}} checked {{end}} disabled> <span class="label label-success">是</span>
       </label>
       <label class="radio-inline">
-        <input type="radio" name="ReserveAlert"  value="1" {{if eq .SiteType 1}} checked {{end}} disabled> <span class="label label-success">是</span>
+        <input type="radio" name="ReserveAlert"  value="0" {{if eq .ReserveAlert 0}} checked {{end}} disabled> <span class="label label-default">否</span>
       </label>
     </div>
   </div>
@@ -383,7 +383,7 @@
          <span class="label label-success">3G网络</span>
       </label>
       <label class="radio-inline">
-         <input type="radio"  name="NetType" value="有线"  {{if eq .NetType "有线" }} checked {{end}} disabled /> 
+         <input type="radio"  name="NetType" value="有线"  {{if eq .NetType "有线" ""}} checked {{end}} disabled /> 
          <span class="label label-success">有线网络</span>
       </label>
     </div>
@@ -443,17 +443,17 @@
   {{end}}
  </div>
  <!--有线网络信息-->
- <div id="div_wire_info"  class="well col-sm-offset-2 col-sm-6" style="display:{{if eq .NetType "有线"}}block{{else}}none{{end}}">
+ <div id="div_wire_info"  class="well col-sm-offset-2 col-sm-6" style="display:{{if eq .NetType "有线" ""}}block{{else}}none{{end}}">
   {{with .WireTypeInfo}}
   <div class="form-group">
   <label class="col-sm-3 control-label" for="IPType">IP类型</label>
     <div class="col-sm-9">
       <label class="radio-inline">
-         <input type="radio"  name="IPType" value="D" {{if eq .IPType "3G"}}  checked {{end}} disabled /> 
+         <input type="radio"  name="IPType" value="D" {{if eq .IPType "D" ""}}  checked {{end}} disabled /> 
          <span class="label label-success">动态IP</span>
       </label>
       <label class="radio-inline">
-         <input type="radio"  name="IPType" value="S"  {{if eq .IPType "有线" }} checked {{end}} disabled /> 
+         <input type="radio"  name="IPType" value="S"  {{if eq .IPType "S" }} checked {{end}} disabled /> 
          <span class="label label-success">静态IP</span>
       </label>
     </div>
