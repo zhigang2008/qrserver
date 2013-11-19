@@ -69,10 +69,13 @@ func (dp *dllUtil) ParseFlashData(rec []byte, deviceId string) (readData [240]in
 		uintptr(unsafe.Pointer(&rec[0])),
 		uintptr(unsafe.Pointer(&readData[0])),
 		uintptr(unsafe.Pointer(&deviceId)))
-	if fn == 0 {
+	//共75帧数据
+	if fn >= 0 && fn < 75 {
+		return readData, int16(fn), nil
+	} else {
 		return readData, frameNum, err //errors.New("DLL解析波形图数据失败")
 	}
-	return readData, int16(fn), nil
+
 }
 
 //生成参数读取命令

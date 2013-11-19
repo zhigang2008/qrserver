@@ -6,6 +6,7 @@ import (
 )
 
 /**/
+/*
 func TestGenerateSetParam(t *testing.T) {
 
 	du := DllUtil
@@ -47,7 +48,7 @@ func TestGenerateSetParam(t *testing.T) {
 	retdata := SensorInfo2RetData(ret)
 	r, _ := du.GenerateSetParam(params, retdata)
 	fmt.Printf("\n[%s]", r)
-	/*if err != nil {
+	if err != nil {
 		if string(r) == "" {
 			t.Log("ok")
 		} else {
@@ -56,7 +57,16 @@ func TestGenerateSetParam(t *testing.T) {
 	} else {
 		t.Error("调用失败")
 	}
-	*/
+
+}
+*/
+
+func TestParseSetParam(t *testing.T) {
+
+	du := DllUtil
+	str := "SI30002012s0001019b3f"
+	ret := du.ParseSetParam([]byte(str))
+	fmt.Printf("%s", ret)
 }
 
 /*
