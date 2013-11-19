@@ -35,7 +35,7 @@
       </th>
      <th>更新时间</th>
      <th>网络类型</th>
-     <th>禁用状态</th>
+     <th>设备状态</th>
      <th>最后连接地址</th>
      <th>操作</th>
     </tr>
@@ -50,7 +50,7 @@
 	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{if .Online}}<span class="label label-success">在线</span>{{else}}<span class="label label-default">离线</span> {{end}}</td>
 	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{dateformat .UpdateTime "2006-01-02 15:04:05"}}</td>
 	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{.CustomParams.NetType}}</td>
-	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{.CustomParams.NotUse}}</td>
+	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{if eq .CustomParams.NotUse true}}[停用]{{else}}活动{{end}}</td>
 	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{.RemoteAddr}}</td>
 	 		<td style="font-size:120%">
 	 			<a href="/alarm?sensorid={{.SensorId}}" data-toggle="tooltip" data-placement="bottom" title="报警信息"><span class="glyphicon glyphicon-bell"></span></a> / 

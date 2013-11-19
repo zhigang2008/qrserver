@@ -34,7 +34,7 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SensorId" >传感器编号*</label>
     <div class="col-sm-6">
-      <input id="SensorId" type="text" class="form-control" name="SensorId"  placeholder="SensorId" value="{{.SensorId}}"  />
+      <input id="SensorId" type="text" class="form-control" name="SensorId"  placeholder="SensorId"   />
       <p class="help-block"></p>
     </div>
     <div class="col-sm-2"></div>
@@ -42,19 +42,19 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="SiteName">站点名称*</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="SiteName" name="SiteName" placeholder="SiteName" value="{{.SiteName}}" />
+      <input type="text" class="form-control" id="SiteName" name="SiteName" placeholder="SiteName"  />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Longitude">经度*</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Longitude" name="Longitude" placeholder="Longitude" value="{{.Longitude}}" />
+      <input type="text" class="form-control" id="Longitude" name="Longitude" placeholder="Longitude"  />
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-2 control-label" for="Latitude">纬度*</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="Latitude" name="Latitude" placeholder="Latitude" value="{{.Latitude}}" />
+      <input type="text" class="form-control" id="Latitude" name="Latitude" placeholder="Latitude"  />
     </div>
   </div>
   <div class="form-group">
@@ -127,159 +127,51 @@
   <div class="form-group">
     <label class="col-sm-2 control-label" for="RegionCode">行政区划代码</label>
     <div class="col-sm-6">
-      <input type="text" class="form-control" id="RegionCode" name="RegionCode" placeholder="RegionCode" value="{{.RegionCode}}" />
+      <input type="text" class="form-control" id="RegionCode" name="RegionCode" placeholder="RegionCode"  />
     </div>
   </div>
-  <!--
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="Custom1">预留1</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="Custom1" name="Custom1" placeholder="Custom1" value="{{.Custom1}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="Custom2">预留2</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="Custom2" name="Custom2" placeholder="Custom2" value="{{.Custom2}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="PGATrigger">PGA触发</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="PGATrigger" name="PGATrigger" placeholder="PGATrigger" value="{{.PGATrigger}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="PGATrgThreshold">PGA阀值</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="PGATrgThreshold" name="PGATrgThreshold" placeholder="PGATrgThreshold" value="{{.PGATrgThreshold}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="SITrigger">SI触发</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="SITrigger" name="SITrigger" placeholder="SITrigger" value="{{.SITrigger}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="SITrgThreshold">SI阀值</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="SITrgThreshold" name="SITrgThreshold" placeholder="SITrgThreshold" value="{{.SITrgThreshold}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="CombTrigger">组合触发</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="CombTrigger" name="CombTrigger" placeholder="CombTrigger" value="{{.CombTrigger}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="ReserveTrigger">预留触发</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="ReserveTrigger" name="ReserveTrigger" placeholder="ReserveTrigger" value="{{.ReserveTrigger}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="ReserveTrgThreshold">预留阀值</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="ReserveTrgThreshold" name="ReserveTrgThreshold" placeholder="ReserveTrgThreshold" value="{{.ReserveTrgThreshold}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="PGAAlert">PGA报警</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="PGAAlert" name="PGAAlert" placeholder="PGAAlert" value="{{.PGAAlert}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="PGAAlertThreshold">PGA报警阀值</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="PGAAlertThreshold" name="PGAAlertThreshold" placeholder="PGAAlertThreshold" value="{{.PGAAlertThreshold}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="SIAlert">SI报警</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="SIAlert" name="SIAlert"  placeholder="SIAlert" value="{{.SIAlert}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="SIAlertThreshold">SI报警阀值</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="SIAlertThreshold" name="SIAlertThreshold" placeholder="SIAlertThreshold" value="{{.SIAlertThreshold}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="CombAlert">组合报警</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="CombAlert" name="CombAlert" placeholder="CombAlert" value="{{.CombAlert}}" >
-    </div>
-  </div>	
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="ReserveAlert">预留报警</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="ReserveAlert" name="ReserveAlert" placeholder="ReserveAlert" value="{{.ReserveAlert}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="ReserveAlertThreshold">预留报警阀值</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="ReserveAlertThreshold" name="ReserveAlertThreshold" placeholder="ReserveAlertThreshold" value="{{.ReserveAlertThreshold}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="DA1">DA输出1</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="DA1" name="DA1" placeholder="DA1" value="{{.DA1}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="DA2">DA输出2</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="DA2" name="DA2"  placeholder="DA2" value="{{.DA2}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="IO1">IO输出1</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="IO1" name="IO1" placeholder="IO1" value="{{.IO1}}" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label" for="IO2">IO输出2</label>
-    <div class="col-sm-6">
-      <input type="text" class="form-control" id="IO2" name="IO2" placeholder="IO2" value="{{.IO2}}" >
-    </div>
-  </div>
--->
+  
+ <!--自定义数据-->
 <div class="form-group">
 	 	<label class="col-sm-2 control-label" for="InstallDate">安装时间</label>
     <div class="col-sm-6">
-      <input id="InstallDate" type="text" class="form-control" name="InstallDate"  placeholder="yyyy-mm-dd" value="{{.InstallDate}}" >
+      <input id="InstallDate" type="text" class="form-control" name="InstallDate"  placeholder="yyyy-mm-dd"  value="2013-03-28">
     </div>
   </div>
   <div class="form-group">
   <label class="col-sm-2 control-label" for="Installer">安装人员</label>
     <div class="col-sm-6">
-      <input id="Installer" type="text" class="form-control" name="Installer"  placeholder="Installer" value="{{.Installer}}" >
+      <input id="Installer" type="text" class="form-control" name="Installer"  placeholder="Installer"  >
     </div>
   </div>
   <div class="form-group">
   <label class="col-sm-2 control-label" for="Contact">联系人</label>
     <div class="col-sm-6">
-      <input id="Contact" type="text" class="form-control" name="Contact"  placeholder="Contact" value="{{.Contact}}" >
+      <input id="Contact" type="text" class="form-control" name="Contact"  placeholder="Contact"  >
     </div>
   </div>
   <div class="form-group">
   <label class="col-sm-2 control-label" for="Telphone">固定电话</label>
     <div class="col-sm-6">
-      <input id="Telphone" type="text" class="form-control" name="Telphone"  placeholder="Telphone" value="{{.Telphone}}" >
+      <input id="Telphone" type="text" class="form-control" name="Telphone"  placeholder="Telphone"  >
     </div>
   </div>
   <div class="form-group">
 	<label class="col-sm-2 control-label" for="Mobile">移动电话</label>
     <div class="col-sm-6">
-      <input id="Mobile" type="text" class="form-control" name="Mobile"  placeholder="Mobile" value="{{.Mobile}}" >
+      <input id="Mobile" type="text" class="form-control" name="Mobile"  placeholder="Mobile"  >
+    </div>
+  </div>
+  <div class="form-group">
+	 	<label class="col-sm-2 control-label" for="MaintainDate">维护日期</label>
+    <div class="col-sm-6">
+      <input id="MaintainDate" type="text" class="form-control" name="MaintainDate"  placeholder="yyyy-mm-dd" >
+    </div>
+  </div>
+  <div class="form-group">
+	 	<label class="col-sm-2 control-label" for="MaintainPeole">维护人</label>
+    <div class="col-sm-6">
+      <input id="MaintainPeole" type="text" class="form-control" name="MaintainPeole"  placeholder="MaintainPeole" >
     </div>
   </div>
   <div class="form-group">
@@ -449,6 +341,13 @@
     Mobile: {
       mobile: true
     },
+    MaintainDate: {
+      dateISO: true
+    },
+    MaintainPeole: {
+    	chinese:true,
+      maxlength:30
+    },
     NetType: {
       required: true
     },
@@ -485,6 +384,9 @@
    },
   messages:{
   	InstallDate: {
+      dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
+    },
+    MaintainDate: {
       dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
     },
     StartDate: {

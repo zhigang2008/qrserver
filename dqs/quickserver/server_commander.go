@@ -25,7 +25,7 @@ func CommandRead(id, remote string) error {
 				AddCommand(remote, "G", c)
 				back := <-c
 
-				fmt.Printf("back=%s\n", back)
+				log.Infof("back=%s\n", back)
 				//取消控制命令
 				DeleteCommand(remote, "G")
 
@@ -61,13 +61,13 @@ func CommandRead(id, remote string) error {
 //发送参数设置指令
 func CommandSet(id, remote string, params *RetData) error {
 	connP := GetConnection(remote)
-	log.Info("CommandSet input Params")
-	log.Info(params)
+
+	//log.Info(params)
 
 	if connP != nil {
 		command, err := DllUtil.GenerateSetParam(id, params)
 		if err == nil {
-			fmt.Println("generated command=" + string(command))
+			log.Infof("generated set command=[%s]\n", string(command))
 			n, err0 := (*connP).Write(command)
 			if err0 != nil {
 				return err0
@@ -79,7 +79,7 @@ func CommandSet(id, remote string, params *RetData) error {
 				AddCommand(remote, "S", c)
 				back := <-c
 
-				fmt.Printf("back=%s\n", back)
+				log.Infof("back=%s\n", back)
 				//取消控制命令
 				DeleteCommand(remote, "S")
 
@@ -134,7 +134,7 @@ func CommandFlashRead(id, remote string, params *RetData) error {
 				AddCommand(remote, "R", c)
 				back := <-c
 
-				fmt.Printf("back=%s\n", back)
+				log.Infof("back=%s\n", back)
 
 				//TODO 读取75帧数据,
 

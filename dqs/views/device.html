@@ -376,6 +376,18 @@
     </div>
   </div>
   <div class="form-group">
+	 	<label class="col-sm-2 control-label" for="MaintainDate">维护日期</label>
+    <div class="col-sm-6">
+      <input id="MaintainDate" type="text" class="form-control" name="MaintainDate"  placeholder="yyyy-mm-dd" value="{{.MaintainDate}}" disabled>
+    </div>
+  </div>
+  <div class="form-group">
+	 	<label class="col-sm-2 control-label" for="MaintainPeole">维护人</label>
+    <div class="col-sm-6">
+      <input id="MaintainPeole" type="text" class="form-control" name="MaintainPeole"  placeholder="MaintainPeole" value="{{.MaintainPeole}}" disabled>
+    </div>
+  </div>
+  <div class="form-group">
   <label class="col-sm-2 control-label" for="NetType">网络类型</label>
     <div class="col-sm-6">
       <label class="radio-inline">
@@ -710,6 +722,13 @@ $(document).ready(function(){
     Mobile: {
       mobile: true
     },
+    MaintainDate: {
+      dateISO: true
+    },
+    MaintainPeole: {
+    	chinese:true,
+      maxlength:30
+    },
     NetType: {
       required: true
     },
@@ -746,6 +765,9 @@ $(document).ready(function(){
   },
   messages:{
   	InstallDate: {
+      dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
+    },
+    MaintainDate: {
       dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
     },
     StartDate: {

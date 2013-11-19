@@ -246,7 +246,7 @@ func SensorInfo2RetData(sensor *SensorInfo) *RetData {
 	r.DA2 = sensor.DA2
 	r.IO1 = sensor.IO1
 	r.IO2 = sensor.IO2
-	fmt.Printf("[SensorInfo2RetData]sensor=%x;\nretdata=%x", sensor, r)
+	//fmt.Printf("[SensorInfo2RetData]sensor=%x;\nretdata=%x", sensor, r)
 	return r
 }
 

@@ -15,7 +15,7 @@ func TestGenerateSetParam(t *testing.T) {
 	ret.SensorId = "SI12345678"
 	ret.SiteName = "haidian000"
 	ret.Longitude = 15.82629
-	ret.Latitude = 232.43544
+	ret.Latitude = 322.43544
 	ret.SiteType = 1
 	ret.ObserveObject = 0
 	ret.Accelerometer = 1
@@ -46,7 +46,7 @@ func TestGenerateSetParam(t *testing.T) {
 
 	retdata := SensorInfo2RetData(ret)
 	r, _ := du.GenerateSetParam(params, retdata)
-	fmt.Printf("\n%s", r)
+	fmt.Printf("\n[%s]", r)
 	/*if err != nil {
 		if string(r) == "" {
 			t.Log("ok")
@@ -59,6 +59,7 @@ func TestGenerateSetParam(t *testing.T) {
 	*/
 }
 
+/*
 func TestFloat2Char(t *testing.T) {
 
 	du := DllUtil
@@ -66,6 +67,7 @@ func TestFloat2Char(t *testing.T) {
 	fmt.Printf("\nFloat2Char:[%s]", ret)
 
 }
+*/
 
 /*
 func TestSendStr(t *testing.T) {

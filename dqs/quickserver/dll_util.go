@@ -2,7 +2,7 @@ package quickserver
 
 import (
 	"errors"
-	//	"fmt"
+	//"fmt"
 	"syscall"
 	"unsafe"
 )
@@ -55,7 +55,7 @@ func (dp *dllUtil) ParseReadFlashParam(rec []byte) (*FlashData, error) {
 	ok, _, _ := dp.p_parseReadFlashParam.Call(
 		uintptr(unsafe.Pointer(&rec[0])),
 		uintptr(unsafe.Pointer(&flashData)))
-	if ok != 1 {
+	if ok == 0 {
 		return nil, errors.New("DLL解析突发数据失败")
 	}
 	return &flashData, nil
@@ -65,12 +65,12 @@ func (dp *dllUtil) ParseReadFlashParam(rec []byte) (*FlashData, error) {
 //@ToDo 需要进行测试验证
 func (dp *dllUtil) ParseFlashData(rec []byte, deviceId string) (readData [240]int16, frameNum int16, err error) {
 
-	fn, _, _ := dp.p_parseFlashData.Call(
+	fn, _, err := dp.p_parseFlashData.Call(
 		uintptr(unsafe.Pointer(&rec[0])),
 		uintptr(unsafe.Pointer(&readData[0])),
 		uintptr(unsafe.Pointer(&deviceId)))
 	if fn == 0 {
-		return readData, frameNum, errors.New("DLL解析波形图数据失败")
+		return readData, frameNum, err //errors.New("DLL解析波形图数据失败")
 	}
 	return readData, int16(fn), nil
 }
@@ -85,6 +85,7 @@ func (dp *dllUtil) GenerateReadParam(param string) ([]byte, error) {
 	ok, _, err := dp.p_GenerateReadParam.Call(
 		uintptr(unsafe.Pointer(&p[0])),
 		uintptr(unsafe.Pointer(&ret[0])))
+
 	if ok == 1 {
 
 		rett := []byte{}
@@ -112,7 +113,6 @@ func (dp *dllUtil) GenerateFlashReadParam(param string) ([]byte, error) {
 		uintptr(unsafe.Pointer(&p[0])),
 		uintptr(unsafe.Pointer(&ret[0])))
 	if ok == 1 {
-
 		rett := []byte{}
 		//截取真正的数据
 		for _, v := range ret {
@@ -134,7 +134,7 @@ func (dp *dllUtil) ParseReadSetParam(rec []byte) (*RetData, error) {
 	ok, _, _ := dp.p_parseReadSetParam.Call(
 		uintptr(unsafe.Pointer(&rec[0])),
 		uintptr(unsafe.Pointer(&retData)))
-	if ok != 1 {
+	if ok == 0 {
 		return nil, errors.New("DLL解析设备的设置参数失败")
 	}
 	return &retData, nil
@@ -163,6 +163,8 @@ func (dp *dllUtil) GenerateSetParam(param string, retData *RetData) ([]byte, err
 		uintptr(unsafe.Pointer(&p[0])),
 		uintptr(unsafe.Pointer(retData)),
 		uintptr(unsafe.Pointer(&ret)))
+
+	//bool类型返回uintptr类型 1-true,0--false
 	if ok == 1 {
 		rett := []byte{}
 		//截取真正的数据
