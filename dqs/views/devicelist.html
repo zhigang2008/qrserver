@@ -72,14 +72,14 @@
 	  				<td>经度:{{.SetParams.Longitude}}</td>
 	  				<td>纬度:{{.SetParams.Latitude}}</td>
 	  				<td>场地类型:{{if eq .SetParams.SiteType 0}} 土壤 {{else if eq .SetParams.SiteType 1}} 软岩石 {{else if eq .SetParams.SiteType 2}} 硬岩石 {{end}} </td>
-	  				<td>观测对象:{{if eq .SetParams.SiteType 0}} 深井 {{else if eq .SetParams.SiteType 1}} 自由地表 {{end}}</td>
-	  				<td>加速度计型号:{{if eq .SetParams.SiteType 0}} MEMS {{else if eq .SetParams.SiteType 1}} 力平衡 {{end}}</td>
+	  				<td>观测对象:{{if eq .SetParams.ObserveObject 0}} 深井 {{else if eq .SetParams.ObserveObject 1}} 自由地表 {{end}}</td>
+	  				<td>加速度计型号:{{if eq .SetParams.Accelerometer 0}} MEMS {{else if eq .SetParams.Accelerometer 1}} 力平衡 {{end}}</td>
 	  			</tr>
 	  			{{with .SetParams}}
 	  			<tr class="active">
-	  				<td>安装方向:{{if eq .SiteType 0}} 南北向 {{else if eq .SiteType 1}} 东西向 {{end}}</td>
-	  				<td>量程选择:{{if eq .SiteType 0}}±1.5g{{else if eq .SiteType 1}}±2g{{else if eq .SiteType 2}}±4g{{else if eq .SiteType 3}}±6g{{end}}</td>
-	  				<td>采样周期:{{if eq .SiteType 0}}0.002s{{else if eq .SiteType 1}}0.005s{{else if eq .SiteType 2}}0.01s{{else if eq .SiteType 3}}0.02s{{end}}</td>
+	  				<td>安装方向:{{if eq .Direction 0}} 南北向 {{else if eq .Direction 1}} 东西向 {{end}}</td>
+	  				<td>量程选择:{{if eq .RangeType 0}}±1.5g{{else if eq .RangeType 1}}±2g{{else if eq .RangeType 2}}±4g{{else if eq .RangeType 3}}±6g{{end}}</td>
+	  				<td>采样周期:{{if eq .Period 0.0}}0.002s{{else if eq .Period 1.0}}0.005s{{else if eq .Period 2.0}}0.01s{{else if eq .Period 3.0}}0.02s{{end}}</td>
 	  				<td>行政区划:{{.RegionCode}}</td>
 	  				<td>预留一:{{.Custom1}}</td>
 	  				<td>预留二:{{.Custom2}}</td>

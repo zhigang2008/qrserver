@@ -83,17 +83,17 @@
     <label class="col-sm-2 control-label" for="ObserveObject">观测对象</label>
     <div class="col-sm-6">
       <select class="form-control" id="ObserveObject" name="ObserveObject" disabled >
-        <option value="0" {{if eq .SiteType 0}} selected {{end}} >深井</option>
-        <option value="1" {{if eq .SiteType 1}} selected {{end}} >自由地表</option>
+        <option value="0" {{if eq .ObserveObject 0}} selected {{end}} >深井</option>
+        <option value="1" {{if eq .ObserveObject 1}} selected {{end}} >自由地表</option>
       </select>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="Accelerometer">加速度计型号</label>
+    <label class="col-sm-2 control-label" for="ObserveObject">加速度计型号</label>
     <div class="col-sm-6">
       <select class="form-control" id="Accelerometer" name="Accelerometer" disabled >
-        <option value="0" {{if eq .SiteType 0}} selected {{end}} >MEMS</option>
-        <option value="1" {{if eq .SiteType 1}} selected {{end}} >力平衡</option>
+        <option value="0" {{if eq .ObserveObject 0}} selected {{end}} >MEMS</option>
+        <option value="1" {{if eq .ObserveObject 1}} selected {{end}} >力平衡</option>
       </select>
     </div>
   </div>
@@ -101,8 +101,8 @@
     <label class="col-sm-2 control-label" for="Direction">安装方向</label>
     <div class="col-sm-6">
       <select class="form-control" id="Direction" name="Direction" disabled >
-        <option value="0" {{if eq .SiteType 0}} selected {{end}} >南北向</option>
-        <option value="1" {{if eq .SiteType 1}} selected {{end}} >东西向</option>
+        <option value="0" {{if eq .Direction 0}} selected {{end}} >南北向</option>
+        <option value="1" {{if eq .Direction 1}} selected {{end}} >东西向</option>
       </select>
     </div>
   </div>
@@ -110,10 +110,10 @@
     <label class="col-sm-2 control-label" for="RangeType">量程选择</label>
     <div class="col-sm-6">
       <select class="form-control" id="RangeType" name="RangeType" disabled >
-        <option value="0" {{if eq .SiteType 0}} selected {{end}} >±1.5g</option>
-        <option value="1" {{if eq .SiteType 1}} selected {{end}} >±2g</option>
-        <option value="2" {{if eq .SiteType 2}} selected {{end}} >±4g</option>
-        <option value="3" {{if eq .SiteType 3}} selected {{end}} >±6g</option>
+        <option value="0" {{if eq .RangeType 0}} selected {{end}} >±1.5g</option>
+        <option value="1" {{if eq .RangeType 1}} selected {{end}} >±2g</option>
+        <option value="2" {{if eq .RangeType 2}} selected {{end}} >±4g</option>
+        <option value="3" {{if eq .RangeType 3}} selected {{end}} >±6g</option>
       </select>
     </div>
   </div>
@@ -121,10 +121,10 @@
     <label class="col-sm-2 control-label" for="Period">采样周期</label>
     <div class="col-sm-6">
       <select class="form-control" id="Period" name="Period" disabled >
-        <option value="0" {{if eq .SiteType 0}} selected {{end}} >0.002s</option>
-        <option value="1" {{if eq .SiteType 1}} selected {{end}} >0.005s</option>
-        <option value="2" {{if eq .SiteType 2}} selected {{end}} >0.01s</option>
-        <option value="3" {{if eq .SiteType 3}} selected {{end}} >0.02s</option>
+        <option value="0" {{if eq .Period 0.0}} selected {{end}} >0.002s</option>
+        <option value="1" {{if eq .Period 1.0}} selected {{end}} >0.005s</option>
+        <option value="2" {{if eq .Period 2.0}} selected {{end}} >0.01s</option>
+        <option value="3" {{if eq .Period 3.0}} selected {{end}} >0.02s</option>
       </select>
     </div>
   </div>
