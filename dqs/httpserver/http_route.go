@@ -48,6 +48,8 @@ func routeConfig() {
 	beego.Router("/register", &controllers.CommonController{}, "*:Register")
 	beego.Router("/registersave", &controllers.CommonController{}, "*:RegisterSave")
 
+	//数据交换
+	beego.Router("/data/alarm", &controllers.ExchangeController{}, "*:ExportAlarms")
 	//测试页面
 	beego.Router("/testgis", &controllers.TestController{}, "*:TestGis")
 
@@ -55,4 +57,5 @@ func routeConfig() {
 	beego.SetStaticPath("/logs", "logs")
 	beego.SetStaticPath("/img", "static/img")
 	beego.SetStaticPath("/font", "static/font")
+
 }

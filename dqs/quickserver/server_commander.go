@@ -67,8 +67,10 @@ func CommandSet(id, remote string, params *RetData) error {
 	if connP != nil {
 		command, err := DllUtil.GenerateSetParam(id, params)
 		if err == nil {
-			log.Infof("generated set command=[%s]\n", string(command))
-			n, err0 := (*connP).Write(command)
+			//添加CRC校验码
+			commandCRC := DllUtil.AppendCRCCode(command)
+			log.Infof("generated set command=[%s]\n", string(commandCRC))
+			n, err0 := (*connP).Write(commandCRC)
 			if err0 != nil {
 				return err0
 			} else {

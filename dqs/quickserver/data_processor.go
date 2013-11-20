@@ -2,7 +2,7 @@ package quickserver
 
 import (
 	"errors"
-	"fmt"
+	//"fmt"
 	log "github.com/cihub/seelog"
 	"net"
 	"time"
@@ -33,8 +33,8 @@ func NewDataProcessor(dm *DataManager) *DataProcessor {
 func (dp *DataProcessor) DataProcess(content []byte, remote string, conn *net.Conn) (err error) {
 	log.Info("Begin process data")
 
-	fmt.Printf("设备:%s\n", content[0:10])
-	fmt.Printf("功能:%c\n", content[10])
+	log.Infof("设备:%s\n", content[0:10])
+	log.Infof("功能:%c\n", content[10])
 	//判断接收的数据类型
 	datatype := content[10]
 
@@ -64,7 +64,7 @@ func (dp *DataProcessor) DataProcess(content []byte, remote string, conn *net.Co
 			c <- content
 		}
 	default:
-		fmt.Println("无效数据")
+		log.Info("无效数据")
 	}
 	return
 }
@@ -78,7 +78,7 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 	if ServerConfigs.CRC {
 		//先进行CRC校验.无效数据直接抛弃.
 		if DllUtil.CheckCRCCode(content) != true {
-			log.Warnf("[%s]设备报警态数据CRC校验失败", id)
+			log.Warnf("[%s]设备报警数据CRC校验失败", id)
 			return errors.New("CRC校验失败,数据非法")
 		}
 	}
@@ -205,7 +205,7 @@ func (dp *DataProcessor) ProcessWaveData(content []byte) (err error) {
 	if ServerConfigs.CRC {
 		//先进行CRC校验.无效数据直接抛弃.
 		if DllUtil.CheckCRCCode(content) != true {
-			log.Warnf("[%s]设备报警态数据CRC校验失败", id)
+			log.Warnf("[%s]设备波形图数据CRC校验失败", id)
 			return errors.New("CRC校验失败,数据非法")
 		}
 	}
@@ -217,6 +217,7 @@ func (dp *DataProcessor) ProcessWaveData(content []byte) (err error) {
 		return err
 	}
 	log.Infof("波形图%d帧数据:%d", frame, data)
+
 	/*//数据转换
 	sData := FlashData2AlarmInfo(data)
 	err = dp.dataManager.FlashDataSave(sData)

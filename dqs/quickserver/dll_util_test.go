@@ -7,6 +7,7 @@ import (
 
 /**/
 /*
+ */
 func TestGenerateSetParam(t *testing.T) {
 
 	du := DllUtil
@@ -48,19 +49,11 @@ func TestGenerateSetParam(t *testing.T) {
 	retdata := SensorInfo2RetData(ret)
 	r, _ := du.GenerateSetParam(params, retdata)
 	fmt.Printf("\n[%s]", r)
-	if err != nil {
-		if string(r) == "" {
-			t.Log("ok")
-		} else {
-			t.Error("fail")
-		}
-	} else {
-		t.Error("调用失败")
-	}
+	fmt.Printf("\n[%s]\n", du.AppendCRCCode(r))
 
 }
-*/
 
+/*
 func TestParseSetParam(t *testing.T) {
 
 	du := DllUtil
@@ -69,21 +62,13 @@ func TestParseSetParam(t *testing.T) {
 	fmt.Printf("%s", ret)
 }
 
-/*
-func TestFloat2Char(t *testing.T) {
-
-	du := DllUtil
-	ret := du.Float2Char(43.34356)
-	fmt.Printf("\nFloat2Char:[%s]", ret)
-
-}
 */
 
 /*
 func TestSendStr(t *testing.T) {
 
 	du := DllUtil
-	str := "SI30001051a003b1309020107SI3000105110375824030919431111326291309020107270000199904528266002603380000000"
+	str := "SI30002012s000101"
 	ret := du.SendStr([]byte(str))
 	fmt.Printf("%s", ret)
 }

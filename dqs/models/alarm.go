@@ -19,6 +19,15 @@ type AlarmInfo struct {
 	Period        float32
 	PGA           float32
 	SI            float32
+	Intensity     float32 //仪器烈度值
 	Length        float32
 	CreateTime    time.Time
+}
+
+//报警信息列表
+type AlarmList struct {
+	SensorId  string
+	BeginTime string
+	EndTime   string
+	Alarms    []AlarmInfo
 }
