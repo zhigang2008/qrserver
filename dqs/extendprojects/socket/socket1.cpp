@@ -647,9 +647,11 @@ bool ParseDelParam(char *recvParam) {
 //传入参数：
 //recvParam：socket直接返回的字符串
 bool ParseSetParam(char *recvParam) {
+	char result;
+	
+	/*
 	char *temp1="";
 	char str2[5];
-	char result;
 	int i;
 
 	//验证CRC
@@ -665,7 +667,7 @@ bool ParseSetParam(char *recvParam) {
 	if(strcmp(recvParam,temp1)) {
 		return false;
 	}
-
+	*/
 	//验证完毕，返回结果
 	result=recvParam[15];
 
@@ -784,7 +786,7 @@ short parseFlashData(char *receiveStr, short readData[240], char *deviceID) {
 		temp[i] = receiveStr[i];
 	}
 	temp[10] = '\0';
-	strcmp(deviceID, temp);
+	//strcmp(deviceID, temp);
 
 	for(i=0; i<240; i++) {
 		tempShort = ((short)MBCHAR2INT((unsigned char)receiveStr[15+i*4]))*16 + (short)MBCHAR2INT((unsigned char)receiveStr[15+i*4+1]) +
