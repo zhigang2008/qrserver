@@ -23,4 +23,6 @@
 	<HttpServerEnable>[httpenable]</HttpServerEnable>
 	<!--if use CRC check, it can be set to [true|false]. -->
 	<CRC>false</CRC>
+	<!--read wave data after alarm-->
+	<ReadWaveAfterAlarm>true</ReadWaveAfterAlarm>
 </Server>

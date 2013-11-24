@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	defaultDatabase         = "dqs"    //默认数据库名称
-	defaultDataCollection   = "data"   //默认数据Collection
-	defaultDeviceCollection = "device" //默认设备Collection
+	defaultDatabase         = "dqs"      //默认数据库名称
+	defaultDataCollection   = "data"     //默认数据Collection
+	defaultDeviceCollection = "device"   //默认设备Collection
+	defaultWaveCollection   = "wavedata" //默认波形记录Collection
 )
 
 var (
@@ -26,6 +27,7 @@ type DataManager struct {
 	databaseName     string
 	dataCollection   string
 	deviceCollection string
+	waveCollection   string
 }
 
 //初始化数据库连接
@@ -45,6 +47,7 @@ func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
 		databaseName:     defaultDatabase,
 		dataCollection:   defaultDataCollection,
 		deviceCollection: defaultDeviceCollection,
+		waveCollection:   defaultWaveCollection,
 	}
 	//设置配置文件指定值
 	if conf.DataBaseName != "" {
@@ -195,6 +198,45 @@ func (dm *DataManager) AlarmList(n int) (*[]AlarmInfo, error) {
 		return nil, err
 	}
 	return &alarms, nil
+}
+
+//添加波形记录信息
+func (dm *DataManager) WaveDataAdd(data *WaveInfo) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.waveCollection)
+	//添加objectid
+	data.Id = bson.NewObjectId()
+	data.LUD = time.Now()
+
+	err = c.Insert(data)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//更新波形记录信息
+func (dm *DataManager) WaveDataUpdate(data *WaveInfo) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.waveCollection)
+
+	//colQuerier := bson.M{"sensorid", data.SensorId}
+	//change := bson.M{"$set": data}
+	err0 := c.UpdateId(data.Id, data)
+	if err0 != nil {
+		return err0
+	}
+	return nil
+}
+
+//获取最新的Wavedata
+func (dm *DataManager) GetLastWave(sid string) (wave WaveInfo, err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.waveCollection)
+
+	//wave := WaveInfo{}
+	err0 := c.Find(bson.M{"sensorid": sid}).Sort("-LUD").One(&wave)
+	if err0 != nil {
+		return WaveInfo{}, err0
+	}
+	return wave, nil
 }
 
 //关闭数据库连接

@@ -23,13 +23,14 @@ var (
 
 //服务器配置信息结构
 type ServerConfig struct {
-	XMLName          xml.Name `xml:"Server"`
-	Host             string
-	Port             int
-	Type             string
-	Database         DataServerConfig
-	HttpServerEnable bool
-	CRC              bool
+	XMLName            xml.Name `xml:"Server"`
+	Host               string
+	Port               int
+	Type               string
+	Database           DataServerConfig
+	HttpServerEnable   bool
+	CRC                bool
+	ReadWaveAfterAlarm bool // 是否报警后立即读取波形记录
 }
 
 //数据库配置文件

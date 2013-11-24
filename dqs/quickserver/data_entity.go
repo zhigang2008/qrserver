@@ -2,6 +2,7 @@ package quickserver
 
 import (
 	"fmt"
+	"labix.org/v2/mgo/bson"
 	"time"
 )
 
@@ -142,6 +143,17 @@ type AlarmInfo struct {
 	SI            float32
 	Length        float32
 	CreateTime    time.Time
+}
+
+//波形记录数据
+type WaveInfo struct {
+	Id       bson.ObjectId "_id"
+	SensorId string        //设备ID
+	Alarm    AlarmInfo
+	X_data   [6000]int16
+	Y_data   [6000]int16
+	Z_data   [6000]int16
+	LUD      time.Time //最后更新时间
 }
 
 //设备信息

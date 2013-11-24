@@ -39,8 +39,8 @@
 	 		<td>{{.Longitude}}</td>
 	 		<td>{{.Latitude}}</td>
 	 		<td>{{if eq .SiteType 0}} 土壤 {{else if eq .SiteType 1}} 软岩石 {{else if eq .SiteType 2}} 硬岩石 {{end}} </td>
-	 		<td>{{if eq .SiteType 0}} 深井 {{else if eq .SiteType 1}} 自由地表 {{end}}</td>
-	 		<td>{{if eq .SiteType 0}} 南北向 {{else if eq .SiteType 1}} 东西向 {{end}}</td>
+	 		<td>{{if eq .ObserveObject 0}} 深井 {{else if eq .ObserveObject 1}} 自由地表 {{end}}</td>
+	 		<td>{{if eq .Direction 0}} 南北向 {{else if eq .Direction 1}} 东西向 {{end}}</td>
 	 		<td>{{.RegionCode}}</td>
 	 		<td>{{.InitTime}}</td>
 	 		<td>{{.Period}}</td>

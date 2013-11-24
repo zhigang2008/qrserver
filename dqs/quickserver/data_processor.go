@@ -40,10 +40,21 @@ func (dp *DataProcessor) DataProcess(content []byte, remote string, conn *net.Co
 
 	switch datatype {
 	case 'a', 'A': //突发数据
-		dp.ProcessFlashData(content)
+		c, ok := hasCommand(remote, "R")
+		if ok == true {
+			c <- content
+		} else {
+			dp.ProcessFlashData(content)
+			//是否报警后,发送波形数据
+			if ServerConfigs.ReadWaveAfterAlarm {
+				dp.sendFlashReadCommand(string(content[0:10]), remote, conn)
+			}
+		}
 	case 'z', 'Z': //设备注册
 		dp.DeviceRegister(&content, remote)
 		dp.sendStatusReadCommand(string(content[0:10]), conn)
+		//发送r命令读取波形图
+		//dp.sendFlashReadCommand(string(content[0:10]), remote, conn)
 	case 'g', 'G': //状态及参数设定
 		//判断是否有控制命令等待返回数据
 		c, ok := hasCommand(remote, "G")
@@ -51,8 +62,6 @@ func (dp *DataProcessor) DataProcess(content []byte, remote string, conn *net.Co
 			c <- content
 		} else {
 			dp.ProcessStatusData(content)
-			//发送r命令读取波形图
-			dp.sendFlashReadCommand(string(content[0:10]), conn)
 		}
 	case 'r', 'R': //地形波读取
 		//fmt.Println("波形信息读取")
@@ -181,7 +190,7 @@ func (dp *DataProcessor) sendStatusReadCommand(deviceid string, connP *net.Conn)
 }
 
 //发送波形图读取命令
-func (dp *DataProcessor) sendFlashReadCommand(deviceid string, connP *net.Conn) {
+func (dp *DataProcessor) sendFlashReadCommand(deviceid string, remote string, connP *net.Conn) {
 	command, err := DllUtil.GenerateFlashReadParam(deviceid)
 	if err == nil {
 		//发送控制命令
@@ -191,12 +200,57 @@ func (dp *DataProcessor) sendFlashReadCommand(deviceid string, connP *net.Conn) 
 			log.Warnf("向[%s]设备发送波形图读取指令失败:%s", deviceid, err0.Error())
 		} else {
 			log.Infof("向[%s]设备发送波形图读取指令成功:%d", deviceid, n)
+
+			//remote := (*connP).RemoteAddr().String()
+			//等着读取返回的受帧报警数据
+			c := make(chan []byte)
+			AddCommand(remote, "R", c)
+			back := <-c
+			//处理
+			dp.ProcessWaveFlashData(back)
+			//取消控制命令
+			DeleteCommand(remote, "R")
+
 		}
 	}
 }
 
+//处理波形图的突发数据
+func (dp *DataProcessor) ProcessWaveFlashData(content []byte) (err error) {
+
+	//进行数据处理
+	id := string(content[0:10])
+
+	if ServerConfigs.CRC {
+		//先进行CRC校验.无效数据直接抛弃.
+		if DllUtil.CheckCRCCode(content) != true {
+			log.Warnf("[%s]设备报警数据CRC校验失败", id)
+			return errors.New("CRC校验失败,数据非法")
+		}
+	}
+
+	//调用dll解析
+	data, err := DllUtil.ParseReadFlashParam(content[0 : len(content)-4])
+	if err != nil {
+		log.Warnf("[%s]波形记录报警信息DLL解析失败:%s", id, err.Error())
+		return err
+	}
+	//数据转换
+	sData := FlashData2AlarmInfo(data)
+	wData := WaveInfo{}
+	wData.Alarm = *sData
+	wData.SensorId = sData.SensorId
+
+	err = dp.dataManager.WaveDataAdd(&wData)
+	if err != nil {
+		log.Warnf("[%s]波形图之报警信息处理失败:%s", id, err.Error())
+		return err
+	}
+	log.Infof("波形记录之报警信息保存成功")
+	return nil
+}
+
 //波形图数据接收
-//处理突发数据
 func (dp *DataProcessor) ProcessWaveData(content []byte) (err error) {
 
 	//进行数据处理
@@ -218,14 +272,28 @@ func (dp *DataProcessor) ProcessWaveData(content []byte) (err error) {
 	}
 	log.Infof("波形图%d帧数据:%d", frame, data)
 
-	/*//数据转换
-	sData := FlashData2AlarmInfo(data)
-	err = dp.dataManager.FlashDataSave(sData)
+	//数据处理
+	wData, err1 := dp.dataManager.GetLastWave(id)
+	if err1 != nil {
+		log.Warnf("[%s]获取最新的波形图记录失败:%s", id, err1.Error())
+		return errors.New("获取最新波形图失败[" + err1.Error() + "]")
+	}
+	//x分量
+	if frame >= 0 && frame < 25 {
+		copy(wData.X_data[frame*240:(frame+1)*240-1], data[:])
+	} else if frame >= 25 && frame < 50 {
+		copy(wData.Y_data[(frame-25)*240:(frame-24)*240-1], data[:])
+
+	} else if frame >= 50 && frame < 75 {
+		copy(wData.Z_data[(frame-50)*240:(frame-49)*240-1], data[:])
+	}
+
+	err = dp.dataManager.WaveDataUpdate(&wData)
 	if err != nil {
-		log.Warnf("[%s]报警信息处理失败:%s", id, err.Error())
+		log.Warnf("[%s]波形记录信息处理失败:%s", id, err.Error())
 		return err
 	}
 	log.Infof("波形图信息保存成功")
-	*/
+
 	return nil
 }
