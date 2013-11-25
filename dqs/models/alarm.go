@@ -1,6 +1,7 @@
 package models
 
 import (
+	//"labix.org/v2/mgo/bson"
 	"time"
 )
 
@@ -30,4 +31,16 @@ type AlarmList struct {
 	BeginTime string
 	EndTime   string
 	Alarms    []AlarmInfo
+}
+
+//波形记录数据
+type WaveInfo struct {
+	//Id       bson.ObjectId "_id"
+	SensorId string //设备ID
+	SeqNo    string
+	Alarm    AlarmInfo
+	X_data   [6000]int16
+	Y_data   [6000]int16
+	Z_data   [6000]int16
+	LUD      time.Time //最后更新时间
 }

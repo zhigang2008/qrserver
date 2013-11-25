@@ -121,3 +121,34 @@ func ExportAlarms(sid, begintime, endtime string) ([]models.AlarmInfo, error) {
 	}
 	return alarms, nil
 }
+
+//获取波形图
+func GetWaveInfoById(oid string) (models.WaveInfo, error) {
+	c := GetSession().DB(DatabaseName).C(WaveCollection)
+	wave := models.WaveInfo{}
+
+	//查找数据
+	err := c.Find(&bson.M{"_id": bson.ObjectIdHex(oid)}).One(&wave)
+	if err != nil {
+		return wave, err
+	}
+	return wave, nil
+}
+
+//根据设备和序号查找波形数据
+func GetWaveInfo(SensorId string, SeqNo string) (models.WaveInfo, error) {
+	c := GetSession().DB(DatabaseName).C(WaveCollection)
+	wave := models.WaveInfo{}
+
+	//构造查询参数
+	m := bson.M{}
+	m["sensorid"] = SensorId
+	m["SeqNo"] = SeqNo
+
+	//查找数据
+	err := c.Find(&m).One(&wave)
+	if err != nil {
+		return wave, err
+	}
+	return wave, nil
+}

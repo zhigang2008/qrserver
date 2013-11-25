@@ -29,6 +29,7 @@
    		<th>SI</th>
    		<th>数据长度</th>
    		<th>记录时间</th>
+   		<th>波形图</th>
    	</tr>
    	</thead>
 	 	<tbody>
@@ -47,6 +48,7 @@
 	 		<td>{{.PGA}}</td><td>{{.SI}}</td>
 	 		<td>{{.Length}}</td>
 	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05" }}</td>
+	 		<td><a href="/waveinfo/{{.SensorId}}/{{.SeqNo}}" data-toggle="tooltip" data-placement="bottom" title="查看波形图"><span class="glyphicon glyphicon-random"></span></a>  </td>
 	 	</tr>
    {{end}}
 </tbody>

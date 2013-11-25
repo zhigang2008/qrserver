@@ -11,11 +11,12 @@ import (
 
 //默认数据库信息
 const (
-	defaultDatabase         = "dqs"    //默认数据库名称
-	defaultDataCollection   = "data"   //默认数据Collection
-	defaultDeviceCollection = "device" //默认设备Collection
-	defaultUserCollection   = "user"   //默认用户Collection
-	defaultAuditCollection  = "audit"  //默认审计Collection
+	defaultDatabase         = "dqs"      //默认数据库名称
+	defaultDataCollection   = "data"     //默认数据Collection
+	defaultWaveCollection   = "wavedata" //默认波形记录Collection
+	defaultDeviceCollection = "device"   //默认设备Collection
+	defaultUserCollection   = "user"     //默认用户Collection
+	defaultAuditCollection  = "audit"    //默认审计Collection
 )
 
 //全局信息
@@ -24,6 +25,7 @@ var (
 	dbsession        *mgo.Session
 	DatabaseName     string
 	DataCollection   string
+	WaveCollection   string
 	DeviceCollection string
 	UserCollection   string
 	AuditCollection  string
@@ -45,6 +47,7 @@ func Init(host string, port int, dbname, datacol, devicecol, usercol string) (er
 	DeviceCollection = defaultDeviceCollection
 	UserCollection = defaultUserCollection
 	AuditCollection = defaultAuditCollection
+	WaveCollection = defaultWaveCollection
 
 	if dbname != "" {
 		DatabaseName = dbname

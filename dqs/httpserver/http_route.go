@@ -18,6 +18,10 @@ func routeConfig() {
 	//报警
 	beego.Router("/alarm", &controllers.AlarmController{}, "*:Get")
 	beego.Router("/realtime_alarm", &controllers.AlarmController{}, "*:GetRealtimeAlarm")
+	//波形图展示
+	//beego.Router("/waveinfo/:objectid", &controllers.AlarmController{}, "*:ShowWaveInfoById")
+	beego.Router("/waveinfo/:sid/:seqno", &controllers.AlarmController{}, "*:ShowWaveInfo")
+
 	//添加设备页面
 	beego.Router("/adddevice", &controllers.DeviceController{}, "*:ToDeviceAddPage")
 	//设备定位

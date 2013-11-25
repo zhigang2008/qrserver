@@ -1,0 +1,50 @@
+﻿ {{template "header" .}}
+
+ {{with .waveData}}
+<!--
+ <div class="jumbotron">
+      <div class="container">
+        <h2><span class="glyphicon glyphicon-chevron-right"></span>建设中....</h2>
+        <p>........</p>
+        <p><a class="btn btn-primary btn-lg">后续完善 &raquo;</a></p>
+      </div>
+    </div>
+-->
+<div class="container">
+    <div id="chartDiv" align="center"> 
+</div>
+{{template "scripts"}}
+<script src="/static/js/FusionCharts.js"></script>
+<script>
+//<graph caption='Daily Visits'  hovercapbg='FFECAA' hovercapborder='F47E00' formatNumberScale='0' decimalPrecision='0' showvalues='0' numdivlines='3' numVdivlines='0' yaxisminvalue='1000' yaxismaxvalue='1800'  rotateNames='1'>
+var chartData="<graph caption='{{.SensorId}}波形图' subCaption='{{.SeqNo}}' outCnvBaseFontSize='12' hovercapbg='FFECAA' hovercapborder='F47E00'  formatNumberScale='0' decimalPrecision='0' showvalues='0' numdivlines='3' numVdivlines='0'  rotateNames='1'>";
+chartData +="<categories >";
+{{range $i,$v:=.X_data}}
+chartData +="<category name=''/>";
+{{end}}
+chartData +="</categories>";
+chartData +="<dataset seriesName='X分量' color='1D8BD1' anchorBorderColor='1D8BD1' anchorBgColor='1D8BD1'>";
+{{range $i,$v:=.X_data}}
+ chartData += "<set  value='{{$v}}' />";
+{{end}}
+chartData +="</dataset>";
+chartData +="<dataset seriesName='Y分量' color='F1683C' anchorBorderColor='F1683C' anchorBgColor='F1683C'>";
+{{range $i,$v:=.Y_data}}
+ chartData += "<set  value='{{$v}}' />";
+{{end}}
+chartData +="</dataset>";
+chartData +="<dataset seriesName='Z分量' color='2AD62A' anchorBorderColor='2AD62A' anchorBgColor='2AD62A'>";
+{{range $i,$v:=.Z_data}}
+ chartData += "<set  value='{{$v}}' />";
+{{end}}
+chartData +="</dataset>";
+ chartData +="</graph> "
+
+// $(document).ready(function() {
+		var chart1 = new FusionCharts("/static/charts/FCF_MSLine.swf", "chart1Id", "980", "400", "0", "1");		   			
+		chart1.setDataXML(chartData);
+		chart1.render("chartDiv");
+//});
+</script>
+{{end}}
+{{template "footer"}}

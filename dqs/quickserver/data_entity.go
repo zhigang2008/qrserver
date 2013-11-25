@@ -149,6 +149,7 @@ type AlarmInfo struct {
 type WaveInfo struct {
 	Id       bson.ObjectId "_id"
 	SensorId string        //设备ID
+	SeqNo    string
 	Alarm    AlarmInfo
 	X_data   [6000]int16
 	Y_data   [6000]int16

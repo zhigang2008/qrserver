@@ -240,6 +240,7 @@ func (dp *DataProcessor) ProcessWaveFlashData(content []byte) (err error) {
 	wData := WaveInfo{}
 	wData.Alarm = *sData
 	wData.SensorId = sData.SensorId
+	wData.SeqNo = sData.SeqNo
 
 	err = dp.dataManager.WaveDataAdd(&wData)
 	if err != nil {
