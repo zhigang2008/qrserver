@@ -242,10 +242,21 @@ func (dp *DataProcessor) ProcessWaveFlashData(content []byte) (err error) {
 	wData.SensorId = sData.SensorId
 	wData.SeqNo = sData.SeqNo
 
-	err = dp.dataManager.WaveDataAdd(&wData)
-	if err != nil {
-		log.Warnf("[%s]波形图之报警信息处理失败:%s", id, err.Error())
-		return err
+	oData, _ := dp.dataManager.GetWaveData(sData.SensorId, sData.SeqNo)
+	if oData.Id != "" {
+		oData.Alarm = *sData
+		oData.LUD = time.Now()
+		err = dp.dataManager.WaveDataUpdate(&oData)
+		if err != nil {
+			log.Warnf("[%s]波形图之报警信息更新处理失败:%s", id, err.Error())
+			return err
+		}
+	} else {
+		err = dp.dataManager.WaveDataAdd(&wData)
+		if err != nil {
+			log.Warnf("[%s]波形图之报警信息处理失败:%s", id, err.Error())
+			return err
+		}
 	}
 	log.Infof("波形记录之报警信息保存成功")
 	return nil
@@ -279,22 +290,24 @@ func (dp *DataProcessor) ProcessWaveData(content []byte) (err error) {
 		log.Warnf("[%s]获取最新的波形图记录失败:%s", id, err1.Error())
 		return errors.New("获取最新波形图失败[" + err1.Error() + "]")
 	}
-	var i int16
+	//var i int16
 	//x分量
 	if frame >= 0 && frame < 25 {
-		for i = 0; i < 240; i++ {
-			wData.X_data[frame*240+i] = data[i]
-		}
-		//copy(wData.X_data[frame*240:(frame+1)*240-1], data[:])
+		//for i = 0; i < 240; i++ {
+		//	wData.X_data[frame*240+i] = data[i]
+		//}
+		copy(wData.X_data[frame*240:(frame+1)*240-1], data[:])
 	} else if frame >= 25 && frame < 50 {
-		for i = 0; i < 240; i++ {
-			wData.Y_data[(frame-25)*240+i] = data[i]
-		}
+		//for i = 0; i < 240; i++ {
+		//	wData.Y_data[(frame-25)*240+i] = data[i]
+		//}
+		copy(wData.Y_data[(frame-25)*240:(frame-24)*240-1], data[:])
 
 	} else if frame >= 50 && frame < 75 {
-		for i = 0; i < 240; i++ {
-			wData.Z_data[(frame-50)*240+i] = data[i]
-		}
+		//for i = 0; i < 240; i++ {
+		//	wData.Z_data[(frame-50)*240+i] = data[i]
+		//}
+		copy(wData.Z_data[(frame-50)*240:(frame-49)*240-1], data[:])
 	}
 
 	err = dp.dataManager.WaveDataUpdate(&wData)

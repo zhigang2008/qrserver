@@ -180,7 +180,7 @@ func (dm *DataManager) DeviceList(n int) (*[]DeviceInfo, error) {
 
 	devices := []DeviceInfo{}
 	//先查找设备
-	err := c.Find(&bson.M{}).Sort("-registertime").Limit(n).All(&devices)
+	err := c.Find(bson.M{}).Sort("-registertime").Limit(n).All(&devices)
 	if err != nil {
 		return nil, err
 	}
@@ -193,7 +193,7 @@ func (dm *DataManager) AlarmList(n int) (*[]AlarmInfo, error) {
 
 	alarms := []AlarmInfo{}
 
-	err := c.Find(&bson.M{}).Sort("-createtime").Limit(n).All(&alarms)
+	err := c.Find(bson.M{}).Sort("-createtime").Limit(n).All(&alarms)
 	if err != nil {
 		return nil, err
 	}
@@ -220,11 +220,27 @@ func (dm *DataManager) WaveDataUpdate(data *WaveInfo) (err error) {
 
 	//colQuerier := bson.M{"sensorid", data.SensorId}
 	//change := bson.M{"$set": data}
-	err0 := c.UpdateId(data.Id, data)
+	err0 := c.Update(bson.M{"_id": data.Id}, data)
 	if err0 != nil {
 		return err0
 	}
 	return nil
+}
+
+//获取Wavedata
+func (dm *DataManager) GetWaveData(sid, seqno string) (wave WaveInfo, err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.waveCollection)
+
+	//wave := WaveInfo{}
+	m := bson.M{}
+	m["sensorid"] = sid
+	m["seqno"] = seqno
+
+	err0 := c.Find(m).Sort("-lud").One(&wave)
+	if err0 != nil {
+		return WaveInfo{}, err0
+	}
+	return wave, nil
 }
 
 //获取最新的Wavedata
@@ -232,7 +248,7 @@ func (dm *DataManager) GetLastWave(sid string) (wave WaveInfo, err error) {
 	c := dm.session.DB(dm.databaseName).C(dm.waveCollection)
 
 	//wave := WaveInfo{}
-	err0 := c.Find(bson.M{"sensorid": sid}).Sort("-LUD").One(&wave)
+	err0 := c.Find(bson.M{"sensorid": sid}).Sort("-lud").One(&wave)
 	if err0 != nil {
 		return WaveInfo{}, err0
 	}
