@@ -17,27 +17,75 @@
 -->
 <script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
 <script language="javascript">
-var map, layer;
+var map, basicLayer, vectorLayer,selector;
+//最后的坐标
+var lastlng,lastlat;
+//放大倍数
+var zoomSize=14;
+ 
+var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+var projectTo;// = map.getProjectionObject(); //The map projection (Spherical Mercator)
+/*
+var size = new OpenLayers.Size(21,25);
+var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+var icon = new OpenLayers.Icon('/static/image/marker-blue.png', size, offset);
+*/
+
+function createPopup(feature) {
+      feature.popup = new OpenLayers.Popup.FramedCloud("pop",
+          feature.geometry.getBounds().getCenterLonLat(),
+          null,
+          '<div class="markerContent"><b>'+feature.attributes.sensorId+'</b><br>'+feature.attributes.siteName+'<br>['+feature.attributes.posLng+','+feature.attributes.posLat+']</div>',
+          null,
+          true,
+          function() { selector.unselectAll(); }
+      );
+      //feature.popup.closeOnMove = true;
+      map.addPopup(feature.popup);
+    }
+
+function destroyPopup(feature) {
+      feature.popup.destroy();
+      feature.popup = null;
+}
+
+//添加观测点
+function addFeature(sid,dname,lng,lat){
+  var feature = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point(lng,lat).transform(epsg4326, projectTo),
+            {sensorId:sid,siteName:dname,posLng:lng,posLat:lat} ,
+            {externalGraphic: '/static/image/marker-blue.png', graphicHeight: 25, graphicWidth: 21, graphicXOffset:-12, graphicYOffset:-25  }
+        );    
+  vectorLayer.addFeatures(feature);
+  lastlng=lng;
+  lastlat=lat;
+}
+ 
   //初始化加载
 $(document).ready(function() {
   map = new OpenLayers.Map( 'map' );
-  layer = new OpenLayers.Layer.WMS( "OpenLayers WMS",
-          "http://vmap0.tiles.osgeo.org/wms/vmap0",
+  basicLayer = new OpenLayers.Layer.WMS( "基础地图",
+          "http://localhost:8080/geoserver/dqs/wms?service=WMS&version=1.1.0&request=GetMap&layers=dqs_layers",
           {layers: 'basic'} );
-  map.addLayer(layer);
-            
-  var markers = new OpenLayers.Layer.Markers("Markers");
-  map.addLayer(markers);
+  map.addLayer(basicLayer);
   
-  var size = new OpenLayers.Size(21,25);
-  var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-  var icon = new OpenLayers.Icon('/static/image/marker-blue.png', size, offset);
+  projectTo = map.getProjectionObject();
+  
+  //feature 图层          
+  vectorLayer = new OpenLayers.Layer.Vector("观测点");
   //加载设备列表
 	{{range $i,$v:=.devices}} 
-	 markers.addMarker(new OpenLayers.Marker(new OpenLayers.LonLat({{.SetParams.Longitude}},{{.SetParams.Latitude}}),icon));
+		  addFeature({{.SensorId}},{{.SetParams.SiteName}},{{.SetParams.Longitude}},{{.SetParams.Latitude}});
 	{{end}}
+	map.addLayer(vectorLayer);
 	
-  map.zoomToMaxExtent();
+  selector=new OpenLayers.Control.SelectFeature(vectorLayer, { onSelect: createPopup, onUnselect: destroyPopup });	
+  map.addControl(selector);
+  selector.activate(); 
+ // map.zoomToMaxExtent();
+ map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
+
+  map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
 });
 </script>
 
