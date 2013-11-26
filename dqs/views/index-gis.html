@@ -55,7 +55,8 @@ function addFeature(sid,dname,lng,lat){
             new OpenLayers.Geometry.Point(lng,lat).transform(epsg4326, projectTo),
             {sensorId:sid,siteName:dname,posLng:lng,posLat:lat} ,
             {externalGraphic: '/static/image/marker-blue.png', graphicHeight: 25, graphicWidth: 21, graphicXOffset:-12, graphicYOffset:-25  }
-        );    
+        );
+  feature.fid=sid;   
   vectorLayer.addFeatures(feature);
   lastlng=lng;
   lastlat=lat;
