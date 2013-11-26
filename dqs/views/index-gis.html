@@ -49,7 +49,7 @@ var sites=[];
 //最后的坐标
 var lastlng,lastlat;
 //放大倍数
-var zoomSize=14;
+var zoomSize=10;
  
 var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
 var projectTo;// = map.getProjectionObject(); //The map projection (Spherical Mercator)
@@ -92,10 +92,11 @@ function addFeature(sid,dname,lng,lat){
  
   //初始化加载
 $(document).ready(function() {
-  map = new OpenLayers.Map( 'map' );
-  basicLayer = new OpenLayers.Layer.WMS( "基础地图",
+	//OpenLayers.Lang.setCode("zh-CN");
+  map = new OpenLayers.Map('map');
+  basicLayer = new OpenLayers.Layer.WMS("基础地图",
           "http://localhost:8080/geoserver/dqs/wms?service=WMS&version=1.1.0&request=GetMap&layers=dqs_layers",
-          {layers: 'basic'} );
+          {layers: 'basic'});
   map.addLayer(basicLayer);
   
   projectTo = map.getProjectionObject();
@@ -109,13 +110,18 @@ $(document).ready(function() {
 	{{end}}
 	map.addLayer(vectorLayer);
 	
+	//控制器
   selector=new OpenLayers.Control.SelectFeature(vectorLayer, { onSelect: createPopup, onUnselect: destroyPopup });	
   map.addControl(selector);
-  selector.activate(); 
+  selector.activate();
+  
+  map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
+  //map.addControl(new OpenLayers.Control.PanZoom());
+  map.addControl(new OpenLayers.Control.ScaleLine());
+  map.addControl(new OpenLayers.Control.OverviewMap());
+  
  // map.zoomToMaxExtent();
- map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
-
-  map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
+ map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
 });
 </script>
 

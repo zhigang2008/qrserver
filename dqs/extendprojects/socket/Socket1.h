@@ -71,7 +71,7 @@ typedef struct
 const int STRUCT2STRING=131;
 
 //一些基本的处理函数，服务器端可能用不到
-DLL_API char MBINT2CHAR(unsigned char ucchar);
+DLL_API char MBINT2CHAR(unsigned char ucByte);
 DLL_API int MBCHAR2INT(unsigned char ucCharacter);
 DLL_API unsigned short CRC(unsigned char *puchMsg, unsigned short usDataLen);
 DLL_API void sendStr(char* b, char *ret);
