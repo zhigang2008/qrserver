@@ -1,0 +1,64 @@
+﻿ {{template "header" .}}
+<div style="background-color:#eee;padding:10px 0px;">
+ <div class="container">
+ 	
+ 	<div class="row">
+   <div id="div-list" class="col-md-1">
+     <div class="btn-group-vertical">
+     <button type="button" class="btn btn-primary">等值线</button>
+     <button type="button" class="btn btn-primary">保存图像</button>
+     <button type="button" class="btn btn-primary">调整</button>
+     </div> 
+   </div>
+   <div id="map" class="col-md-10"  style="height:550px;border:#F6F6F6 solid 1px;"></div>
+  </div>
+  
+ </div>
+ 
+</div>
+
+{{template "scripts"}}
+
+<script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
+<script language="javascript">
+var map, basicLayer, vectorLayer,selector;
+var sites=[];
+//最后的坐标
+var lastlng=108.8;
+var lastlat=28.0;
+//放大倍数
+var zoomSize=4;
+ 
+var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+var projectTo;
+
+  //初始化加载
+$(document).ready(function() {
+	//OpenLayers.Lang.setCode("zh-CN");
+  map = new OpenLayers.Map('map');
+  basicLayer = new OpenLayers.Layer.WMS("基础地图",
+          "{{rawURL .gisServiceUrl}}&layers={{.gisBasicLayer}}",
+          {layers: 'basic'});
+  map.addLayer(basicLayer);
+  
+  projectTo = map.getProjectionObject();
+
+  //feature 图层          
+  vectorLayer = new OpenLayers.Layer.Vector("数据层");
+
+	map.addLayer(vectorLayer);
+ 
+  //map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
+  //map.addControl(new OpenLayers.Control.PanZoom());
+  map.addControl(new OpenLayers.Control.ScaleLine());
+  //map.addControl(new OpenLayers.Control.OverviewMap());
+  map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
+  map.addControl(new OpenLayers.Control.MousePosition());
+  
+ // map.zoomToMaxExtent();
+ map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
+});
+
+</script>
+
+{{template "footer"}}

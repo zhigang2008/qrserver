@@ -2,11 +2,177 @@
 
 <div style="background-color:#eee;padding:10px 0px;">
  <div class="container">
-   <div id="map" style="width:100%;height:550px;border:#F6F6F6 solid 1px;">GIS 定位界面</div>
+ 	 <div>
+ 	 	<ul class="list-inline">
+    {{with .device}}
+      <li>{{.SensorId}}</li>
+      <li>{{.SetParams.SiteName}}</li>
+      <li>{{.SetParams.Longitude}}</li>
+      <li>{{.SetParams.Latitude}}</li>
+      <li>{{.CustomParams.InstallDate}}</li>
+      <li>{{.CustomParams.Installer}}</li>
+      <li>{{.CustomParams.Contact}}</li>
+      <li>{{.CustomParams.NetType}}</li>
+     {{end}} 
+    </ul>
+  </div>
+   <div id="map"  style="height:550px;border:#F6F6F6 solid 1px;"></div>
  </div>
 </div>
 
 {{template "scripts"}}
+<script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
+<script language="javascript">
+var map, basicLayer, vectorLayer,selector;
+var sites=[];
+//最后的坐标
+var lastlng,lastlat;
+//放大倍数
+var zoomSize=10;
+ 
+var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+var projectTo;// = map.getProjectionObject(); //The map projection (Spherical Mercator)
 
+//feature select event
+function createPopup(feature) {
+	  closeAllPopup(); 
+	  content='<div class="markerContent"><b>'+feature.attributes.sensorId+'</b><br>'+feature.attributes.siteName+'<br>['+feature.attributes.posLng+','+feature.attributes.posLat+']';
+		if(feature.attributes.initTime){
+			content+='<p class="text-danger">'+feature.attributes.initTime+' PGA:'+feature.attributes.PGA+' SI:'+feature.attributes.SI+'</p>';
+    }
+		content+='</div>';
+    
+    feature.popup = new OpenLayers.Popup.FramedCloud("pop",
+          feature.geometry.getBounds().getCenterLonLat(),
+          null,
+          content,
+          null,
+          true,
+          function() { selector.unselectAll();    	}
+      );
+      map.addPopup(feature.popup);
+    }
+//feature unselect event
+function destroyPopup(feature) {
+      feature.popup.destroy();
+      feature.popup = null;
+}
+//添加观测点
+function addFeature(sid,dname,lng,lat){
+  var feature = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point(lng,lat).transform(epsg4326, projectTo),
+            {sensorId:sid,siteName:dname,posLng:lng,posLat:lat} ,
+            {externalGraphic: '/static/image/marker-blue.png', graphicHeight: 25, graphicWidth: 25, graphicXOffset:-12, graphicYOffset:-25  }
+        );
+  feature.fid=sid;   
+  vectorLayer.addFeatures(feature);
+  lastlng=lng;
+  lastlat=lat;
+}
+//关闭所有的popup
+function closeAllPopup(){
+	$.each(sites,function(i,item){
+			var site=vectorLayer.getFeatureByFid(item);
+			if(site && site.popup){
+				destroyPopup(site);
+			}
+		});
+}
+//显示位置
+function showFeature(sid){
+	//关闭所有窗口
+	closeAllPopup();
+	var site=vectorLayer.getFeatureByFid(sid);
+	if(site){
+		content='<div class="markerContent"><b>'+site.attributes.sensorId+'</b><br>'+site.attributes.siteName+'<br>['+site.attributes.posLng+','+site.attributes.posLat+']';
+		if(site.attributes.initTime){
+			content+='<br>初始时刻:'+site.attributes.initTime+' PGA:'+site.attributes.PGA+' SI:'+site.attributes.SI;
+		}
+		content+='</div>';
+		site.popup = new OpenLayers.Popup.FramedCloud("showpop",
+          site.geometry.getBounds().getCenterLonLat(),
+          null,
+          content,
+          null,
+          true,
+          function() { 
+          	site.popup.destroy();
+            site.popup = null; }
+      );
+     map.setCenter(new OpenLayers.LonLat(site.attributes.posLng, site.attributes.posLat), zoomSize+1);
+     map.addPopup(site.popup);
+	}
+} 
+
+//重置观测点
+function resetMarker(sid){
+	var marker = vectorLayer.getFeatureByFid(sid);
+	marker.attributes.initTime=null;
+	marker.attributes.PGA=null;
+	marker.attributes.SI=null;
+	marker.style.externalGraphic="/static/image/marker-blue.png";
+	vectorLayer.drawFeature(marker);
+}
+//更新观测点
+function updateMarker(item){
+	var marker = vectorLayer.getFeatureByFid(item.SensorId);
+	marker.style.externalGraphic="/static/image/star.gif";
+	marker.attributes.initTime=item.InitTime;
+	marker.attributes.PGA=item.PGA;
+	marker.attributes.SI=item.SI;
+	vectorLayer.drawFeature(marker);
+}
+
+//定时获取报警信息
+function queryAlarm(){
+	$.getJSON("/realtime_alarm?time=5", function(data){
+		//重置所有站点状态
+		$.each(sites,function(i,item){
+			resetMarker(item);
+		});
+		//更新报警信息
+   $.each(data, function(i,item){
+   	   updateMarker(item);
+   });
+  });
+}
+
+  //初始化加载
+$(document).ready(function() {
+	//OpenLayers.Lang.setCode("zh-CN");
+  map = new OpenLayers.Map('map');
+  basicLayer = new OpenLayers.Layer.WMS("基础地图",
+          "{{rawURL .gisServiceUrl}}&layers={{.gisBasicLayer}}",
+          {layers: 'basic'});
+  map.addLayer(basicLayer);
+  
+  projectTo = map.getProjectionObject();
+ 
+  //feature 图层          
+  vectorLayer = new OpenLayers.Layer.Vector("观测点");
+  //加载设备列表
+	{{with .device}} 
+		  addFeature({{.SensorId}},{{.SetParams.SiteName}},{{.SetParams.Longitude}},{{.SetParams.Latitude}});
+		  sites.push("{{.SensorId}}");
+	{{end}}
+	map.addLayer(vectorLayer);
+	
+	//控制器
+  selector=new OpenLayers.Control.SelectFeature(vectorLayer, { onSelect: createPopup, onUnselect: destroyPopup });	
+  map.addControl(selector);
+  selector.activate();
+  
+  //map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
+  //map.addControl(new OpenLayers.Control.PanZoom());
+  map.addControl(new OpenLayers.Control.ScaleLine());
+  map.addControl(new OpenLayers.Control.OverviewMap());
+  
+ // map.zoomToMaxExtent();
+ map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
+});
+
+//执行定时查询
+	setInterval("queryAlarm()",60000); 
+</script>
 
 {{template "footer"}}
