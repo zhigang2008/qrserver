@@ -167,7 +167,12 @@ $(document).ready(function() {
           "{{rawURL .gisServiceUrl}}&layers={{.gisBasicLayer}}",
           {layers: 'basic'});
   map.addLayer(basicLayer);
-  
+  /*riverLayer = new OpenLayers.Layer.WMS("河流",
+          "{{rawURL .gisServiceUrl}}&layers=dqs:River5_polyline",
+          {layers: 'basic',transparent: true},
+          { isBaseLayer: false });
+  map.addLayer(riverLayer);
+  */
   projectTo = map.getProjectionObject();
  
  /*

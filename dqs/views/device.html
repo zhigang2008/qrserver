@@ -35,11 +35,11 @@
  	 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
     	{{if hasrole $curUser.Roles "role_admin"}}
-      <button id="refreshparams" type="button" class="btn btn-success">重新读取</button>
+      <button id="refreshparams" type="button" class="btn btn-success"><span class="glyphicon glyphicon-repeat"></span>&nbsp;重新读取</button>
       &nbsp;&nbsp;
-      <button id="setparams" type="button" class="btn btn-primary">设置参数</button>
+      <button id="setparams" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-wrench">设置参数</span></button>
       &nbsp;&nbsp;
-      <button id="setsave" type="button" class="btn btn-warning" style="display:none">保存设置</button>
+      <button id="setsave" type="button" class="btn btn-warning" style="display:none"><span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;保存设置</button>
       {{end}}
     </div>
   </div>
@@ -338,9 +338,9 @@
  	 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       {{if hasrole $curUser.Roles "role_admin"}}
-      <button id="setparams2" type="button" class="btn btn-primary">设置参数</button>
+      <button id="setparams2" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-wrench">设置参数</span></button>
       &nbsp;&nbsp;
-      <button id="setsave2" type="button" class="btn btn-warning" style="display:none">保存设置</button>
+      <button id="setsave2" type="button" class="btn btn-warning" style="display:none"><span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;保存设置</button>
       {{end}}
     </div>
   </div>
@@ -591,13 +591,13 @@ $(document).ready(function(){
          $("#setsave").toggle();
          if(setchange==false){
          	setchange=true;
-         	$("#setparams").text("取消设置");
+         	$("#setparams span").text("取消设置");
          	$("#setparamform  :text").prop('disabled',false);
          	$("#setparamform  :radio").prop('disabled',false);
          	$("#setparamform  select").prop('disabled',false);
         }else{
         	setchange=false;
-         	$("#setparams").text("设置参数");
+         	$("#setparams span").text("设置参数");
          	$("#setparamform :text").prop('disabled',true);
          	$("#setparamform :radio").prop('disabled',true);
          	$("#setparamform select").prop('disabled',true);
@@ -621,13 +621,13 @@ $(document).ready(function(){
          $("#setsave2").toggle();
          if(setchange2==false){
          	setchange2=true;
-         	$("#setparams2").text("取消设置");
+         	$("#setparams2 span").text("取消设置");
          	$("#customparamform  :text").prop('disabled',false);
          	$("#customparamform  :radio").prop('disabled',false);
          	$("#customparamform  select").prop('disabled',false);
          }else{
         	setchange2=false;
-         	$("#setparams2").text("设置参数");
+         	$("#setparams2 span").text("设置参数");
          	$("#customparamform  :text").prop('disabled',true);
          	$("#customparamform  :radio").prop('disabled',true);
          	$("#customparamform  select").prop('disabled',true);
