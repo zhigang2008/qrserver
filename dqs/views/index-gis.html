@@ -5,7 +5,7 @@
  	
  	<div class="row">
    <div id="div-list" class="col-md-2">
-   <table class="table table-hover table-condensed">
+   <table class="table table-hover table-bordered table-condensed">
     <thead>
 		<tr>
 			<th>#</th>
@@ -19,7 +19,7 @@
 	  	<tr>
 	  		<td><a href="#"><span class="glyphicon glyphicon-globe"></span></a></td>
 	  		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.SensorId}}</td>
-	  		<td>{{.SetParams.SiteName}}</td>
+	  		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.SetParams.SiteName}}</td>
 	  	</tr>
 	  	{{end}}
 	  </tbody>	
@@ -41,7 +41,9 @@
      "OpenLayers/BaseTypes.js"
      ];
 </script>
+<script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
 -->
+
 <script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
 <script language="javascript">
 var map, basicLayer, vectorLayer,selector;
@@ -53,30 +55,31 @@ var zoomSize=10;
  
 var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
 var projectTo;// = map.getProjectionObject(); //The map projection (Spherical Mercator)
-/*
-var size = new OpenLayers.Size(21,25);
-var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-var icon = new OpenLayers.Icon('/static/image/marker-blue.png', size, offset);
-*/
 
+//feature select event
 function createPopup(feature) {
-      feature.popup = new OpenLayers.Popup.FramedCloud("pop",
+	  closeAllPopup(); 
+	  content='<div class="markerContent"><b>'+feature.attributes.sensorId+'</b><br>'+feature.attributes.siteName+'<br>['+feature.attributes.posLng+','+feature.attributes.posLat+']';
+		if(feature.attributes.initTime){
+			content+='<p class="text-danger">'+feature.attributes.initTime+' PGA:'+feature.attributes.PGA+' SI:'+feature.attributes.SI+'</p>';
+    }
+		content+='</div>';
+    
+    feature.popup = new OpenLayers.Popup.FramedCloud("pop",
           feature.geometry.getBounds().getCenterLonLat(),
           null,
-          '<div class="markerContent"><b>'+feature.attributes.sensorId+'</b><br>'+feature.attributes.siteName+'<br>['+feature.attributes.posLng+','+feature.attributes.posLat+']</div>',
+          content,
           null,
           true,
-          function() { selector.unselectAll(); }
+          function() { selector.unselectAll();    	}
       );
-      //feature.popup.closeOnMove = true;
       map.addPopup(feature.popup);
     }
-
+//feature unselect event
 function destroyPopup(feature) {
       feature.popup.destroy();
       feature.popup = null;
 }
-
 //添加观测点
 function addFeature(sid,dname,lng,lat){
   var feature = new OpenLayers.Feature.Vector(
@@ -89,18 +92,92 @@ function addFeature(sid,dname,lng,lat){
   lastlng=lng;
   lastlat=lat;
 }
- 
+//关闭所有的popup
+function closeAllPopup(){
+	$.each(sites,function(i,item){
+			var site=vectorLayer.getFeatureByFid(item);
+			if(site && site.popup){
+				destroyPopup(site);
+			}
+		});
+}
+//显示位置
+function showFeature(sid){
+	//关闭所有窗口
+	closeAllPopup();
+	var site=vectorLayer.getFeatureByFid(sid);
+	if(site){
+		content='<div class="markerContent"><b>'+site.attributes.sensorId+'</b><br>'+site.attributes.siteName+'<br>['+site.attributes.posLng+','+site.attributes.posLat+']';
+		if(site.attributes.initTime){
+			content+='<br>初始时刻:'+site.attributes.initTime+' PGA:'+site.attributes.PGA+' SI:'+site.attributes.SI;
+		}
+		content+='</div>';
+		site.popup = new OpenLayers.Popup.FramedCloud("showpop",
+          site.geometry.getBounds().getCenterLonLat(),
+          null,
+          content,
+          null,
+          true,
+          function() { 
+          	site.popup.destroy();
+            site.popup = null; }
+      );
+     map.setCenter(new OpenLayers.LonLat(site.attributes.posLng, site.attributes.posLat), zoomSize+1);
+     map.addPopup(site.popup);
+	}
+} 
+
+//重置观测点
+function resetMarker(sid){
+	var marker = vectorLayer.getFeatureByFid(sid);
+	marker.attributes.initTime=null;
+	marker.attributes.PGA=null;
+	marker.attributes.SI=null;
+	marker.style.externalGraphic="/static/image/marker-blue.png";
+	vectorLayer.drawFeature(marker);
+}
+//更新观测点
+function updateMarker(item){
+	var marker = vectorLayer.getFeatureByFid(item.SensorId);
+	marker.style.externalGraphic="/static/image/star.gif";
+	marker.attributes.initTime=item.InitTime;
+	marker.attributes.PGA=item.PGA;
+	marker.attributes.SI=item.SI;
+	vectorLayer.drawFeature(marker);
+}
+
+//定时获取报警信息
+function queryAlarm(){
+	$.getJSON("/realtime_alarm?time=5", function(data){
+		//重置所有站点状态
+		$.each(sites,function(i,item){
+			resetMarker(item);
+		});
+		//更新报警信息
+   $.each(data, function(i,item){
+   	   updateMarker(item);
+   });
+  });
+}
+
   //初始化加载
 $(document).ready(function() {
 	//OpenLayers.Lang.setCode("zh-CN");
   map = new OpenLayers.Map('map');
   basicLayer = new OpenLayers.Layer.WMS("基础地图",
-          "http://localhost:8080/geoserver/dqs/wms?service=WMS&version=1.1.0&request=GetMap&layers=dqs_layers",
+          "{{rawURL .gisServiceUrl}}&layers={{.gisBasicLayer}}",
           {layers: 'basic'});
   map.addLayer(basicLayer);
   
   projectTo = map.getProjectionObject();
-  
+ 
+ /*
+  var googlePhysical=new OpenLayers.Layer.Google("Google Physical",{type: google.maps.MapTypeId.TERRAIN} );
+  var googleStreets=new OpenLayers.Layer.Google("Google Streets", {numZoomLevels: 1});
+  var googleHybird=new OpenLayers.Layer.Google("Google Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 1});
+  var googleSatellite=new OpenLayers.Layer.Google("Google Satellite",{type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 1});
+  map.addLayer(googleSatellite);
+ */
   //feature 图层          
   vectorLayer = new OpenLayers.Layer.Vector("观测点");
   //加载设备列表
@@ -123,6 +200,9 @@ $(document).ready(function() {
  // map.zoomToMaxExtent();
  map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
 });
+
+//执行定时查询
+	setInterval("queryAlarm()",60000); 
 </script>
 
 {{template "footer"}}

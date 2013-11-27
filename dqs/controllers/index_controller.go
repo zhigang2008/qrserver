@@ -30,6 +30,8 @@ func (this *MainController) Get() {
 		log.Warnf("无法从配置文件中获取gis启用信息.将使用地图模式.")
 	}
 	if usegis {
+		this.Data["gisServiceUrl"] = beego.AppConfig.String("gis.service.url")
+		this.Data["gisBasicLayer"] = beego.AppConfig.String("gis.layer.basic")
 		this.TplNames = "index-gis.html"
 	} else {
 		this.TplNames = "index.html"

@@ -308,6 +308,8 @@ func (this *DeviceController) DeviceLocation() {
 		log.Warnf("无法从配置文件中获取gis启用信息.将使用地图模式.")
 	}
 	if usegis {
+		this.Data["gisServiceUrl"] = beego.AppConfig.String("gis.service.url")
+		this.Data["gisBasicLayer"] = beego.AppConfig.String("gis.layer.basic")
 		this.TplNames = "location-gis.html"
 	} else {
 		this.TplNames = "location.html"
