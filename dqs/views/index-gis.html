@@ -44,6 +44,14 @@
 -->
 
 <script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
+<script language="javascript" src="/static/js/messenger/messenger.min.js"></script>
+<script language="javascript" src="/static/js/messenger/messenger-theme-future.js"></script>
+<script language="javascript">
+	Messenger.options = {
+    extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+    theme: 'future'
+}
+</script>
 <script language="javascript">
 var map, basicLayer, vectorLayer,selector;
 var sites=[];
@@ -143,6 +151,13 @@ function updateMarker(item){
 	marker.attributes.PGA=item.PGA;
 	marker.attributes.SI=item.SI;
 	vectorLayer.drawFeature(marker);
+	
+	//提示信息
+  Messenger().post({
+  message: item.SensorId+' [PGA:'+item.PGA+' , SI:'+item.SI+']',
+  type: 'error',
+  showCloseButton: true
+});
 }
 
 //定时获取报警信息
