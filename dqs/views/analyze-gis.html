@@ -27,7 +27,7 @@ var sites=[];
 var lastlng=108.8;
 var lastlat=28.0;
 //放大倍数
-var zoomSize=4;
+var zoomSize=7;
  
 var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
 var projectTo;
@@ -47,6 +47,18 @@ $(document).ready(function() {
   vectorLayer = new OpenLayers.Layer.Vector("数据层");
 
 	map.addLayer(vectorLayer);
+ 
+ //测试数据
+ var pointList = []; 
+
+ for(var i=1;i<8;i++){ 
+    newPoint = new OpenLayers.Geometry.Point(lastlng+Math.random(),lastlat+Math.random()); 
+    pointList.push(newPoint); 
+   
+ } 
+ lineFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(pointList),null,null); 
+ vectorLayer.addFeatures([lineFeature]);
+
  
   //map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
   //map.addControl(new OpenLayers.Control.PanZoom());
