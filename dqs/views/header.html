@@ -27,7 +27,6 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <!--<li class="active"><a href="/">首页</a></li>-->
-            <li><a href="/alarm">报警信息</a></li>
             {{if hasrole .CurrentUser.Roles "role_admin" "role_device"}}
             <li class="dropdown">
             	<a href="#" class="dropdown-toggle" data-toggle="dropdown">设备信息<b class="caret"></b></a>
@@ -42,6 +41,7 @@
             {{end}}
             <li><a href="/analyze">数据分析</a></li>
             <li><a href="/report">速报管理</a></li>
+            <li><a href="/alarm">报警信息</a></li>
             {{if hasrole .CurrentUser.Roles "role_admin" }}
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">系统管理 <b class="caret"></b></a>
