@@ -20,6 +20,7 @@
 {{template "scripts"}}
 
 <script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
+
 <script language="javascript">
 var map, basicLayer, vectorLayer,selector;
 var sites=[];
@@ -35,7 +36,7 @@ var projectTo;
   //初始化加载
 $(document).ready(function() {
 	//OpenLayers.Lang.setCode("zh-CN");
-  map = new OpenLayers.Map('map');
+  map = new OpenLayers.Map('map', {projection: "EPSG:26713"});
   basicLayer = new OpenLayers.Layer.WMS("基础地图",
           "{{rawURL .gisServiceUrl}}&layers={{.gisBasicLayer}}",
           {layers: 'basic'});
@@ -49,7 +50,7 @@ $(document).ready(function() {
 	map.addLayer(vectorLayer);
  
  //测试数据
- var pointList = []; 
+ /*var pointList = []; 
 
  for(var i=1;i<8;i++){ 
     newPoint = new OpenLayers.Geometry.Point(lastlng+Math.random(),lastlat+Math.random()); 
@@ -58,17 +59,40 @@ $(document).ready(function() {
  } 
  lineFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(pointList),null,null); 
  vectorLayer.addFeatures([lineFeature]);
-
+*/
+var bounds = new OpenLayers.Bounds(
+                    590223.4382724703, 4914107.882513998,
+                    608462.4604629107, 4920523.89081033
+                );
+ var wms = new OpenLayers.Layer.WMS(
+		"sf:bugsites - Untiled", "http://ams.xoomcode.com/geoserver/wms",
+		{
+			LAYERS: 'sf:bugsites',
+			STYLES: '',
+			//format: format,
+			VALUE_COLUMN:"cat",
+			SIMPLIFY_METHOD: 3,
+			SIMPLIFY_SIZE:90,
+			'INTERVALS[]':"10,20,45,70,100",
+			'INTERVALS_COLORS[]':"0xffffffcc,0xff0000cc,0xffff00cc,0x00ff00cc,0x0000ffcc",
+			RENDERER_TYPE:2,
+			INTERPOLATION_STRATEGY:2,
+			RADIUS:40,
+			SERVICE:"AMS"
+		},
+		{singleTile: true, ratio: 1} 
+	);
+ map.addLayer(wms);
  
   //map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
   //map.addControl(new OpenLayers.Control.PanZoom());
   map.addControl(new OpenLayers.Control.ScaleLine());
   //map.addControl(new OpenLayers.Control.OverviewMap());
-  map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
+  //map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
   map.addControl(new OpenLayers.Control.MousePosition());
   
- // map.zoomToMaxExtent();
- map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
+ //map.zoomToMaxExtent();
+ //map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
 });
 
 </script>
