@@ -1,26 +1,188 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+﻿<!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>TEST Gis</title>
-    <link rel="stylesheet" type="text/css" href="/static/js/arcgis/3.5/3.5compact/js/dojo/dijit/themes/tundra/tundra.css"/>
-    <link rel="stylesheet" type="text/css" href="/static/js/arcgis/3.5/3.5compact/js/esri/css/esri.css" />
-    <script type="text/javascript" src="/static/js/arcgis/3.5/3.5compact/init.js"></script>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>{{.title}}</title>
+<!-- Bootstrap -->
+<link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="/static/css/bootstrap-select.min.css" rel="stylesheet" media="screen">
+<link href="/static/css/steven.css" rel="stylesheet" media="screen">
+<link href="/static/css/daterangepicker-bs3.css" rel="stylesheet" media="screen">
+<link href="/static/css/messenger/messenger.css" rel="stylesheet" media="screen">
+<link href="/static/css/messenger/messenger-theme-future.css" rel="stylesheet" media="screen">
+</head>
+<body>
+	<div class="navbar active" data-bind="main-nav">
+		<div class="container">
+			<button data-target=".navbar-responsive-collapse" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		      <b>×</b>
+		    </button>
+		    <a title="STYLIGHT&nbsp;Startseite" href="/" class="navbar-brand">
+         <img width="140" height="60" src="//d336s8nt4p00c3.cloudfront.net/images/stylight_logo.p10285.png" alt="STYLIGHT" class="hidden-phone">
+   <i class="icon-logo visible-phone"></i>
+  
+</a><div class="nav-collapse navbar-responsive-collapse collapse">
+	<ul class="nav">
+	
+		<li>
+        	<a href="/Damen/">
+				Damen</a>
+		</li>
+        
+        <li>
+        	<a href="/Herren/">
+				Herren</a>
+		</li>
+		
+		<li>
+	<a href="/Looks/">
+		Looks</a>
+</li><li class="pull-right search-gap dropdown nav-icon">
 
-    <script type="text/javascript">
-      dojo.require("esri.map");
+ 	<a href="/User/" class="dropdown-toggle">
+		<i class="icon-user hidden-phone"></i>
+		<span class="visible-phone">
+			Login</span>
+	</a>
 
-      function init() {
-        var myMap = new esri.Map("mapDiv");
-        //note that if you do not have public Internet access then you will need to point this url to your own locally accessible cached service.
-        var myTiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/NGS_Topo_US_2D/MapServer");
-        myMap.addLayer(myTiledMapServiceLayer);
-      }
-      dojo.addOnLoad(init);
-    </script>
-  </head>
-  <body class="tundra">
-    <div id="mapDiv" style="width:900px; height:600px; border:1px solid #000;"></div>
-  </body>
+  	<ul class="dropdown-menu dropdown-form hidden-phone">
+		<li>
 
+			<div data-bind="facebook-signin" class="btn btn-fb btn-block btn-icon icon-left">
+				<i class="icon-fb"></i>
+				Login mit Facebook</div>
+
+	      	<div class="divider-stroked">
+			  <div class="divider"></div>
+			  <div class="h6">oder</div>
+			</div>
+
+			<form acceptcharset="UTF-8" method="post" action="/User/Signin/">
+				
+				<label class="control-label" for="username">
+					Benutzername&nbsp;/&nbsp;E-Mail</label>
+	     		<input type="text" name="username" class="input-with-feedback">
+
+	     		<label class="control-label" for="passwd">
+					Passwort</label>
+	     		<input type="password" name="passwd" class="input-with-feedback">
+
+	     		<input type="submit" value="Login" class="btn btn-block mt">
+
+			</form>
+
+			<div class="h6 text-center mt2">
+				Neu hier? <a href="/User/Create-Account/">Jetzt registrieren!</a></div>
+
+		</li>
+	</ul>
+</li>
+
+<li class="pull-right">
+  <a href="/User/Create-Account/">
+    Registrieren</a>
+</li></ul>
+</div><!-- Mobile breadcrumb -->
+		    <div class="visible-phone" id="current">
+
+	Startseite</div><div id="search">
+  <form data-bind="main-search-submit" action="/Mode/">
+    <input type="text" data-bind="main-search-box" autocomplete="off" class="icon-search" data-provide="autocompleter" name="searchstring">
+  </form>
+</div></div>
+	</div>
+  <div class="sub-navbar " role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar">ss</span>
+            <span class="icon-bar">sss</span>
+            <span class="icon-bar">sss</span>
+          </button>
+          <a class="navbar-brand" href="/"><b>县市地震烈度速报系统</b></a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+            	<a href="#" class="dropdown-toggle" data-toggle="dropdown">设备信息<b class="caret"></b></a>
+            	 <ul class="dropdown-menu">
+            	  	<li><a href="/device">设备列表</a></li>
+            	  	<li class="divider"></li>
+                  <li><a href="/adddevice">添加设备</a></li>
+               </ul>   
+            	</li>
+            <li><a href="/analyze">数据分析</a></li>
+            <li><a href="/report">速报管理</a></li>
+            <li><a href="/alarm">报警信息</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">系统管理 <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/user">用户管理</a></li>
+                <!--<li><a href="#">权限管理</a></li>-->
+                <li class="divider"></li>
+                <!--<li class="dropdown-header">高级管理</li>-->
+                <li><a href="/audit">审计日志</a></li>
+                <li><a href="/loglist">运行日志</a></li>
+                
+              </ul>
+            </li>
+          </ul>
+          <div class="col-lg-3  navbar-right text-center">
+          <div id="global-login-show" style="margin-top:15px;">
+          	<a href="#" class="label" style="color:#999999;" data-toggle="popover" title="请登录" data-content="" data-original-title="请在此登录" ><span class="glyphicon glyphicon-log-in"></span>&nbsp;&nbsp;登录</a>
+          </div>
+          <div id="global-login-div" style="display:none">
+           <form id="signform" action="/sign" method="post" class="navbar-form ">
+             	<div class="form-group">
+             		<div class="input-group" >
+               <span class="input-group-addon glyphicon glyphicon-user"></span>
+               <input type="text" name="SignId" placeholder="ID/Email/手机" class="form-control">
+               </div>
+               <p class="help-block"></p>
+           </div>
+           <div class="form-group">
+             	<div class="input-group">
+              <span class="input-group-addon glyphicon glyphicon-lock"></span>
+              <input type="password" name="Password" placeholder="密码" class="form-control">
+             </div>
+             <p class="help-block"></p>
+            </div> 
+             <div class="form-group">
+               <div class="col-lg-8">
+               	<button type="submit" class="btn btn-success">登&nbsp;&nbsp;录</button>
+              </div>
+              <div class="col-lg-4">
+              <button type="button" class="btn btn-info" onclick="javascript:location.href='/register';">新用户</button>
+             </div>
+            </div>
+          </form>
+         </div>
+        </div>
+
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+<div class="container">
+      <hr>
+      <footer>
+        <div class="text-center">&copy; 2013 .All rights reserved.</div>
+      </footer>
+    </div> 
+    <!-- Bootstrap core JavaScript-->
+    <script src="/static/js/jquery.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    {{rawHTML "<!--[if lt IE 9]>"}}
+    <script src="/static/js/respond.min.js"></script>
+    <script src="/static/js/html5.js"></script>
+    {{rawHTML "<![endif]-->"}}
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/steven.js"></script>
+    <script src="/static/js/tooltip.js"></script>
+   </body>
 </html>
