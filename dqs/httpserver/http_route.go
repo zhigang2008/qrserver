@@ -56,6 +56,7 @@ func routeConfig() {
 	beego.Router("/data/alarm", &controllers.ExchangeController{}, "*:ExportAlarms")
 	//测试页面
 	beego.Router("/testgis", &controllers.TestController{}, "*:TestGis")
+	beego.Router("/test", &controllers.TestController{}, "*:Test")
 
 	//静态文件路径
 	beego.SetStaticPath("/logs", "logs")

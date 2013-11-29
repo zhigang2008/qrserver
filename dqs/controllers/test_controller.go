@@ -17,3 +17,10 @@ func (this *TestController) TestGis() {
 	this.TplNames = "testgis.html"
 	this.Render()
 }
+func (this *TestController) Test() {
+	this.Data["title"] = "测试页面"
+	this.Data["author"] = "wangzhigang"
+
+	this.TplNames = "test.html"
+	this.Render()
+}

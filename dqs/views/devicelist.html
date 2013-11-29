@@ -22,7 +22,8 @@
 		<tr>
 			<th>序号</th>
 			<th>设备编号</th>
-			<th>站点名称</th>
+			<th>站点编号</th>
+			<th>观测点</th>
 			<th>注册时间</th>
 		  <th>在线状态
 		  	<span style="margin-left:15px;">
@@ -46,6 +47,7 @@
 	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{seqno $i $pagesize $curpage}}</td>
 	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{.SensorId}}</td>
 	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{.SetParams.SiteName}}</td>
+	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{.CustomParams.SiteAliasName}}</td>
 	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{dateformat .RegisterTime "2006-01-02 15:04:05"}}</td>
 	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{if .Online}}<span class="label label-success">在线</span>{{else}}<span class="label label-default">离线</span> {{end}}</td>
 	 		<td onclick="javascript:$('#{{.SensorId}}').toggle();">{{dateformat .UpdateTime "2006-01-02 15:04:05"}}</td>
@@ -63,11 +65,11 @@
 	 	</tr>
 	 	<!--详细信息(隐藏)-->
 	  <tr id="{{.SensorId}}"  style="display:none">
-	  	<td class="well" colspan="10">
+  		<td class="well" colspan="11">
 	  		<table class="table table-condensed">
 	  			<tr class="active">
 	  				<td>编号:{{.SensorId}}</td>
-	  				<td>站点名称:{{.SetParams.SiteName}}</td>
+	  				<td>站点:{{.CustomParams.SiteAliasName}}[{{.SetParams.SiteName}}]</td>
 	  				<td>注册时间:{{dateformat .RegisterTime "2006-01-02 15:04:05"}}</td>
 	  				<td>经度:{{.SetParams.Longitude}}</td>
 	  				<td>纬度:{{.SetParams.Latitude}}</td>

@@ -60,6 +60,7 @@ type SensorInfo struct {
 
 //用户自定义数据
 type CustomDefineParams struct {
+	SiteAliasName    string       //观测点名称
 	InstallDate      string       //安装日期
 	Installer        string       //安装人员
 	Contact          string       //联系人

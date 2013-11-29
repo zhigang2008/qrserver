@@ -28,42 +28,42 @@
  <form id="deviceform" class="form-horizontal" role="form" action="#" method="post">
  	 <div class="form-group">
     <div class="col-sm-offset-1 ">
-      <div class="col-sm-2"><button id="savedevice" type="button" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;保&nbsp;&nbsp;存</button></div>
-      <div class="col-sm-2 pull-right"><button id="btn-reset" type="reset" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-retweet"></span>&nbsp;重&nbsp;&nbsp;置</button></div>
+      <div class="col-sm-2"><button id="savedevice" type="button" class="btn btn-success "><span class="glyphicon glyphicon-floppy-disk"></span>&nbsp;保&nbsp;&nbsp;存</button></div>
+      <div class="col-sm-2 pull-right"><button id="btn-reset" type="reset" class="btn btn-default "><span class="glyphicon glyphicon-retweet"></span>&nbsp;重&nbsp;&nbsp;置</button></div>
      </div>
   </div>
   
-  <div id="deviceparams" class="col-md-5">
+  <div id="deviceparams" class="col-md-6">
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="SensorId" >传感器编号*</label>
-    <div class="col-sm-8">
-      <input id="SensorId" type="text" class="form-control" name="SensorId"  placeholder="SensorId"   />
+    <label class="col-sm-3 control-label" for="SensorId" >传感器编号*</label>
+    <div class="col-sm-7">
+      <input id="SensorId" type="text" class="form-control input-sm" name="SensorId"  placeholder="SensorId"   />
       <!--<p class="help-block"></p>-->
     </div>
     <div class="col-sm-4"></div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="SiteName">站点名称*</label>
-    <div class="col-sm-8">
-      <input type="text" class="form-control" id="SiteName" name="SiteName" placeholder="SiteName"  />
+    <label class="col-sm-3 control-label" for="SiteName">站点名称*</label>
+    <div class="col-sm-7">
+      <input type="text" class="form-control input-sm" id="SiteName" name="SiteName" placeholder="SiteName"  />
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="Longitude">经度*</label>
-    <div class="col-sm-8">
-      <input type="text" class="form-control" id="Longitude" name="Longitude" placeholder="Longitude"  />
+    <label class="col-sm-3 control-label" for="Longitude">经度*</label>
+    <div class="col-sm-7">
+      <input type="text" class="form-control input-sm" id="Longitude" name="Longitude" placeholder="Longitude"  />
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="Latitude">纬度*</label>
-    <div class="col-sm-8">
-      <input type="text" class="form-control" id="Latitude" name="Latitude" placeholder="Latitude"  />
+    <label class="col-sm-3 control-label" for="Latitude">纬度*</label>
+    <div class="col-sm-7">
+      <input type="text" class="form-control input-sm" id="Latitude" name="Latitude" placeholder="Latitude"  />
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="SiteType">场地类型</label>
-    <div class="col-sm-8">
-      <select class="form-control" id="SiteType" name="SiteType">
+    <label class="col-sm-3 control-label" for="SiteType">场地类型</label>
+    <div class="col-sm-7">
+      <select class="form-control input-sm" id="SiteType" name="SiteType">
         <option value="0">土壤</option>
         <option value="1" selected >软岩石</option>
         <option value="2">硬岩石</option>
@@ -71,26 +71,26 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="ObserveObject">观测对象</label>
-    <div class="col-sm-8">
-      <select class="form-control" id="ObserveObject" name="ObserveObject">
+    <label class="col-sm-3 control-label" for="ObserveObject">观测对象</label>
+    <div class="col-sm-7">
+      <select class="form-control input-sm" id="ObserveObject" name="ObserveObject">
         <option value="0">深井</option>
         <option value="1" selected >自由地表</option>
       </select>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="Accelerometer">加速度计型号</label>
-    <div class="col-sm-8">
-      <select class="form-control" id="Accelerometer" name="Accelerometer">
+    <label class="col-sm-3 control-label" for="Accelerometer">加速度计型号</label>
+    <div class="col-sm-7">
+      <select class="form-control input-sm" id="Accelerometer" name="Accelerometer">
         <option value="0">MEMS</option>
         <option value="1">力平衡</option>
       </select>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="Direction">安装方向</label>
-    <div class="col-sm-8">
+    <label class="col-sm-3 control-label" for="Direction">安装方向</label>
+    <div class="col-sm-7">
       <!--
       <label class="radio-inline">
         <input type="radio" name="Direction"   value="0" checked> 南北向
@@ -99,16 +99,16 @@
         <input type="radio" name="Direction"   value="1" > 东西向
       </label>
       -->
-      <select class="form-control" id="Direction" name="Direction">
+      <select class="form-control input-sm" id="Direction" name="Direction">
         <option value="0">南北向</option>
         <option value="1">东西向</option>
       </select>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="RangeType">量程选择</label>
-    <div class="col-sm-8">
-      <select class="form-control" id="RangeType" name="RangeType">
+    <label class="col-sm-3 control-label" for="RangeType">量程选择</label>
+    <div class="col-sm-7">
+      <select class="form-control input-sm" id="RangeType" name="RangeType">
         <option value="0">±1.5g</option>
         <option value="1" selected >±2g</option>
         <option value="2">±4g</option>
@@ -117,9 +117,9 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="Period">采样周期</label>
-    <div class="col-sm-8">
-      <select class="form-control" id="Period" name="Period">
+    <label class="col-sm-3 control-label" for="Period">采样周期</label>
+    <div class="col-sm-7">
+      <select class="form-control input-sm" id="Period" name="Period">
         <option value="0">0.002s</option>
         <option value="1">0.005s</option>
         <option value="2" selected >0.01s</option>
@@ -128,60 +128,66 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="RegionCode">行政区划代码</label>
-    <div class="col-sm-8">
-      <input type="text" class="form-control" id="RegionCode" name="RegionCode" placeholder="RegionCode"  />
+    <label class="col-sm-3 control-label" for="RegionCode">行政区划代码</label>
+    <div class="col-sm-7">
+      <input type="text" class="form-control input-sm" id="RegionCode" name="RegionCode" placeholder="RegionCode"  />
     </div>
   </div>
   
  </div> 
  <!--自定义数据-->
- <div id="custumparams" class="col-md-7 pull-right">
-<div class="form-group">
-	 	<label class="col-sm-4 control-label" for="InstallDate">安装时间</label>
-    <div class="col-sm-8">
-      <input id="InstallDate" type="text" class="form-control" name="InstallDate"  placeholder="yyyy-mm-dd"  value="2013-03-28">
+ <div id="custumparams" class="col-md-6 pull-right" style="border-left:#ccc 1px dashed;">
+  <div class="form-group">
+	 	<label class="col-sm-3 control-label" for="SiteAliasName">观测点名称</label>
+    <div class="col-sm-7">
+      <input id="SiteAliasName" type="text" class="form-control input-sm" name="SiteAliasName"  placeholder="观测点名称"  >
     </div>
   </div>
   <div class="form-group">
-  <label class="col-sm-4 control-label" for="Installer">安装人员</label>
-    <div class="col-sm-8">
-      <input id="Installer" type="text" class="form-control" name="Installer"  placeholder="Installer"  >
+	 	<label class="col-sm-3 control-label" for="InstallDate">安装时间</label>
+    <div class="col-sm-7">
+      <input id="InstallDate" type="text" class="form-control input-sm" name="InstallDate"  placeholder="yyyy-mm-dd"  value="2013-03-28">
     </div>
   </div>
   <div class="form-group">
-  <label class="col-sm-4 control-label" for="Contact">联系人</label>
-    <div class="col-sm-8">
-      <input id="Contact" type="text" class="form-control" name="Contact"  placeholder="Contact"  >
+  <label class="col-sm-3 control-label" for="Installer">安装人员</label>
+    <div class="col-sm-7">
+      <input id="Installer" type="text" class="form-control input-sm" name="Installer"  placeholder="Installer"  >
     </div>
   </div>
   <div class="form-group">
-  <label class="col-sm-4 control-label" for="Telphone">固定电话</label>
-    <div class="col-sm-8">
-      <input id="Telphone" type="text" class="form-control" name="Telphone"  placeholder="Telphone"  >
+  <label class="col-sm-3 control-label" for="Contact">联系人</label>
+    <div class="col-sm-7">
+      <input id="Contact" type="text" class="form-control input-sm" name="Contact"  placeholder="Contact"  >
     </div>
   </div>
   <div class="form-group">
-	<label class="col-sm-4 control-label" for="Mobile">移动电话</label>
-    <div class="col-sm-8">
-      <input id="Mobile" type="text" class="form-control" name="Mobile"  placeholder="Mobile"  >
+  <label class="col-sm-3 control-label" for="Telphone">固定电话</label>
+    <div class="col-sm-7">
+      <input id="Telphone" type="text" class="form-control input-sm" name="Telphone"  placeholder="Telphone"  >
     </div>
   </div>
   <div class="form-group">
-	 	<label class="col-sm-4 control-label" for="MaintainDate">维护日期</label>
-    <div class="col-sm-8">
-      <input id="MaintainDate" type="text" class="form-control" name="MaintainDate"  placeholder="yyyy-mm-dd" >
+	<label class="col-sm-3 control-label" for="Mobile">移动电话</label>
+    <div class="col-sm-7">
+      <input id="Mobile" type="text" class="form-control input-sm" name="Mobile"  placeholder="Mobile"  >
     </div>
   </div>
   <div class="form-group">
-	 	<label class="col-sm-4 control-label" for="MaintainPeole">维护人</label>
-    <div class="col-sm-8">
-      <input id="MaintainPeole" type="text" class="form-control" name="MaintainPeole"  placeholder="MaintainPeole" >
+	 	<label class="col-sm-3 control-label" for="MaintainDate">维护日期</label>
+    <div class="col-sm-7">
+      <input id="MaintainDate" type="text" class="form-control input-sm" name="MaintainDate"  placeholder="yyyy-mm-dd" >
     </div>
   </div>
   <div class="form-group">
-  <label class="col-sm-4 control-label" for="NetType">网络类型</label>
-    <div class="col-sm-8">
+	 	<label class="col-sm-3 control-label" for="MaintainPeole">维护人</label>
+    <div class="col-sm-7">
+      <input id="MaintainPeole" type="text" class="form-control input-sm" name="MaintainPeole"  placeholder="MaintainPeole" >
+    </div>
+  </div>
+  <div class="form-group">
+  <label class="col-sm-3 control-label" for="NetType">网络类型</label>
+    <div class="col-sm-7">
       <label class="radio-inline">
          <input type="radio"  name="NetType" value="3G" checked > 
          <span class="label label-success">3G网络</span>
@@ -193,10 +199,10 @@
     </div>
   </div>
   <!--3G 信息-->
-  <div id="div_3G_info" class="well col-sm-offset-2 col-sm-10" style="display:block" >
+  <div id="div_3G_info" class="well col-sm-offset-1 col-sm-10" style="display:block" >
   <div class="form-group">
-  <label class="col-sm-3 control-label" for="NetOperator">3G运营商</label>
-    <div class="col-sm-9">
+  <label class="col-sm-4 control-label" for="NetOperator">3G运营商</label>
+    <div class="col-sm-8">
       <label class="radio-inline">
          <input type="radio"  name="NetOperator" value="电信" checked  > 
          <span class="label label-success">电信</span>
@@ -212,41 +218,41 @@
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-3 control-label" for="NetNo">用户号码</label>
-    <div class="col-sm-9">
-      <input id="NetNo" type="text" class="form-control" name="NetNo"  placeholder="用户的号码" >
+  <label class="col-sm-4 control-label" for="NetNo">用户号码</label>
+    <div class="col-sm-7">
+      <input id="NetNo" type="text" class="form-control input-sm" name="NetNo"  placeholder="用户的号码" >
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-3 control-label" for="NetTariff">资费标准</label>
-    <div class="col-sm-9">
-      <input id="NetTariff" type="text" class="form-control" name="NetTariff"  placeholder="资费标准"  >
+  <label class="col-sm-4 control-label" for="NetTariff">资费标准</label>
+    <div class="col-sm-7">
+      <input id="NetTariff" type="text" class="form-control input-sm" name="NetTariff"  placeholder="资费标准"  >
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-3 control-label" for="NetTraffic">包月流量(MB)</label>
-    <div class="col-sm-9">
-      <input id="NetTraffic" type="text" class="form-control" name="NetTraffic"  placeholder="NetTraffic" >
+  <label class="col-sm-4 control-label" for="NetTraffic">包月流量(MB)</label>
+    <div class="col-sm-7">
+      <input id="NetTraffic" type="text" class="form-control input-sm" name="NetTraffic"  placeholder="NetTraffic" >
     </div>
   </div>
   <div class="form-group">
-  <label class="col-sm-3 control-label" for="StartDate">开卡日期</label>
-    <div class="col-sm-9">
-      <input id="StartDate" type="text" class="form-control" name="StartDate"  placeholder="yyyy-mm-dd"  >
+  <label class="col-sm-4 control-label" for="StartDate">开卡日期</label>
+    <div class="col-sm-7">
+      <input id="StartDate" type="text" class="form-control input-sm" name="StartDate"  placeholder="yyyy-mm-dd"  >
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-3 control-label" for="NetQixian">有效期(个月)</label>
-    <div class="col-sm-9">
-      <input id="NetQixian" type="text" class="form-control" name="NetQixian"  placeholder="NetQixian" value="12" >
+  <label class="col-sm-4 control-label" for="NetQixian">有效期(个月)</label>
+    <div class="col-sm-7">
+      <input id="NetQixian" type="text" class="form-control input-sm" name="NetQixian"  placeholder="NetQixian" value="12" >
     </div>
   </div>
  </div>
   <!--有线网络信息-->
- <div id="div_wire_info"  class="well col-sm-offset-2 col-sm-10" style="display:none">
+ <div id="div_wire_info"  class="well col-sm-offset-1 col-sm-10" style="display:none">
   <div class="form-group">
-  <label class="col-sm-3 control-label" for="IPType">IP类型</label>
-    <div class="col-sm-9">
+  <label class="col-sm-4 control-label" for="IPType">IP类型</label>
+    <div class="col-sm-7">
       <label class="radio-inline">
          <input type="radio"  name="IPType" value="D"      /> 
          <span class="label label-success">动态IP</span>
@@ -259,27 +265,27 @@
   </div>
   <!--静态地址-->
   <div class="form-group">
-  <label class="col-sm-3 control-label" for="IPAddress">IP地址</label>
-    <div class="col-sm-9">
-      <input id="IPAddress" type="text" class="form-control" name="IPAddress"  placeholder="IP地址" >
+  <label class="col-sm-4 control-label" for="IPAddress">IP地址</label>
+    <div class="col-sm-7">
+      <input id="IPAddress" type="text" class="form-control input-sm" name="IPAddress"  placeholder="IP地址" >
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-3 control-label" for="IPMask">子网掩码</label>
-    <div class="col-sm-9">
-      <input id="IPMask" type="text" class="form-control" name="IPMask"  placeholder="子网掩码" value="255.255.255.0" >
+  <label class="col-sm-4 control-label" for="IPMask">子网掩码</label>
+    <div class="col-sm-7">
+      <input id="IPMask" type="text" class="form-control input-sm" name="IPMask"  placeholder="子网掩码" value="255.255.255.0" >
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-3 control-label" for="GateWay">网关</label>
-    <div class="col-sm-9">
-      <input id="GateWay" type="text" class="form-control" name="GateWay"  placeholder="网关地址" value="192.168.0.1" >
+  <label class="col-sm-4 control-label" for="GateWay">网关</label>
+    <div class="col-sm-7">
+      <input id="GateWay" type="text" class="form-control input-sm" name="GateWay"  placeholder="网关地址" value="192.168.0.1" >
     </div>
   </div>
    <div class="form-group">
-  <label class="col-sm-3 control-label" for="DNS">DNS</label>
-    <div class="col-sm-9">
-      <input id="DNS" type="text" class="form-control" name="DNS"  placeholder="DNS地址"  >
+  <label class="col-sm-4 control-label" for="DNS">DNS</label>
+    <div class="col-sm-7">
+      <input id="DNS" type="text" class="form-control input-sm" name="DNS"  placeholder="DNS地址"  >
     </div>
   </div>
 </div> <!--end div_wire_info-->
@@ -329,6 +335,10 @@
     	digits:true,
       minlength: 6,
       maxlength: 6
+    },
+    SiteAliasName: {
+      required: true,
+      maxlength:10
     },
     InstallDate: {
       dateISO: true
