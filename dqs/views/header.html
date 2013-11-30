@@ -16,19 +16,27 @@
 <link href="/static/css/messenger/messenger-theme-future.css" rel="stylesheet" media="screen">
 </head>
 <body>
-  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
+<div id="wrapper" class="">
+  	<div class="navbar " role="navigation">
+      <div id="nav-logo" class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="navbar-brand" >
+          	<img class="img-circle"   height="40" src="//d336s8nt4p00c3.cloudfront.net/images/stylight_logo.p10285.png" alt="STYLIGHT">
+          	<strong>&nbsp;广元市地震烈度速报系统</strong>
+          	</span>
+        </div>
+      </div>
+     </div>
+     <div class="sub-navbar">
+      <div id="nav-menu" class="container">
+      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar">ss</span>
             <span class="icon-bar">sss</span>
             <span class="icon-bar">sss</span>
           </button>
-          <a class="navbar-brand" href="/"><b>县市地震烈度速报系统</b></a>
-        </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <!--<li class="active"><a href="/">首页</a></li>-->
+            <li class="active"><a href="/">系统主界面</a></li>
             {{if hasrole .CurrentUser.Roles "role_admin" "role_device"}}
             <li class="dropdown">
             	<a href="#" class="dropdown-toggle" data-toggle="dropdown">设备信息<b class="caret"></b></a>
@@ -61,14 +69,14 @@
           </ul>
           {{if .isLogin}}
            <ul class="nav navbar-nav navbar-right">
-            <li><a href="/userinfo/view/{{.CurrentUser.ObjectId.Hex}}" data-toggle="tooltip"  data-placement="bottom" title="设置用户信息"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{.CurrentUserName}}</a></li>
-            <li><a href="/signout" data-toggle="tooltip"  data-placement="bottom" title="注销"><span class="glyphicon glyphicon-log-out"></span></a></li>
+            <li><a href="/userinfo/view/{{.CurrentUser.ObjectId.Hex}}" data-toggle="tooltip"  data-placement="bottom" title="设置用户信息"><small><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{.CurrentUserName}}</small></a></li>
+            <li><a href="/signout" data-toggle="tooltip"  data-placement="bottom" title="注销"><small><span class="glyphicon glyphicon-log-out"></span></small></a></li>
          </ul>
           {{else}}
-          <div class="col-lg-3  navbar-right text-center">
-          <div id="global-login-show" style="margin-top:15px;">
-          	<a href="#" class="label" style="color:#999999;" data-toggle="popover" title="请登录" data-content="" data-original-title="请在此登录" ><span class="glyphicon glyphicon-log-in"></span>&nbsp;&nbsp;登录</a>
-          </div>
+          <ul class="col-md-3 nav navbar-nav navbar-right ">
+          <li id="global-login-show" class="col-md-offset-4">
+          	<a href="#"  data-toggle="popover" title="请登录" data-content="" data-original-title="请在此登录" ><small><span class="glyphicon glyphicon-log-in"></span>&nbsp;&nbsp;登录</small></a>
+          </li>
           <div id="global-login-div" style="display:none">
            <form id="signform" action="/sign" method="post" class="navbar-form ">
              	<div class="form-group">
@@ -95,7 +103,7 @@
             </div>
           </form>
          </div>
-        </div>
+        </ul>
           {{end}}
         </div><!--/.navbar-collapse -->
       </div>
