@@ -3,15 +3,17 @@ body {
   /*padding-top: 100px;
   padding-bottom: 20px;
   */
+  background-color: #E6E6E6;
 }
 #wrapper {
     height: auto !important;
     margin: 0 auto -240px;
     min-height: 100%;
 }
+
 .navbar {
-	  background-color: #ECE8ED;
-    border-bottom: 1px solid #E8E8E8;
+	  background-color: #399BF1;
+    /*border-bottom: 1px solid #E8E8E8;*/
     border-radius: 0;
     min-height: 40px;
     margin-bottom: 0;
@@ -22,12 +24,12 @@ body {
 .navbar-brand {
     float: left;
     font-size: 28px;
-    line-height: 40px;
+    /*line-height: 40px;*/
     padding: 0 0 0 25px;
     font-family: "微软雅黑","宋体","Times New Roman",Georgia,Serif;
 }
 .sub-navbar {
-    background-color: #ECE8ED;
+    background-color: #42A2EF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 4px rgba(0, 0, 0, 0.05);
     height: 40px;
     position: relative;
