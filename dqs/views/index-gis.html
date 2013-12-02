@@ -1,16 +1,16 @@
 ﻿ {{template "header" .}}
-
 <div style="background-color:#eee;padding:10px 0px;">
  <div class="container">
  	
  	<div class="row">
    <div id="div-list" class="col-md-2">
-       <table class="table table-hover table-bordered table-condensed">
+     <div id="devices-list">
+      <table id="devices-list-table" class="table table-hover table-bordered table-condensed">
        <thead>
 		   <tr>
 			   <th>#</th>
 			   <th>编号</th>
-			   <th>站点</th>
+			   <th>观测点</th>
 		   </tr>
 	     </thead>
 	     <tbody>
@@ -18,14 +18,45 @@
 	     	<tr>
 	     		<td>{{if .Online}}<span class="glyphicon glyphicon-refresh text-info"></span>{{else}}<span class="glyphicon glyphicon-refresh text-muted"></span>{{end}}</td>
 	     		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.SensorId}}</td>
-	     		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.SetParams.SiteName}}</td>
+	     		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.CustomParams.SiteAliasName}}</td>
 	     	</tr>
 	     	{{end}}
 	     </tbody>	
       </table>
-   
+	     <div id="device-pager" class="pagination"></div>
+    </div>
+    
+    <div id="events-list">
+      <table class="table table-hover table-bordered table-condensed">
+       <thead>
+		   <tr>
+			   <th>#</th>
+			   <th>时间</th>
+			   <th>烈度</th>
+		   </tr>
+	     </thead>
+	     <tbody>
+
+	     	<tr>
+	     		<td><span class="glyphicon glyphicon-flash"></span></td>
+	     		<td >2013-01-01</td>
+	     		<td >1</td>
+	     	</tr>
+        <tr>
+	     		<td><span class="glyphicon glyphicon-flash"></span></td>
+	     		<td >2013-01-01 10:00</td>
+	     		<td >2</td>
+	     	</tr>
+	     	<tr>
+	     		<td><span class="glyphicon glyphicon-flash"></span></td>
+	     		<td >2013-01-01 10:00</td>
+	     		<td >3</td>
+	     	</tr>
+	     </tbody>	
+      </table>
+    </div>
    </div>
-   <div id="map" class="col-md-9"  style="height:550px;border:#F6F6F6 solid 1px;"></div>
+   <div id="map" class="col-md-10"  style="height:550px;border:#F6F6F6 solid 1px;"></div>
   </div>
   
  </div>
@@ -42,7 +73,7 @@
 </script>
 <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
 -->
-
+<script language="javascript" src="/static/js/bootstrap-paginator.min.js"></script>
 <script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
 <script language="javascript" src="/static/js/messenger/messenger.min.js"></script>
 <script language="javascript" src="/static/js/messenger/messenger-theme-future.js"></script>
@@ -71,7 +102,7 @@ function createPopup(feature) {
 			content+='<p class="text-danger">'+feature.attributes.initTime+' PGA:'+feature.attributes.PGA+' SI:'+feature.attributes.SI+'</p>';
     }
 		content+='</div>';
-    
+     
     feature.popup = new OpenLayers.Popup.FramedCloud("pop",
           feature.geometry.getBounds().getCenterLonLat(),
           null,
@@ -174,8 +205,49 @@ function queryAlarm(){
   });
 }
 
+//设备翻页
+function PageDevice(page){
+	var newtablestr="";
+	$.getJSON("/listdevice?pagesize=5&page="+page, function(data){
+		  
+		//更新设备信息
+   $.each(data.Data, function(i,item){
+   	 newtablestr+="<tr><td><span class=\"glyphicon glyphicon-refresh ";
+   	 if(item.Online==true){
+   	 	 newtablestr+=" text-info ";
+   	 	}else{
+   	 		newtablestr+=" text-muted ";
+   	 	}
+   	 	newtablestr+=" \"></span></td> <td onclick=\"javascript:showFeature('"+item.SensorId+"');\">"+item.SensorId+"</td>	<td onclick=\"javascript:showFeature('"+item.SensorId+"');\">"+item.CustomParams.SiteAliasName+"</td></tr>";
+   });
+  });
+  $("#devices-list-table").find('tbody').html(newtablestr);
+}
   //初始化加载
 $(document).ready(function() {
+	//设备列表分页
+	 var options = {
+            currentPage: 1,
+            totalPages: {{.devicePages}},
+            numberOfPages:5,
+            alignment:'center',
+            size:'mini',
+            shouldShowPage:function(type, page, current){
+                switch(type)
+                {
+                    case "first":
+                    case "last":
+                        return false;
+                    default:
+                        return true;
+                }
+            },
+            onPageClicked: function(e,originalEvent,type,page){
+                PageDevice(page);
+            }
+        }
+   $('#device-pager').bootstrapPaginator(options);
+	
 	//OpenLayers.Lang.setCode("zh-CN");
   map = new OpenLayers.Map('map');
   basicLayer = new OpenLayers.Layer.WMS("基础地图",

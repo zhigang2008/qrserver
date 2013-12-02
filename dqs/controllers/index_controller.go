@@ -20,7 +20,6 @@ func (this *MainController) Get() {
 	if err != nil {
 		log.Warnf("获取所有设备列表失败:%s", err.Error())
 	}
-
 	this.Data["devices"] = devices
 
 	usegis := false
@@ -37,5 +36,15 @@ func (this *MainController) Get() {
 		this.TplNames = "index.html"
 	}
 
+	//计算设备信息
+	deviceNum := len(devices)
+	pages := 1
+	if deviceNum%10 == 0 {
+		pages = deviceNum / 10
+	} else {
+		pages = deviceNum/10 + 1
+	}
+
+	this.Data["devicePages"] = pages
 	this.Render()
 }

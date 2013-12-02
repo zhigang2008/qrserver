@@ -16,18 +16,18 @@
 <link href="/static/css/messenger/messenger-theme-future.css" rel="stylesheet" media="screen">
 </head>
 <body>
-<div id="wrapper" class="">
+<div id="wrapper" >
   	<div class="navbar " role="navigation">
       <div id="nav-logo" class="container">
         <div class="navbar-header">
           <span class="navbar-brand" >
-          	<img class="img-circle"   height="40" src="/static/image/globe2.png" alt="LOGO">
+          	<img class="img-circle"   height="40" src="/static/image/globe.png" alt="LOGO">
           	<strong>&nbsp;广元市地震烈度速报系统</strong>
           	</span>
         </div>
       </div>
      </div>
-     <div class="sub-navbar">
+     <div class="sub-navbar navbar-dqs">
       <div id="nav-menu" class="container">
       	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="icon-bar">ss</span>
@@ -36,7 +36,7 @@
           </button>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/">系统主界面</a></li>
+            <li ><a href="/">系统首页</a></li>
             {{if hasrole .CurrentUser.Roles "role_admin" "role_device"}}
             <li class="dropdown">
             	<a href="#" class="dropdown-toggle" data-toggle="dropdown">设备信息<b class="caret"></b></a>
@@ -51,7 +51,7 @@
             {{end}}
             <li><a href="/analyze">数据分析</a></li>
             <li><a href="/report">速报管理</a></li>
-            <li><a href="/alarm">报警信息</a></li>
+            <li><a href="/alarm">设备报警</a></li>
             {{if hasrole .CurrentUser.Roles "role_admin" }}
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">系统管理 <b class="caret"></b></a>

@@ -70,6 +70,47 @@ func (this *DeviceController) Get() {
 	this.Render()
 }
 
+//获取设备列表
+func (this *DeviceController) DeviceList() {
+
+	pagination := util.Pagination{}
+	page, err := this.GetInt("page")
+	if err != nil {
+		pagination.CurrentPage = 1
+	} else {
+		pagination.CurrentPage = int(page)
+	}
+	pagesize, err2 := this.GetInt("pagesize")
+	if err2 != nil {
+		pagination.PageSize = 10
+	} else {
+		pagination.PageSize = int(pagesize)
+	}
+
+	//查询参数
+	sid := this.GetString("sensorid")
+	if sid != "" {
+		pagination.AddParams("sensorid", sid)
+	}
+	sonline := this.GetString("online")
+	if sonline != "" {
+		online, err := this.GetBool("online")
+		if err == nil {
+			pagination.AddParams("online", online)
+		}
+	}
+
+	//执行查询
+	err = dao.DeviceList(&pagination)
+	if err != nil {
+		log.Warnf("查询所有设备信息失败:%s", err.Error())
+	}
+	pagination.Compute()
+
+	this.Data["json"] = &pagination
+	this.ServeJson()
+}
+
 //添加设备
 func (this *DeviceController) Post() {
 

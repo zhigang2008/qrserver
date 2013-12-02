@@ -24,6 +24,8 @@ func routeConfig() {
 
 	//添加设备页面
 	beego.Router("/adddevice", &controllers.DeviceController{}, "*:ToDeviceAddPage")
+	//获取设备列表json
+	beego.Router("/listdevice", &controllers.DeviceController{}, "*:DeviceList")
 	//设备定位
 	beego.Router("/location/:id", &controllers.DeviceController{}, "*:DeviceLocation")
 	//设备参数
