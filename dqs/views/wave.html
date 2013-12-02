@@ -11,40 +11,74 @@
     </div>
 -->
 <div class="container">
-    <div id="chartDiv" align="center"> 
+	 <div id="chartDiv" align="center" style="height: 500px; min-width: 500px"></div>
 </div>
 {{template "scripts"}}
-<script src="/static/js/FusionCharts.js"></script>
-<script>
-//<graph caption='Daily Visits'  hovercapbg='FFECAA' hovercapborder='F47E00' formatNumberScale='0' decimalPrecision='0' showvalues='0' numdivlines='3' numVdivlines='0' yaxisminvalue='1000' yaxismaxvalue='1800'  rotateNames='1'>
-var chartData="<graph caption='{{.SensorId}}波形图' subCaption='{{.SeqNo}}' outCnvBaseFontSize='12' hovercapbg='FFECAA' hovercapborder='F47E00'  formatNumberScale='0' decimalPrecision='0' showvalues='0' numdivlines='3' numVdivlines='0'  rotateNames='1'>";
-chartData +="<categories >";
-{{range $i,$v:=.X_data}}
-chartData +="<category name=''/>";
-{{end}}
-chartData +="</categories>";
-chartData +="<dataset seriesName='X分量' color='1D8BD1' anchorBorderColor='1D8BD1' anchorBgColor='1D8BD1'>";
-{{range $i,$v:=.X_data}}
- chartData += "<set  value='{{$v}}' />";
-{{end}}
-chartData +="</dataset>";
-chartData +="<dataset seriesName='Y分量' color='F1683C' anchorBorderColor='F1683C' anchorBgColor='F1683C'>";
-{{range $i,$v:=.Y_data}}
- chartData += "<set  value='{{$v}}' />";
-{{end}}
-chartData +="</dataset>";
-chartData +="<dataset seriesName='Z分量' color='2AD62A' anchorBorderColor='2AD62A' anchorBgColor='2AD62A'>";
-{{range $i,$v:=.Z_data}}
- chartData += "<set  value='{{$v}}' />";
-{{end}}
-chartData +="</dataset>";
- chartData +="</graph> "
-
-// $(document).ready(function() {
-		var chart1 = new FusionCharts("/static/charts/FCF_MSLine.swf", "chart1Id", "980", "400", "0", "1");		   			
-		chart1.setDataXML(chartData);
-		chart1.render("chartDiv");
-//});
+<script src="/static/js/chart/highcharts.js"></script>
+<script type="text/javascript">
+//var mule='<mugl><background color="0xcccccc"/><window margin="0" padding="5" border="5" bordercolor="0x000000"/><plotarea margintop="10" marginleft="38" marginbottom="35" marginright="35"/><horizontalaxis id="x" min="1900" max="2000" length="1" base="-1,-1" anchor="-1" tickmin="-5" tickmax="5"><labels format="%1d" start="0" spacing="1000 500 200 100 50 20 10 5 2 1" anchor="0,0" position="10,-10" angle="45"/></horizontalaxis><verticalaxis id="y" min="-1" max="1" length="1"><labels format="%.2f" start="0" spacing="100 20 10 5 2 1 0.5 0.2 0.1 0.05 0.02 0.01" anchor="0,0" position="0,0" angle="0"/></verticalaxis><plot><horizontalaxis ref="x"><variable ref="x"/></horizontalaxis><verticalaxis ref="y"><variable ref="y"/></verticalaxis><renderer type="line"><option name="linecolor" value="0xff00ff"/><option name="linewidth" value="3"/><option name="pointshape" value="circle"/><option name="pointoutlinewidth" value="2"/><option name="pointoutlinecolor" value="0x000000"/><option name="pointcolor" value="0xffffff"/><option name="pointopacity" value="1.0"/><option name="pointsize" value="3"/></renderer></plot><data><variables><variable column="0" id="x"/><variable column="1" id="y" missingvalue="-9000" missingop="le"/></variables><values>';
+/*mule+='</values></data></mugl>';
+window.multigraph.jQuery(document).ready(function() {
+window.multigraph.jQuery('#chartDiv').multigraph(
+         { 
+         	'muglString' : mule ,
+         	'width':400,
+         	'height':200,
+         	'driver':'raphael',
+         	'error':function(err){alert(err);},
+         	'warning':function(msg){alert(msg);}
+         	});
+ });
+ */
+ var datastr='[';
+ var titstr='[';
+ {{range $i,$v:=.X_data}}
+   {{if eq $i 0}}
+   datastr+='{{$v}}';
+   titstr+='{{$i}}';
+   {{else}}
+   datastr+=',{{$v}}';
+    titstr+=',{{$i}}';
+  {{end}}
+  {{end}}
+  datastr+=']';
+  titstr+=']';
+$('#chartDiv').highcharts({
+            title: {
+                text: 'X向量',
+                x: -20 //center
+            },
+            /*subtitle: {
+                text: 'Source: ',
+                x: -20
+            },*/
+            xAxis: {
+                categories: titstr
+            },
+            yAxis: {
+                title: {
+                    text: 'm2'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: 'm2'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [{
+                name: 'x',
+                data: datastr
+            }]
+        });
 </script>
 {{end}}
 {{template "footer"}}
