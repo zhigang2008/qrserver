@@ -15,11 +15,13 @@
 	     </thead>
 	     <tbody>
 	     	{{range $i,$v:=.devices}}
+	     	{{if lt $i 10}}
 	     	<tr>
 	     		<td>{{if .Online}}<span class="glyphicon glyphicon-refresh text-info"></span>{{else}}<span class="glyphicon glyphicon-refresh text-muted"></span>{{end}}</td>
 	     		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.SensorId}}</td>
 	     		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.CustomParams.SiteAliasName}}</td>
 	     	</tr>
+	     	{{end}}
 	     	{{end}}
 	     </tbody>	
       </table>
@@ -208,8 +210,7 @@ function queryAlarm(){
 //设备翻页
 function PageDevice(page){
 	var newtablestr="";
-	$.getJSON("/listdevice?pagesize=5&page="+page, function(data){
-		  
+	$.getJSON("/listdevice?pagesize=10&page="+page, function(data){
 		//更新设备信息
    $.each(data.Data, function(i,item){
    	 newtablestr+="<tr><td><span class=\"glyphicon glyphicon-refresh ";
@@ -220,8 +221,9 @@ function PageDevice(page){
    	 	}
    	 	newtablestr+=" \"></span></td> <td onclick=\"javascript:showFeature('"+item.SensorId+"');\">"+item.SensorId+"</td>	<td onclick=\"javascript:showFeature('"+item.SensorId+"');\">"+item.CustomParams.SiteAliasName+"</td></tr>";
    });
+   $("#devices-list-table").find('tbody').html(newtablestr);
   });
-  $("#devices-list-table").find('tbody').html(newtablestr);
+ 
 }
   //初始化加载
 $(document).ready(function() {

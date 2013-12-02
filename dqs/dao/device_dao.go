@@ -17,7 +17,7 @@ func GetAllDevices() ([]models.DeviceInfo, error) {
 	m := bson.M{}
 
 	//查询总数
-	err := c.Find(&m).All(&devices)
+	err := c.Find(&m).Sort("-registertime").All(&devices)
 	if err != nil {
 		return devices, err
 	}
