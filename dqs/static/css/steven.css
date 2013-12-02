@@ -1,6 +1,63 @@
 body {
-  padding-top: 50px;
+	margin:0;
+  /*padding-top: 100px;
   padding-bottom: 20px;
+  */
+  background-color: #E6E6E6;
+}
+#wrapper {
+    height: auto !important;
+    margin: 0 auto -240px;
+    min-height: 100%;
+}
+
+.navbar {
+	  background-color: #399BF1;
+    /*border-bottom: 1px solid #E8E8E8;*/
+    border-radius: 0;
+    min-height: 40px;
+    margin-bottom: 0;
+    padding: 0;
+    position: relative;
+    z-index: 1030;
+}
+.navbar-brand {
+    float: left;
+    font-size: 28px;
+    /*line-height: 40px;*/
+    padding: 0 0 0 25px;
+    font-family: "寰蒋闆呴粦","瀹嬩綋","Times New Roman",Georgia,Serif;
+}
+.sub-navbar {
+    background-color: #42A2EF;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 0 4px rgba(0, 0, 0, 0.05);
+    height: 40px;
+    position: relative;
+    z-index: 1005;
+    margin-bottom:5px;
+}
+#wrapper.subnavbar-fixed .sub-navbar {
+    height: 40px;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1030;
+}
+#wrapper .navbar-nav > li > a {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-size: 125%;
+    font-weight: 600;
+    font-family: "寰蒋闆呴粦","瀹嬩綋","Times New Roman",Georgia,Serif;
+}
+.navbar-collapse {
+    border-top: 1px solid rgba(0, 0, 0, 0);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+    max-height: 340px;
+    overflow-x: visible;
+    padding-left: 0px;
+    padding-right: 15px;
 }
 .table {
  font-size:12px
@@ -11,6 +68,10 @@ body {
 .bootstrap-select.btn-group, .bootstrap-select.btn-group[class*="span"]{
 	margin-bottom:0px;
 }
+.border-bottom{
+border-bottom: 1px solid #E8E8E8;
+}
+
 /* Fix Google Maps canvas
  *
  * Wrap your Google Maps embed in a `.google-map-canvas` to reset Bootstrap's
@@ -25,7 +86,7 @@ body {
 
 /* Optional responsive image override */
 img { max-width: none; }
-/*校验样式*/
+/*鏍￠獙鏍峰紡*/
 .form-group .popover{
 	min-width:150px;
 }
@@ -34,7 +95,7 @@ img { max-width: none; }
 	background-color:transparent;
 	margin-bottom:0px;
 }
-/*调整高德地图显示*/
+/*璋冩暣楂樺痉鍦板浘鏄剧ず*/
 .mcjt * {
 	-webkit-box-sizing: content-box;
   -moz-box-sizing: content-box;

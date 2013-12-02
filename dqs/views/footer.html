@@ -14,6 +14,14 @@
       return $("#global-login-div").html();
     }
 });
+  //hide top logo
+  $(window).scroll(function () {
+        if ($(window).scrollTop() == "0") {
+            $("#wrapper").removeClass("subnavbar-fixed");
+        } else {
+            $("#wrapper").addClass("subnavbar-fixed");
+        }
+    });
 </script>
    </body>
 </html>
