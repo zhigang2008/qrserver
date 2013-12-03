@@ -4,6 +4,7 @@ import (
 	"dqs/dao"
 	"dqs/util"
 	//"github.com/astaxie/beego"
+	//"encoding/json"
 	log "github.com/cihub/seelog"
 )
 
@@ -71,7 +72,7 @@ func (this *AlarmController) GetRealtimeAlarm() {
 
 //获取波形图数据
 func (this *AlarmController) ShowWaveInfoById() {
-
+	this.Data["title"] = "波形图"
 	oid := this.GetString(":objectid")
 
 	//执行查询
@@ -87,7 +88,7 @@ func (this *AlarmController) ShowWaveInfoById() {
 
 //获取波形图数据
 func (this *AlarmController) ShowWaveInfo() {
-
+	this.Data["title"] = "波形图"
 	sid := this.GetString(":sid")
 	seqno := this.GetString(":seqno")
 
@@ -100,4 +101,22 @@ func (this *AlarmController) ShowWaveInfo() {
 	this.Data["waveData"] = waveInfo
 	this.TplNames = "wave.html"
 	this.Render()
+}
+
+//获取波形图数据Json
+func (this *AlarmController) GetWaveInfo() {
+
+	sid := this.GetString(":sid")
+	seqno := this.GetString(":seqno")
+
+	//执行查询
+	waveInfo, err2 := dao.GetWaveInfo(sid, seqno)
+	if err2 != nil {
+		log.Warnf("查询波形数据信息失败:%s", err2.Error())
+	}
+
+	this.Data["json"] = waveInfo
+
+	this.TplNames = "wave.html"
+	this.ServeJson()
 }

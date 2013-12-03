@@ -143,7 +143,7 @@ func GetWaveInfo(SensorId string, SeqNo string) (models.WaveInfo, error) {
 	//构造查询参数
 	m := bson.M{}
 	m["sensorid"] = SensorId
-	m["SeqNo"] = SeqNo
+	m["seqno"] = SeqNo
 
 	//查找数据
 	err := c.Find(&m).One(&wave)

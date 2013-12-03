@@ -21,7 +21,7 @@ func routeConfig() {
 	//波形图展示
 	//beego.Router("/waveinfo/:objectid", &controllers.AlarmController{}, "*:ShowWaveInfoById")
 	beego.Router("/waveinfo/:sid/:seqno", &controllers.AlarmController{}, "*:ShowWaveInfo")
-
+	beego.Router("/getwaveinfo/:sid/:seqno", &controllers.AlarmController{}, "*:GetWaveInfo")
 	//添加设备页面
 	beego.Router("/adddevice", &controllers.DeviceController{}, "*:ToDeviceAddPage")
 	//获取设备列表json

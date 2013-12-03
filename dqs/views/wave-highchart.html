@@ -1,0 +1,80 @@
+﻿ {{template "header" .}}
+
+<!--
+ <div class="jumbotron">
+      <div class="container">
+        <h2><span class="glyphicon glyphicon-chevron-right"></span>建设中....</h2>
+        <p>........</p>
+        <p><a class="btn btn-primary btn-lg">后续完善 &raquo;</a></p>
+      </div>
+    </div>
+-->
+<div class="container">
+	 <div id="chartDiv" align="center" style="height: 150px; min-width: 500px"></div>
+</div>
+{{template "scripts"}}
+<script src="/static/js/chart/highcharts.js"></script>
+<script type="text/javascript">
+//var mule='<mugl><background color="0xcccccc"/><window margin="0" padding="5" border="5" bordercolor="0x000000"/><plotarea margintop="10" marginleft="38" marginbottom="35" marginright="35"/><horizontalaxis id="x" min="1900" max="2000" length="1" base="-1,-1" anchor="-1" tickmin="-5" tickmax="5"><labels format="%1d" start="0" spacing="1000 500 200 100 50 20 10 5 2 1" anchor="0,0" position="10,-10" angle="45"/></horizontalaxis><verticalaxis id="y" min="-1" max="1" length="1"><labels format="%.2f" start="0" spacing="100 20 10 5 2 1 0.5 0.2 0.1 0.05 0.02 0.01" anchor="0,0" position="0,0" angle="0"/></verticalaxis><plot><horizontalaxis ref="x"><variable ref="x"/></horizontalaxis><verticalaxis ref="y"><variable ref="y"/></verticalaxis><renderer type="line"><option name="linecolor" value="0xff00ff"/><option name="linewidth" value="3"/><option name="pointshape" value="circle"/><option name="pointoutlinewidth" value="2"/><option name="pointoutlinecolor" value="0x000000"/><option name="pointcolor" value="0xffffff"/><option name="pointopacity" value="1.0"/><option name="pointsize" value="3"/></renderer></plot><data><variables><variable column="0" id="x"/><variable column="1" id="y" missingvalue="-9000" missingop="le"/></variables><values>';
+/*mule+='</values></data></mugl>';
+window.multigraph.jQuery(document).ready(function() {
+window.multigraph.jQuery('#chartDiv').multigraph(
+         { 
+         	'muglString' : mule ,
+         	'width':400,
+         	'height':200,
+         	'driver':'raphael',
+         	'error':function(err){alert(err);},
+         	'warning':function(msg){alert(msg);}
+         	});
+ });
+ */
+function requestData() {
+    $.ajax({
+        url: '/getwaveinfo/SI30001052/1309010715',
+        success: function(wave) {
+            var series = chart.series[0],
+                shift = series.data.length > 20; // shift if the series is 
+            // add the point
+            chart.series[0].addPoint(wave.X_data, true, shift);
+        },
+        cache: true
+    });
+}
+
+$(document).ready(function() {
+    chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'chartDiv',
+            defaultSeriesType: 'line',
+            zoomType:'x',
+            events: {
+                load: requestData
+            }
+        },
+        title: {
+            text: 'X向量'
+        },
+        xAxis: {
+        	tickInterval:3,
+        	tickPixelInterval:20,
+        	labels: {enabled: false},
+          max:100,
+          min:1
+        },
+        yAxis: {
+            minPadding: 0.2,
+            maxPadding: 0.2,
+            title: {
+                text: 'Value'
+            }
+        },
+        series: [{
+            name: '波形值',
+            data: []
+        }]
+    });        
+});
+</script>
+
+{{template "footer"}}
