@@ -77,7 +77,7 @@ func CheckConfig(conf ServerConfig) (err error) {
 		err = fmt.Errorf("TCP Type only be 'tcp4' or 'tcp6' ")
 		return
 	}
-	if conf.Database.Host == "" {
+	if conf.database_host == "" {
 		err = fmt.Errorf("必须设置数据库地址")
 		return
 	}

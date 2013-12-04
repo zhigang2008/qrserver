@@ -85,7 +85,7 @@ func (this *UserController) Post() {
 	} else {
 		user.Roles = this.GetStrings("Roles")
 		user.ReportSet = reportset
-		user.SetPassword(beego.AppConfig.String("user.default.password"))
+		user.SetPassword(beego.AppConfig.String("user_default_password"))
 		user.CreateTime = time.Now()
 
 		err = dao.AddUser(&user)

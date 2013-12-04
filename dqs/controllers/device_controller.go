@@ -343,14 +343,14 @@ func (this *DeviceController) DeviceLocation() {
 	}
 	this.Data["device"] = device
 
-	usegis, err := beego.AppConfig.Bool("map.gis")
+	usegis, err := beego.AppConfig.Bool("map_gis")
 	if err != nil {
 		usegis = false
 		log.Warnf("无法从配置文件中获取gis启用信息.将使用地图模式.")
 	}
 	if usegis {
-		this.Data["gisServiceUrl"] = beego.AppConfig.String("gis.service.url")
-		this.Data["gisBasicLayer"] = beego.AppConfig.String("gis.layer.basic")
+		this.Data["gisServiceUrl"] = beego.AppConfig.String("gis_service_url")
+		this.Data["gisBasicLayer"] = beego.AppConfig.String("gis_layer_basic")
 		this.TplNames = "location-gis.html"
 	} else {
 		this.TplNames = "location.html"

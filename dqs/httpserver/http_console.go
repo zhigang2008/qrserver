@@ -30,12 +30,12 @@ func StartHttp(workdir string) {
 		return
 	}
 
-	host := beego.AppConfig.String("database.host")
-	dataBaseName := beego.AppConfig.String("database.dbname")
-	dataCollection := beego.AppConfig.String("database.datacollection")
-	deviceCollection := beego.AppConfig.String("database.devicecollection")
-	userCollection := beego.AppConfig.String("database.usercollection")
-	port, err := beego.AppConfig.Int("database.port")
+	host := beego.AppConfig.String("database_host")
+	dataBaseName := beego.AppConfig.String("database_dbname")
+	dataCollection := beego.AppConfig.String("database_datacollection")
+	deviceCollection := beego.AppConfig.String("database_devicecollection")
+	userCollection := beego.AppConfig.String("database_usercollection")
+	port, err := beego.AppConfig.Int("database_port")
 	log.Infof("host=%s\n", host)
 	if err != nil {
 		log.Warnf("Http Server 的配置的数据库端口参数应是整型格式.")
