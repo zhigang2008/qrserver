@@ -143,6 +143,7 @@ type AlarmInfo struct {
 	SI            float32
 	Length        float32
 	CreateTime    time.Time
+	HasWaveInfo   bool
 }
 
 //波形记录数据

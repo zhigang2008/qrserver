@@ -3,6 +3,7 @@ package quickserver
 import (
 	"errors"
 	//"fmt"
+	"dqs/util"
 	log "github.com/cihub/seelog"
 	"net"
 	"time"
@@ -14,12 +15,14 @@ var dataProcessor *DataProcessor
 //包含调用的dll以及 其中的function句柄
 type DataProcessor struct {
 	dataManager *DataManager
+	alarmMap    *util.SafeMap
 }
 
 //初始化全局数据处理器
 func InitDataProcessor(dm *DataManager) {
 	dataProcessor = new(DataProcessor)
 	dataProcessor.dataManager = dm
+	dataProcessor.alarmMap = util.NewSafeMap()
 }
 
 //初始化数据处理器
@@ -100,7 +103,9 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 	}
 	//数据转换
 	sData := FlashData2AlarmInfo(data)
-	err = dp.dataManager.FlashDataSave(sData)
+
+	//err = dp.dataManager.FlashDataSave(sData)
+	err = dp.dataManager.AlarmUpsert(sData)
 	if err != nil {
 		log.Warnf("[%s]报警信息处理失败:%s", id, err.Error())
 		return err
@@ -202,7 +207,7 @@ func (dp *DataProcessor) sendFlashReadCommand(deviceid string, remote string, co
 			log.Infof("向[%s]设备发送波形图读取指令成功:%d", deviceid, n)
 
 			//remote := (*connP).RemoteAddr().String()
-			//等着读取返回的受帧报警数据
+			//等着读取返回的首帧报警数据
 			c := make(chan []byte)
 			AddCommand(remote, "R", c)
 			back := <-c
@@ -237,6 +242,15 @@ func (dp *DataProcessor) ProcessWaveFlashData(content []byte) (err error) {
 	}
 	//数据转换
 	sData := FlashData2AlarmInfo(data)
+
+	//更新报警信息
+	sData.HasWaveInfo = true
+	err = dp.dataManager.AlarmUpsert(sData)
+	if err != nil {
+		log.Warnf("[%s]波形记录报警信息更新失败:%s", id, err.Error())
+	}
+
+	//记录波形记录
 	wData := WaveInfo{}
 	wData.Alarm = *sData
 	wData.SensorId = sData.SensorId
@@ -258,6 +272,10 @@ func (dp *DataProcessor) ProcessWaveFlashData(content []byte) (err error) {
 			return err
 		}
 	}
+
+	//更新设备波形标记
+	dp.alarmMap.Set(sData.SensorId, sData.SeqNo)
+
 	log.Infof("波形记录之报警信息保存成功")
 	return nil
 }
@@ -285,11 +303,23 @@ func (dp *DataProcessor) ProcessWaveData(content []byte) (err error) {
 	log.Infof("波形图%d帧数据:%d", frame, data)
 
 	//数据处理
-	wData, err1 := dp.dataManager.GetLastWave(id)
-	if err1 != nil {
-		log.Warnf("[%s]获取最新的波形图记录失败:%s", id, err1.Error())
-		return errors.New("获取最新波形图失败[" + err1.Error() + "]")
+
+	seqno := dp.alarmMap.Get(id)
+	var wData = WaveInfo{}
+	if v, ok := seqno.(string); ok == true {
+		wData, err = dp.dataManager.GetWaveData(id, v)
+		if err != nil {
+			log.Warnf("获取[%s-%s]波形图失败,将获取最后时间的波形图记录:%s", id, seqno, err.Error())
+		}
 	}
+	if wData.SeqNo == "" {
+		wData, err = dp.dataManager.GetLastWave(id)
+		if err != nil {
+			log.Warnf("[%s]获取最新的波形图记录失败:%s", id, err.Error())
+			return errors.New("获取最新波形图失败[" + err.Error() + "]")
+		}
+	}
+
 	//var i int16
 	//x分量
 	if frame >= 0 && frame < 25 {

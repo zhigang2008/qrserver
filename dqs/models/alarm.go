@@ -23,6 +23,7 @@ type AlarmInfo struct {
 	Intensity     float32 //仪器烈度值
 	Length        float32
 	CreateTime    time.Time
+	HasWaveInfo   bool
 }
 
 //报警信息列表

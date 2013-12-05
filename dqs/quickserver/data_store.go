@@ -80,6 +80,18 @@ func (dm *DataManager) FlashDataSave(data *AlarmInfo) (err error) {
 	return nil
 }
 
+//保存或更改报警信息
+func (dm *DataManager) AlarmUpsert(data *AlarmInfo) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
+	colQuerier := bson.M{"sensorid": data.SensorId, "seqno": data.SeqNo}
+
+	_, err = c.Upsert(colQuerier, data)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 //更新设备状态及参数
 func (dm *DataManager) UpdateDeviceStatus(status *SensorInfo) (err error) {
 	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)

@@ -48,7 +48,7 @@
 	 		<td>{{.PGA}}</td><td>{{.SI}}</td>
 	 		<td>{{.Length}}</td>
 	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05" }}</td>
-	 		<td><a href="/waveinfo/{{.SensorId}}/{{.SeqNo}}" data-toggle="tooltip" data-placement="bottom" title="查看波形图"><span class="glyphicon glyphicon-random"></span></a>  </td>
+	 		<td>{{if .HasWaveInfo}}<a href="/waveinfo/{{.SensorId}}/{{.SeqNo}}" data-toggle="tooltip" data-placement="bottom" title="查看波形图"><span class="glyphicon glyphicon-random"></span></a>{{else}}&nbsp;{{end}}  </td>
 	 	</tr>
    {{end}}
 </tbody>
