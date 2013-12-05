@@ -25,10 +25,10 @@
 var map, basicLayer, vectorLayer,selector;
 var sites=[];
 //最后的坐标
-var lastlng=108.8;
-var lastlat=28.0;
+var lastlng=105.8;
+var lastlat=32.44;
 //放大倍数
-var zoomSize=7;
+var zoomSize=10;
  
 var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
 var projectTo;
@@ -36,18 +36,18 @@ var projectTo;
   //初始化加载
 $(document).ready(function() {
 	//OpenLayers.Lang.setCode("zh-CN");
-  map = new OpenLayers.Map('map', {projection: "EPSG:26713"});
+  map = new OpenLayers.Map('map');
   basicLayer = new OpenLayers.Layer.WMS("基础地图",
-          "{{rawURL .gisServiceUrl}}&layers={{.gisBasicLayer}}",
+         // "{{rawURL .gisServiceUrl}}&layers={{.gisBasicLayer}}",
+         "{{rawURL .gisServiceUrl}}{{rawURL .gisServiceParams}}&layers={{.gisBasicLayer}}",
           {layers: 'basic'});
   map.addLayer(basicLayer);
   
   projectTo = map.getProjectionObject();
 
   //feature 图层          
-  vectorLayer = new OpenLayers.Layer.Vector("数据层");
-
-	map.addLayer(vectorLayer);
+ // vectorLayer = new OpenLayers.Layer.Vector("数据层");
+	//map.addLayer(vectorLayer);
  
  //测试数据
  /*var pointList = []; 
@@ -60,31 +60,35 @@ $(document).ready(function() {
  lineFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(pointList),null,null); 
  vectorLayer.addFeatures([lineFeature]);
 */
-var bounds = new OpenLayers.Bounds(
-                    590223.4382724703, 4914107.882513998,
-                    608462.4604629107, 4920523.89081033
-                );
- var wms = new OpenLayers.Layer.WMS(
-		"sf:bugsites - Untiled", "http://ams.xoomcode.com/geoserver/wms",
+
+ var wms = new OpenLayers.Layer.WMS("烈度等值线", 
+    "{{rawURL .gisServiceUrl}}",
 		{
-			LAYERS: 'sf:bugsites',
+			//LAYERS: 'maptest',
+			TRANSPARENT: true,
 			STYLES: '',
 			//format: format,
-			VALUE_COLUMN:"cat",
-			SIMPLIFY_METHOD: 3,
-			SIMPLIFY_SIZE:90,
-			'INTERVALS[]':"10,20,45,70,100",
-			'INTERVALS_COLORS[]':"0xffffffcc,0xff0000cc,0xffff00cc,0x00ff00cc,0x0000ffcc",
+			//VALUE_COLUMN:"AREA",
+			SIMPLIFY_METHOD: 2,
+			SIMPLIFY_SIZE:6,
+			DATA_ARRAY:"105.75824-32.41943-2,105.76824-32.42943-4,105.77824-32.42043-8,105.72854-32.42043-0,105.73824-32.46943-7,105.74824-32.46943-9",
+			'INTERVALS[]':"0,1,2,3,4,10",
+			'INTERVALS_COLORS[]':"0xffffffcc,0xff0000cc,0xffff00cc,0x00ff00cc,0x0000ffcc,0x0000ffcc",
 			RENDERER_TYPE:2,
 			INTERPOLATION_STRATEGY:2,
 			RADIUS:40,
 			SERVICE:"AMS"
 		},
-		{singleTile: true, ratio: 1} 
+		{
+			singleTile: true,
+			transparent: true,
+			isBaseLayer:false, 
+			opacity: 0.5,
+			ratio: 1} 
 	);
  map.addLayer(wms);
  
-  //map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
+  map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
   //map.addControl(new OpenLayers.Control.PanZoom());
   map.addControl(new OpenLayers.Control.ScaleLine());
   //map.addControl(new OpenLayers.Control.OverviewMap());
@@ -92,7 +96,7 @@ var bounds = new OpenLayers.Bounds(
   map.addControl(new OpenLayers.Control.MousePosition());
   
  //map.zoomToMaxExtent();
- //map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
+ map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
 });
 
 </script>

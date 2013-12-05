@@ -142,7 +142,7 @@ $(document).ready(function() {
 	//OpenLayers.Lang.setCode("zh-CN");
   map = new OpenLayers.Map('map');
   basicLayer = new OpenLayers.Layer.WMS("基础地图",
-          "{{rawURL .gisServiceUrl}}&layers={{.gisBasicLayer}}",
+          "{{rawURL .gisServiceUrl}}{{rawURL .gisServiceParams}}&layers={{.gisBasicLayer}}",
           {layers: 'basic'});
   map.addLayer(basicLayer);
   

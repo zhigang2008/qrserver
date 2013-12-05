@@ -24,6 +24,7 @@ func (this *AnalyzeController) Get() {
 	}
 	if usegis {
 		this.Data["gisServiceUrl"] = beego.AppConfig.String("gis_service_url")
+		this.Data["gisServiceParams"] = beego.AppConfig.String("gis_service_params")
 		this.Data["gisBasicLayer"] = beego.AppConfig.String("gis_layer_basic")
 		this.TplNames = "analyze-gis.html"
 	} else {

@@ -423,11 +423,11 @@
   <label class="col-sm-4 control-label" for="NetType">网络类型</label>
     <div class="col-sm-6">
       <label class="radio-inline">
-         <input type="radio"  name="NetType" value="3G" {{if eq .NetType "3G"}}  checked {{end}} disabled /> 
+         <input type="radio"  name="NetType" value="3G" {{if eq .NetType "3G" }}  checked {{end}} disabled /> 
          <span class="label label-success">3G网络</span>
       </label>
       <label class="radio-inline">
-         <input type="radio"  name="NetType" value="有线"  {{if eq .NetType "有线" ""}} checked {{end}} disabled /> 
+         <input type="radio"  name="NetType" value="有线"  {{if ne .NetType "3G" }} checked {{end}} disabled /> 
          <span class="label label-success">有线网络</span>
       </label>
     </div>
@@ -487,7 +487,7 @@
   {{end}}
  </div>
  <!--有线网络信息-->
- <div id="div_wire_info"  class="well col-sm-offset-2 col-sm-10" style="display:{{if eq .NetType "有线" ""}}block{{else}}none{{end}}">
+ <div id="div_wire_info"  class="well col-sm-offset-2 col-sm-10" style="display:{{if ne .NetType "3G"}}block{{else}}none{{end}}">
   {{with .WireTypeInfo}}
   <div class="form-group">
   <label class="col-sm-4 control-label" for="IPType">IP类型</label>
