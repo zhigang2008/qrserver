@@ -141,9 +141,11 @@ type AlarmInfo struct {
 	Period        float32
 	PGA           float32
 	SI            float32
+	Intensity     float32 //仪器烈度值
 	Length        float32
 	CreateTime    time.Time
 	HasWaveInfo   bool
+	EventId       string //事件编号
 }
 
 //波形记录数据
@@ -156,6 +158,26 @@ type WaveInfo struct {
 	Y_data   [6000]int16
 	Z_data   [6000]int16
 	LUD      time.Time //最后更新时间
+}
+
+//地震事件
+type Event struct {
+	EventId    string
+	EventTime  time.Time
+	AlarmCount int
+	IsConfirm  bool
+	SignalId   string
+	Signal     EventSignal
+}
+
+//地震事件确认信号
+type EventSignal struct {
+	Id          string
+	time        time.Time //震情时间
+	Longitude   float32   //震中位置
+	Latitude    float32
+	Level       int       //震级
+	ReveiveTime time.Time //信号接收时间
 }
 
 //设备信息

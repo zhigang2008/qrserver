@@ -16,6 +16,7 @@ var dataProcessor *DataProcessor
 type DataProcessor struct {
 	dataManager *DataManager
 	alarmMap    *util.SafeMap
+	analyzer    *EarthquakeAnalyzer
 }
 
 //初始化全局数据处理器
@@ -23,12 +24,16 @@ func InitDataProcessor(dm *DataManager) {
 	dataProcessor = new(DataProcessor)
 	dataProcessor.dataManager = dm
 	dataProcessor.alarmMap = util.NewSafeMap()
+	dataProcessor.analyzer = NewEarthquakeAnalyzer("default", dm)
+
 }
 
 //初始化数据处理器
 func NewDataProcessor(dm *DataManager) *DataProcessor {
 	var dp = new(DataProcessor)
 	dp.dataManager = dm
+	dataProcessor.alarmMap = util.NewSafeMap()
+	dataProcessor.analyzer = NewEarthquakeAnalyzer("default", dm)
 	return dp
 }
 
@@ -111,6 +116,10 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 		return err
 	}
 	log.Infof("报警信息保存成功")
+
+	//-----进入震情分析过程------
+	go dp.analyzer.analyze(sData)
+
 	return nil
 }
 

@@ -11,10 +11,12 @@ import (
 )
 
 const (
-	defaultDatabase         = "dqs"      //默认数据库名称
-	defaultDataCollection   = "data"     //默认数据Collection
-	defaultDeviceCollection = "device"   //默认设备Collection
-	defaultWaveCollection   = "wavedata" //默认波形记录Collection
+	defaultDatabase              = "dqs"         //默认数据库名称
+	defaultDataCollection        = "data"        //默认数据Collection
+	defaultDeviceCollection      = "device"      //默认设备Collection
+	defaultWaveCollection        = "wavedata"    //默认波形记录Collection
+	defaultEventCollection       = "event"       //默认事件Collection
+	defaultEventSignalCollection = "eventsignal" //默认事件信号Collection
 )
 
 var (
@@ -23,11 +25,13 @@ var (
 
 //数据库连接服务
 type DataManager struct {
-	session          *mgo.Session
-	databaseName     string
-	dataCollection   string
-	deviceCollection string
-	waveCollection   string
+	session               *mgo.Session
+	databaseName          string
+	dataCollection        string
+	deviceCollection      string
+	waveCollection        string
+	eventCollection       string
+	eventSignalCollection string
 }
 
 //初始化数据库连接
@@ -43,11 +47,13 @@ func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
 	session1.SetMode(mgo.Monotonic, true)
 	log.Info("创建了数据连接")
 	dataManager := &DataManager{
-		session:          session1,
-		databaseName:     defaultDatabase,
-		dataCollection:   defaultDataCollection,
-		deviceCollection: defaultDeviceCollection,
-		waveCollection:   defaultWaveCollection,
+		session:               session1,
+		databaseName:          defaultDatabase,
+		dataCollection:        defaultDataCollection,
+		deviceCollection:      defaultDeviceCollection,
+		waveCollection:        defaultWaveCollection,
+		eventCollection:       defaultEventCollection,
+		eventSignalCollection: defaultEventSignalCollection,
 	}
 	//设置配置文件指定值
 	if conf.DataBaseName != "" {

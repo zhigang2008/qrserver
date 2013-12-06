@@ -24,6 +24,7 @@ type AlarmInfo struct {
 	Length        float32
 	CreateTime    time.Time
 	HasWaveInfo   bool
+	EventId       string //事件编号
 }
 
 //报警信息列表
