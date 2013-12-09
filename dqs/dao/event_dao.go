@@ -1,0 +1,115 @@
+package dao
+
+import (
+	"dqs/models"
+	"labix.org/v2/mgo/bson"
+	"time"
+)
+
+//保存确认信号
+func EventSignalAdd(signal *models.EventSignal) (err error) {
+	c := GetSession().DB(DatabaseName).C(EventSignalCollection)
+
+	err = c.Insert(signal)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//事件列表
+func EventSignalList(n int) (*[]models.EventSignal, error) {
+	c := GetSession().DB(DatabaseName).C(EventSignalCollection)
+
+	eventSignals := []models.EventSignal{}
+	//先查找设备
+	err := c.Find(bson.M{}).Sort("-eventtime").Limit(n).All(&eventSignals)
+	if err != nil {
+		return nil, err
+	}
+	return &eventSignals, nil
+}
+
+//获取事件确认信号
+func GetEventSignalById(sid string) (signal models.EventSignal, err error) {
+	c := GetSession().DB(DatabaseName).C(EventSignalCollection)
+
+	err0 := c.Find(bson.M{"id": sid}).One(&signal)
+	if err0 != nil {
+		return models.EventSignal{}, err0
+	}
+	return signal, nil
+}
+
+//获取当前时间段内有效的信号
+func GetValidEventSignal(begintime, endtime time.Time) (signal models.EventSignal, err error) {
+	c := GetSession().DB(DatabaseName).C(EventSignalCollection)
+
+	m := bson.M{}
+	timeparam := bson.M{}
+	timeparam["$gte"] = begintime
+	timeparam["$lt"] = endtime
+
+	m["time"] = timeparam
+
+	err0 := c.Find(&m).Sort("-time").One(&signal)
+	if err0 != nil {
+		return models.EventSignal{}, err0
+	}
+	return signal, nil
+}
+
+//保存事件
+func EventAdd(event *models.Event) (err error) {
+	c := GetSession().DB(DatabaseName).C(EventCollection)
+	err = c.Insert(event)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//保存更新事件
+func EventUpsert(event *models.Event) (err error) {
+	c := GetSession().DB(DatabaseName).C(EventCollection)
+	query := bson.M{"eventid": event.EventId}
+	_, err = c.Upsert(query, event)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//获取事件
+func GetEventById(sid string) (event models.Event, err error) {
+	c := GetSession().DB(DatabaseName).C(EventCollection)
+
+	err0 := c.Find(bson.M{"eventid": sid}).One(&event)
+	if err0 != nil {
+		return models.Event{}, err0
+	}
+	return event, nil
+}
+
+//更新事件
+func EventUpdate(event *models.Event) (err error) {
+	c := GetSession().DB(DatabaseName).C(EventCollection)
+	err = c.Update(bson.M{"eventid": event.EventId}, event)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//事件列表
+func EventList(n int) (*[]models.Event, error) {
+	c := GetSession().DB(DatabaseName).C(EventCollection)
+
+	events := []models.Event{}
+
+	err := c.Find(bson.M{}).Sort("-eventtime").Limit(n).All(&events)
+	if err != nil {
+		return nil, err
+	}
+	return &events, nil
+}

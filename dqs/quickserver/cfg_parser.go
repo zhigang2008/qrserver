@@ -31,6 +31,7 @@ type ServerConfig struct {
 	HttpServerEnable   bool
 	CRC                bool
 	ReadWaveAfterAlarm bool // 是否报警后立即读取波形记录
+	EventParams        EventParameters
 }
 
 //数据库配置文件
@@ -41,6 +42,13 @@ type DataServerConfig struct {
 	DataBaseName     string
 	DataCollection   string
 	DeviceCollection string
+}
+
+//震情事件判断的参数
+type EventParameters struct {
+	XMLName              xml.Name `xml:"EventParams"`
+	SignalTimeSpan       int
+	ValidEventAlarmCount int
 }
 
 //读取配置文件,并进行校验

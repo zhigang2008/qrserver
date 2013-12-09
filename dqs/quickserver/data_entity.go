@@ -7,16 +7,29 @@ import (
 )
 
 const (
-	I_Register    = 'z'
-	O_ConfRead    = 'g'
-	O_ConfSet     = 's'
-	I_Alert       = 'a'
-	I_AlertUp     = 'A'
-	O_Record      = 'r'
-	I_RecordAlert = 'a'
-	I_RecordData  = 'r'
-	I_Status      = 'g'
+	I_Register      = 'z'
+	O_ConfRead      = 'g'
+	O_ConfSet       = 's'
+	I_Alert         = 'a'
+	I_AlertUp       = 'A'
+	O_Record        = 'r'
+	I_RecordAlert   = 'a'
+	I_RecordData    = 'r'
+	I_Status        = 'g'
+	AlarmTimeLayout = "060102150405"
 )
+
+var Local *time.Location
+
+func init() {
+	l, err := time.LoadLocation("Local")
+	if err == nil {
+		Local = l
+		fmt.Println(Local)
+	} else {
+		fmt.Println("init:" + err.Error())
+	}
+}
 
 /*
 //modbus 协议结构
@@ -138,6 +151,7 @@ type AlarmInfo struct {
 	Direction     int
 	RegionCode    string
 	InitTime      string
+	InitRealTime  time.Time
 	Period        float32
 	PGA           float32
 	SI            float32
@@ -304,5 +318,12 @@ func FlashData2AlarmInfo(f *FlashData) *AlarmInfo {
 	a.SI = f.SI
 	a.Length = f.Length
 	a.CreateTime = time.Now()
+
+	//初始时刻转换
+	rtime, err0 := time.ParseInLocation(AlarmTimeLayout, a.InitTime, Local)
+	if err0 == nil {
+		a.InitRealTime = rtime
+	}
+
 	return &a
 }

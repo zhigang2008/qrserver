@@ -25,4 +25,11 @@
 	<CRC>false</CRC>
 	<!--是否在收到警报数据后立即发送波形记录读取命令-->
 	<ReadWaveAfterAlarm>true</ReadWaveAfterAlarm>
+	<!--震情事件相关的参数设定-->
+	<EventParams>
+	   <!--有效震情信号判断用到的时间宽度设定-->
+	   <SignalTimeSpan>5</SignalTimeSpan>
+	   <!--确认一个震情事件是否有效,报警站点最低数量-->
+	   <ValidEventAlarmCount>3</ValidEventAlarmCount>
+	</EventParams>
 </Server>

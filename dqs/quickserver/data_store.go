@@ -98,6 +98,18 @@ func (dm *DataManager) AlarmUpsert(data *AlarmInfo) (err error) {
 	return nil
 }
 
+//更新报警信息的事件号
+func (dm *DataManager) updateAlarmEvent(data *AlarmInfo) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
+	colQuerier := bson.M{"sensorid": data.SensorId, "seqno": data.SeqNo}
+
+	err = c.Update(colQuerier, bson.M{"eventid": data.EventId})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 //更新设备状态及参数
 func (dm *DataManager) UpdateDeviceStatus(status *SensorInfo) (err error) {
 	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
@@ -277,4 +289,135 @@ func (dm *DataManager) GetLastWave(sid string) (wave WaveInfo, err error) {
 func (dm *DataManager) DataClose() {
 	dm.session.Close()
 
+}
+
+//-------------事件处理-----
+//保存确认信号
+func (dm *DataManager) EventSignalAdd(signal *EventSignal) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventSignalCollection)
+
+	err = c.Insert(signal)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//事件列表
+func (dm *DataManager) EventSignalList(n int) (*[]EventSignal, error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventSignalCollection)
+
+	eventSignals := []EventSignal{}
+	//先查找设备
+	err := c.Find(bson.M{}).Sort("-eventtime").Limit(n).All(&eventSignals)
+	if err != nil {
+		return nil, err
+	}
+	return &eventSignals, nil
+}
+
+//获取事件确认信号
+func (dm *DataManager) GetEventSignalById(sid string) (signal EventSignal, err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventSignalCollection)
+
+	err0 := c.Find(bson.M{"id": sid}).One(&signal)
+	if err0 != nil {
+		return EventSignal{}, err0
+	}
+	return signal, nil
+}
+
+//获取当前时间段内有效的信号
+func (dm *DataManager) GetValidEventSignal(begintime, endtime time.Time) (signal EventSignal, err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventSignalCollection)
+
+	m := bson.M{}
+	timeparam := bson.M{}
+	timeparam["$gte"] = begintime
+	timeparam["$lt"] = endtime
+
+	m["time"] = timeparam
+
+	err0 := c.Find(&m).Sort("-time").One(&signal)
+	if err0 != nil {
+		return EventSignal{}, err0
+	}
+	return signal, nil
+}
+
+//保存事件
+func (dm *DataManager) EventAdd(event *Event) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventCollection)
+	err = c.Insert(event)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//保存更新事件
+func (dm *DataManager) EventUpsert(event *Event) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventCollection)
+	query := bson.M{"eventid": event.EventId}
+	_, err = c.Upsert(query, event)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//获取事件
+func (dm *DataManager) GetEventById(sid string) (event Event, err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventCollection)
+
+	err0 := c.Find(bson.M{"eventid": sid}).One(&event)
+	if err0 != nil {
+		return Event{}, err0
+	}
+	return event, nil
+}
+
+//获取事件
+func (dm *DataManager) GetEventBySingalId(sid string) (event Event, err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventCollection)
+
+	err0 := c.Find(bson.M{"signalid": sid}).One(&event)
+	if err0 != nil {
+		return Event{}, err0
+	}
+	return event, nil
+}
+
+//更新事件
+func (dm *DataManager) EventUpdate(event *Event) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventCollection)
+	err = c.Update(bson.M{"eventid": event.EventId}, event)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//事件列表
+func (dm *DataManager) EventList(n int) (*[]Event, error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventCollection)
+
+	events := []Event{}
+
+	err := c.Find(bson.M{}).Sort("-eventtime").Limit(n).All(&events)
+	if err != nil {
+		return nil, err
+	}
+	return &events, nil
+}
+
+//获取最近的一个事件
+func (dm *DataManager) GetLastEvent() (event Event, err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.eventCollection)
+
+	err0 := c.Find(bson.M{}).Sort("-eventtime").One(&event)
+	if err0 != nil {
+		return Event{}, err0
+	}
+	return event, nil
 }

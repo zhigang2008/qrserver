@@ -17,6 +17,7 @@ type AlarmInfo struct {
 	Direction     int
 	RegionCode    string
 	InitTime      string
+	InitRealTime  time.Time
 	Period        float32
 	PGA           float32
 	SI            float32
