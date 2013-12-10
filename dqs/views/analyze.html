@@ -1,15 +1,117 @@
-﻿ {{template "header" .}}
- <div class="jumbotron">
-      <div class="container">
-        <h2><span class="glyphicon glyphicon-chevron-right"></span>地图分析建设中....</h2>
-        <p>........</p>
-        <p><a class="btn btn-primary btn-lg">后续完善 &raquo;</a></p>
-      </div>
-    </div>
+﻿{{template "header" .}}
+ 
 
-<div class="container">
-      <!-- Example row of columns -->
-     
+ <div class="container">
+ 	
+ 	<div class="panel panel-default">
+  <div class="panel-heading">观测到的震情事件 <span class="pull-right"><a href="/eventlist" class="btn btn-info btn-sm" role="button">查询</a></span></div>
+  <div class="panel-body">
+   <table id="event-list-table" class="table table-condensed">
+       <thead>
+		   <tr>
+			   <th>事件ID</th>
+			   <th>震情时间</th>
+			    <th>报警数</th>
+			   <th>记录时间</th>
+		     <th>已确认</th>
+         <th>操作</th>
+		   </tr>
+	     </thead>
+	     <tbody>
+	     	{{range $i,$v:=.eventList}}
+	     	<tr>
+	 		    <td>{{.EventId}}</td>
+	 		    <td>{{dateformat .EventTime "2006-01-02 15:04:05"}}</td>
+	 		     <td><span class="badge">{{.AlarmCount}}</span></td>
+	 		    <td>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</td>
+	 		    <td>{{if .IsConfirm}}<span class="glyphicon glyphicon-ok text-info"></span>{{else}}<span class="glyphicon glyphicon-minus text-muted"></span>{{end}}</td>
+	 		  	<td><a href="/eventline/{{.EventId}}" data-toggle="tooltip" data-placement="bottom" title="查看等值线"><span class="glyphicon glyphicon-certificate"></span></a></td>
+	     	</tr>
+	     	{{end}}
+	     </tbody>	
+      </table>
+	     <div id="event-pager" class="pagination"></div>
+    </div>
+   </div>
+  <div class="panel panel-default">
+  <!--地震信息-->
+  <div class="panel-heading">接收到的地震信息<span class="pull-right"><a href="/eventsignallist" class="btn btn-info btn-sm" role="button">查询</a></span></div>
+  <div class="panel-body">
+   <table id="event-list-table" class="table  table-condensed">
+       <thead>
+		   <tr>
+			   <th>时间</th>
+			    <th>震中</th>
+			   <th>震级</th>
+		     <th>接收时间</th>
+		   </tr>
+	     </thead>
+	     <tbody>
+	     	{{range $i,$v:=.eventSignalList}}
+	     	<tr>
+	 		    <td>{{dateformat .time "2006-01-02 15:04:05"}}</td>
+	 		     <td>[{{.Longitude}},{{.Latitude}}]</td>
+	 		     <td>{{.Level}}</td>
+	 		    <td>{{dateformat .ReceiveTime "2006-01-02 15:04:05"}}</td>
+	     	</tr>
+	     	{{end}}
+	     </tbody>	
+      </table>
+	     <div id="signal-pager" class="pagination"></div>
+    </div>
+   </div>
  </div>
+
 {{template "scripts"}}
+<script type="text/javascript" src="/static/js/bootstrap-paginator.min.js" charset="UTF-8"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		//设备列表分页
+	 var options = {
+            currentPage: 1,
+            totalPages: {{.eventPages}},
+            numberOfPages:10,
+            alignment:'center',
+            size:'small',
+            shouldShowPage:function(type, page, current){
+                switch(type)
+                {
+                    case "first":
+                    case "last":
+                        return false;
+                    default:
+                        return true;
+                }
+            },
+            onPageClicked: function(e,originalEvent,type,page){
+                PageEvent(page);
+            }
+        }
+   $('#event-pager').bootstrapPaginator(options);
+  //地震信息
+    var options2 = {
+            currentPage: 1,
+            totalPages: {{.signalPages}},
+            numberOfPages:10,
+            alignment:'center',
+            size:'small',
+            shouldShowPage:function(type, page, current){
+                switch(type)
+                {
+                    case "first":
+                    case "last":
+                        return false;
+                    default:
+                        return true;
+                }
+            },
+            onPageClicked: function(e,originalEvent,type,page){
+                PageSignal(page);
+            }
+        }
+    $('#signal-pager').bootstrapPaginator(options2);
+	});
+
+</script>
+
 {{template "footer"}}

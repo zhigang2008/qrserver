@@ -179,6 +179,7 @@ type Event struct {
 	EventId    string
 	EventTime  time.Time
 	AlarmCount int
+	CreateTime time.Time
 	IsConfirm  bool
 	SignalId   string
 	Signal     EventSignal
@@ -191,7 +192,7 @@ type EventSignal struct {
 	Longitude   float32   //震中位置
 	Latitude    float32
 	Level       int       //震级
-	ReveiveTime time.Time //信号接收时间
+	ReceiveTime time.Time //信号接收时间
 }
 
 //设备信息

@@ -2,8 +2,13 @@ package dao
 
 import (
 	"dqs/models"
+	"dqs/util"
 	"labix.org/v2/mgo/bson"
 	"time"
+)
+
+const (
+	EventTimeLayout = "2006-01-02"
 )
 
 //保存确认信号
@@ -135,4 +140,54 @@ func GetAlarmsByEvent(event *models.Event) (*[]models.AlarmInfo, error) {
 		return nil, err0
 	}
 	return &alist, nil
+}
+
+//分页查询
+func EventPageList(p *util.Pagination) error {
+	c := GetSession().DB(DatabaseName).C(EventCollection)
+	events := []models.Event{}
+
+	//构造查询参数
+	m := bson.M{}
+	eventid := p.QueryParams["eventid"]
+	begintime := p.QueryParams["begintime"]
+	endtime := p.QueryParams["endtime"]
+
+	if eventid != nil {
+		m["eventid"] = eventid
+	}
+
+	timeparam := bson.M{}
+	if begintime != nil {
+		sbtime, ok := begintime.(string)
+		if ok {
+			btime, _ := time.ParseInLocation(EventTimeLayout, sbtime, Local)
+			timeparam["$gte"] = btime
+		}
+	}
+	if endtime != nil {
+		setime, ok := endtime.(string)
+		if ok {
+			etime, _ := time.ParseInLocation(EventTimeLayout, setime, Local)
+			etime = etime.Add(time.Hour * 24)
+			timeparam["$lt"] = etime
+		}
+	}
+	m["eventtime"] = timeparam
+
+	//查询总数
+	query := c.Find(&m).Sort("-eventtime")
+	count, err := query.Count()
+	if err != nil {
+		return err
+	}
+	p.Count = count
+
+	//查找列表
+	err = query.Skip(p.SkipNum()).Limit(p.PageSize).All(&events)
+	if err != nil {
+		return err
+	}
+	p.Data = events
+	return nil
 }

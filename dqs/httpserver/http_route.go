@@ -34,6 +34,9 @@ func routeConfig() {
 	//设备自定义参数
 	beego.Router("/customparams/update/:id", &controllers.DeviceController{}, "*:UpdateCustomParams")
 
+	//震情事件
+	beego.Router("/eventlist", &controllers.EventController{}, "*:PageList")
+
 	//用户管理
 	beego.RESTRouter("/user", &controllers.UserController{})
 	beego.Router("/user/add", &controllers.UserController{}, "*:ToUserAddPage")
@@ -53,7 +56,6 @@ func routeConfig() {
 	beego.Router("/login", &controllers.CommonController{}, "*:Login")
 	beego.Router("/register", &controllers.CommonController{}, "*:Register")
 	beego.Router("/registersave", &controllers.CommonController{}, "*:RegisterSave")
-
 	//数据交换
 	beego.Router("/data/alarm", &controllers.ExchangeController{}, "*:ExportAlarms")
 	//测试页面

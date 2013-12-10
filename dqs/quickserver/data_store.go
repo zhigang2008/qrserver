@@ -347,6 +347,7 @@ func (dm *DataManager) GetValidEventSignal(begintime, endtime time.Time) (signal
 
 //保存事件
 func (dm *DataManager) EventAdd(event *Event) (err error) {
+	event.CreateTime = time.Now()
 	c := dm.session.DB(dm.databaseName).C(dm.eventCollection)
 	err = c.Insert(event)
 	if err != nil {
