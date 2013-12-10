@@ -113,3 +113,26 @@ func EventList(n int) (*[]models.Event, error) {
 	}
 	return &events, nil
 }
+
+//获取最近的一个事件
+func GetLastEvent() (event models.Event, err error) {
+	c := GetSession().DB(DatabaseName).C(EventCollection)
+
+	err0 := c.Find(bson.M{}).Sort("-eventtime").One(&event)
+	if err0 != nil {
+		return models.Event{}, err0
+	}
+	return event, nil
+}
+
+//最后一个事件的报警数据
+func GetAlarmsByEvent(event *models.Event) (*[]models.AlarmInfo, error) {
+	c := GetSession().DB(DatabaseName).C(EventCollection)
+	m := bson.M{"eventid": event.EventId}
+	alist := []models.AlarmInfo{}
+	err0 := c.Find(&m).All(&alist)
+	if err0 != nil {
+		return nil, err0
+	}
+	return &alist, nil
+}

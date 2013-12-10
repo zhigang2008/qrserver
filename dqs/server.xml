@@ -31,5 +31,15 @@
 	   <SignalTimeSpan>5</SignalTimeSpan>
 	   <!--确认一个震情事件是否有效,报警站点最低数量-->
 	   <ValidEventAlarmCount>3</ValidEventAlarmCount>
+	   <!--一个报警消息是否属于新的震情事件,其与上个事件的时间间隔(单位:分钟)-->
+	   <NewEventTimeGap>15</NewEventTimeGap>
+	   <!--报警信息与上个事件报警信息平均量的间隔时间倍数-->
+	   <NewEventGapMultiple>2.5</NewEventGapMultiple>
 	</EventParams>
+	<FileConfig>
+	   <!--是否有报警时写入文件中-->
+	   <WriteFile>true</WriteFile>
+	   <!--文件保存路径-->
+	   <FileDir>./outfiles</FileDir>
+	</FileConfig>
 </Server>

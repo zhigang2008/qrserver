@@ -85,8 +85,19 @@ func (eq *EarthquakeAnalyzer) eventJudge(a *AlarmInfo) {
 	if err != nil || lastEvent.EventId == "" {
 		eq.eventRecord(a)
 
+	} else {
+		//存在,则判断时间及其它因素.
+		if eq.isNewEvent(*a, &lastEvent) {
+			eq.eventRecord(a)
+		} else {
+			//更新当前报警事件
+			a.EventId = lastEvent.EventId
+			eq.updateAlarmEvent(a)
+			//更新事件数量
+			lastEvent.AlarmCount += 1
+			eq.updateEvent(&lastEvent)
+		}
 	}
-	//存在,则判断时间及其它因素.
 
 }
 
@@ -152,4 +163,61 @@ func (eq *EarthquakeAnalyzer) updateEvent(event *Event) {
 		log.Warnf("更新地震事件[%s]出错:%s", event.EventId, err.Error())
 	}
 
+}
+
+//是否是新事件
+func (eq *EarthquakeAnalyzer) isNewEvent(a AlarmInfo, le *Event) bool {
+	lastEventTime := le.EventTime
+	alarmTime := a.InitRealTime
+	var laterAlarmTime, earlyAlarmTime time.Time
+	var eventGap, laterAlarmGap, earlyAlarmGap, averageGap time.Duration
+
+	//如果时间距离够长,则判断为新事件
+	eventGap = alarmTime.Sub(lastEventTime)
+	if eventGap > time.Minute*time.Duration(ServerConfigs.EventParams.NewEventTimeGap) {
+		return true
+	}
+
+	//根据事件报警信息进行判断
+	lastAlarms, err0 := eq.dm.GetAlarmsByEvent(le)
+	if err0 != nil {
+		log.Warnf("查询最末事件[%s]的报警信息出错时出错,将该报警标记为新震情事件:%s", le.EventId, err0.Error())
+		return true
+	}
+	//在此进行额外的数据校正
+	le.AlarmCount = len(*lastAlarms)
+	//eq.updateEvent(&le)
+
+	//当报警数过少时,则无法进行群体分析,则断定为同一事件
+	if len(*lastAlarms) < ServerConfigs.EventParams.ValidEventAlarmCount {
+		log.Infof("最近的震情事件[%s]报警数量仅有[%d]个,该次报警判断属于同一事件.", le.EventId, len(*lastAlarms))
+		return false
+	}
+	//较多数数量时,则进行数据距离差的分析
+	laterAlarmTime = (*lastAlarms)[0].InitRealTime
+	earlyAlarmTime = (*lastAlarms)[0].InitRealTime
+	sumGap := time.Duration(0)
+	for _, v := range *lastAlarms {
+		if v.InitRealTime.After(laterAlarmTime) {
+			laterAlarmTime = v.InitRealTime
+		}
+		if v.InitRealTime.Before(earlyAlarmTime) {
+			earlyAlarmTime = v.InitRealTime
+		}
+		sumGap += v.InitRealTime.Sub(lastEventTime)
+	}
+
+	averageGap = sumGap / time.Duration(len(*lastAlarms))
+	laterAlarmGap = laterAlarmTime.Sub(lastEventTime)
+	earlyAlarmGap = earlyAlarmTime.Sub(lastEventTime)
+
+	initMultiple := float64((laterAlarmGap + earlyAlarmGap)) / 2 / float64(averageGap)
+	alarmMultiple := float64(eventGap) / float64(averageGap)
+
+	//离散度过大,则判断为新事件
+	if alarmMultiple > initMultiple*ServerConfigs.EventParams.NewEventGapMultiple {
+		return true
+	}
+
+	return false
 }

@@ -103,7 +103,7 @@ func (dm *DataManager) updateAlarmEvent(data *AlarmInfo) (err error) {
 	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
 	colQuerier := bson.M{"sensorid": data.SensorId, "seqno": data.SeqNo}
 
-	err = c.Update(colQuerier, bson.M{"eventid": data.EventId})
+	err = c.Update(colQuerier, data)
 	if err != nil {
 		return err
 	}
@@ -420,4 +420,16 @@ func (dm *DataManager) GetLastEvent() (event Event, err error) {
 		return Event{}, err0
 	}
 	return event, nil
+}
+
+//最后一个事件的报警数据
+func (dm *DataManager) GetAlarmsByEvent(event *Event) (*[]AlarmInfo, error) {
+	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
+	m := bson.M{"eventid": event.EventId}
+	alist := []AlarmInfo{}
+	err0 := c.Find(&m).All(&alist)
+	if err0 != nil {
+		return nil, err0
+	}
+	return &alist, nil
 }

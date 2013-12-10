@@ -117,6 +117,10 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 	}
 	log.Infof("报警信息保存成功")
 
+	//------写入文件-----
+	if ServerConfigs.FileConfig.WriteFile {
+		go writeAlarm(sData)
+	}
 	//-----进入震情分析过程------
 	go dp.analyzer.analyze(sData)
 
