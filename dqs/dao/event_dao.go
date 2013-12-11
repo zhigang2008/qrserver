@@ -142,6 +142,18 @@ func GetAlarmsByEvent(event *models.Event) (*[]models.AlarmInfo, error) {
 	return &alist, nil
 }
 
+//根据事件ID查找报警数据
+func GetAlarmsByEventId(eventid string) (*[]models.AlarmInfo, error) {
+	c := GetSession().DB(DatabaseName).C(EventCollection)
+	m := bson.M{"eventid": eventid}
+	alist := []models.AlarmInfo{}
+	err0 := c.Find(&m).All(&alist)
+	if err0 != nil {
+		return nil, err0
+	}
+	return &alist, nil
+}
+
 //分页查询
 func EventPageList(p *util.Pagination) error {
 	c := GetSession().DB(DatabaseName).C(EventCollection)
@@ -189,5 +201,59 @@ func EventPageList(p *util.Pagination) error {
 		return err
 	}
 	p.Data = events
+	return nil
+}
+
+//分页查询
+func EventSignalPageList(p *util.Pagination) error {
+	c := GetSession().DB(DatabaseName).C(EventCollection)
+	signals := []models.EventSignal{}
+
+	//构造查询参数
+	m := bson.M{}
+	signalid := p.QueryParams["signalid"]
+	level := p.QueryParams["level"]
+	begintime := p.QueryParams["begintime"]
+	endtime := p.QueryParams["endtime"]
+
+	if signalid != nil {
+		m["id"] = signalid
+	}
+	if level != nil {
+		m["level"] = level
+	}
+
+	timeparam := bson.M{}
+	if begintime != nil {
+		sbtime, ok := begintime.(string)
+		if ok {
+			btime, _ := time.ParseInLocation(EventTimeLayout, sbtime, Local)
+			timeparam["$gte"] = btime
+		}
+	}
+	if endtime != nil {
+		setime, ok := endtime.(string)
+		if ok {
+			etime, _ := time.ParseInLocation(EventTimeLayout, setime, Local)
+			etime = etime.Add(time.Hour * 24)
+			timeparam["$lt"] = etime
+		}
+	}
+	m["time"] = timeparam
+
+	//查询总数
+	query := c.Find(&m).Sort("-time")
+	count, err := query.Count()
+	if err != nil {
+		return err
+	}
+	p.Count = count
+
+	//查找列表
+	err = query.Skip(p.SkipNum()).Limit(p.PageSize).All(&signals)
+	if err != nil {
+		return err
+	}
+	p.Data = signals
 	return nil
 }

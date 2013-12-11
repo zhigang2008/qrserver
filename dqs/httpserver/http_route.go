@@ -35,8 +35,9 @@ func routeConfig() {
 	beego.Router("/customparams/update/:id", &controllers.DeviceController{}, "*:UpdateCustomParams")
 
 	//震情事件
-	beego.Router("/eventlist", &controllers.EventController{}, "*:PageList")
-
+	beego.Router("/eventlist", &controllers.EventController{}, "*:EventPageList")
+	beego.Router("/eventsignallist", &controllers.EventController{}, "*:EventSignalPageList")
+	beego.Router("/eventline/:id", &controllers.EventController{}, "*:EventLine")
 	//用户管理
 	beego.RESTRouter("/user", &controllers.UserController{})
 	beego.Router("/user/add", &controllers.UserController{}, "*:ToUserAddPage")
@@ -58,8 +59,11 @@ func routeConfig() {
 	beego.Router("/registersave", &controllers.CommonController{}, "*:RegisterSave")
 	//数据交换
 	beego.Router("/data/alarm", &controllers.ExchangeController{}, "*:ExportAlarms")
+
+	//关于与帮助
+	beego.Router("/about", &controllers.HelpController{}, "*:About")
+	beego.Router("/help", &controllers.HelpController{}, "*:Help")
 	//测试页面
-	beego.Router("/testgis", &controllers.TestController{}, "*:TestGis")
 	beego.Router("/test", &controllers.TestController{}, "*:Test")
 
 	//静态文件路径

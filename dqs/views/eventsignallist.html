@@ -9,20 +9,26 @@
  <div class="panel panel-default">
   <!-- Default panel contents -->
  <div class="panel-heading">
- 	<span >震情事件记录</span>
+ 	<span>接收的地震事件记录</span>
  </div>
   <div class="panel-body" style="padding:2px">
   	<div class="pull-right">
-   	<form id="searchform" class="form-inline" role="form" action="/eventlist"  method="post"> 
+   	<form id="searchform" class="form-inline" role="form" action="/eventsignallist"  method="post"> 
    		
-   			<div class="col-lg-4">
+   			<div class="col-lg-3">
    				<div class="input-group">
-          <span class="input-group-addon">事件ID:</span>
+          <span class="input-group-addon">地震ID:</span>
       	  <!--<label class="control-label" for="userid">用户ID:</label>-->
-    	    <input id="eventid" type="text"  class="form-control" name="eventid" placeholder="事件ID" value="{{$params.eventid}}"  />
+    	    <input id="signalid" type="text"  class="form-control" name="signalid" placeholder="地震ID" value="{{$params.signalid}}"  />
     	   </div>
     	  </div>
-    		
+    		<div class="col-lg-3">
+   				<div class="input-group">
+          <span class="input-group-addon">震级:</span>
+      	  <!--<label class="control-label" for="userid">用户ID:</label>-->
+    	    <input id="level" type="text"  class="form-control" name="level" placeholder="震级" value="{{$params.level}}"  />
+    	   </div>
+    	  </div>
     	<input id="begintime" type="hidden"   name="begintime" value="{{$params.begintime}}"  />
     	<input id="endtime" type="hidden"   name="endtime" value="{{$params.endtime}}"  />
        <div class="col-lg-4" style="overflow: auto">
@@ -43,24 +49,20 @@
 	<thead>
 		<tr>
 			<th>序号</th>
-			<th>事件ID</th>
-			<th>震情时间</th>
-			<th>报警数</th>
+			<th>ID</th>
+			<th>位置</th>
+			<th>震级</th>
 			<th>记录时间</th>
-		  <th>已确认</th>
-      <th>操作</th>
     </tr>
   </thead>
 	<tbody>
 		{{range $i,$v:=.Data}}
 	 	<tr>
 	 		<td>{{seqno $i $pagesize $curpage}}</td>
-	 		<td>{{.EventId}}</td>
-	 		<td>{{dateformat .EventTime "2006-01-02 15:04:05"}}</td>
-	 		<td>{{.AlarmCount}}</td>
-	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</td>
-	 		<td>{{if .IsConfirm}}<span class="glyphicon glyphicon-ok text-info"></span>{{else}}<span class="glyphicon glyphicon-minus text-muted"></span>{{end}}</td>
-	 		<td><a href="/eventline/{{.EventId}}" data-toggle="tooltip" data-placement="bottom" title="查看等值线"><span class="glyphicon glyphicon-certificate"></span></a></td>
+	 		<td>{{.Id}}</td>
+	 		<td>[{{.Longitude}},{{.Latitude}}]</td>
+	 		<td>{{.Level}}</td>
+	 		<td>{{dateformat .ReceiveTime "2006-01-02 15:04:05"}}</td>
 	 	</tr>
    {{end}}
  </tbody> 
@@ -70,11 +72,11 @@
    <span >{{.CurrentPage}} / {{.PageCount}} 页  [共 {{.Count}} 记录] </span>
    <span class="pull-right">
    	<ul class="pagination" style="margin:1px;padding-top:0px;">
-      <li><a href="{{"/eventlist?page=1&pagesize="|html}}{{.PageSize}}{{purl $params }}">&laquo;</a></li>
+      <li><a href="{{"/eventsignallist?page=1&pagesize="|html}}{{.PageSize}}{{purl $params }}">&laquo;</a></li>
       {{range .NavPages}}
-        <li {{if compare . $curpage}} class="active" {{end}} ><a href="{{"/eventlist?page="|html}}{{.}}{{"&pagesize="|html}}{{$pagesize}}{{purl $params}}">{{.}}</a></li>
+        <li {{if compare . $curpage}} class="active" {{end}} ><a href="{{"/eventsignallist?page="|html}}{{.}}{{"&pagesize="|html}}{{$pagesize}}{{purl $params}}">{{.}}</a></li>
        {{end}}
-      <li><a href="{{"/eventlist?page="|html}}{{.PageCount}}{{"&pagesize="|html}}{{.PageSize}}{{purl $params}}">&raquo;</a></li>
+      <li><a href="{{"/eventsignallist?page="|html}}{{.PageCount}}{{"&pagesize="|html}}{{.PageSize}}{{purl $params}}">&raquo;</a></li>
      </ul>
    </span>
   </div>

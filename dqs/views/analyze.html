@@ -4,7 +4,7 @@
  <div class="container">
  	
  	<div class="panel panel-default">
-  <div class="panel-heading">观测到的震情事件 <span class="pull-right"><a href="/eventlist" class="btn btn-info btn-sm" role="button">查询</a></span></div>
+  <div class="panel-heading">观测到的震情事件 <span class="pull-right"><a href="/eventlist" class="btn btn-info btn-sm" role="button">高级查询</a></span></div>
   <div class="panel-body">
    <table id="event-list-table" class="table table-condensed">
        <thead>
@@ -35,7 +35,7 @@
    </div>
   <div class="panel panel-default">
   <!--地震信息-->
-  <div class="panel-heading">接收到的地震信息<span class="pull-right"><a href="/eventsignallist" class="btn btn-info btn-sm" role="button">查询</a></span></div>
+  <div class="panel-heading">接收到的地震信息<span class="pull-right"><a href="/eventsignallist" class="btn btn-info btn-sm" role="button">高级查询</a></span></div>
   <div class="panel-body">
    <table id="event-list-table" class="table  table-condensed">
        <thead>
@@ -73,7 +73,7 @@
             numberOfPages:10,
             alignment:'center',
             size:'small',
-            shouldShowPage:function(type, page, current){
+            /*shouldShowPage:function(type, page, current){
                 switch(type)
                 {
                     case "first":
@@ -82,7 +82,7 @@
                     default:
                         return true;
                 }
-            },
+            },*/
             onPageClicked: function(e,originalEvent,type,page){
                 PageEvent(page);
             }
@@ -95,7 +95,7 @@
             numberOfPages:10,
             alignment:'center',
             size:'small',
-            shouldShowPage:function(type, page, current){
+            /*shouldShowPage:function(type, page, current){
                 switch(type)
                 {
                     case "first":
@@ -104,7 +104,7 @@
                     default:
                         return true;
                 }
-            },
+            },*/
             onPageClicked: function(e,originalEvent,type,page){
                 PageSignal(page);
             }
