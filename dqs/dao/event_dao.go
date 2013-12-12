@@ -144,7 +144,7 @@ func GetAlarmsByEvent(event *models.Event) (*[]models.AlarmInfo, error) {
 
 //根据事件ID查找报警数据
 func GetAlarmsByEventId(eventid string) (*[]models.AlarmInfo, error) {
-	c := GetSession().DB(DatabaseName).C(EventCollection)
+	c := GetSession().DB(DatabaseName).C(DataCollection)
 	m := bson.M{"eventid": eventid}
 	alist := []models.AlarmInfo{}
 	err0 := c.Find(&m).All(&alist)

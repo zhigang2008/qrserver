@@ -179,7 +179,7 @@ func (this *EventController) EventLine() {
 
 	eventid := this.GetString(":id")
 	var eventSignal models.EventSignal = models.EventSignal{}
-	var dataArray *[]models.NetGrid
+	//var dataArray []models.NetGrid
 	//查找当前事件
 	event, err0 := dao.GetEventById(eventid)
 	if err0 != nil {
@@ -196,7 +196,7 @@ func (this *EventController) EventLine() {
 	}
 
 	//是否加入网格化虚拟站点
-	dataArray = NetGridCompute(alarms, eventSignal)
+	dataArray := NetGridCompute(alarms, eventSignal)
 
 	//传递的数据值
 	DataArrayStr := ""
@@ -204,8 +204,8 @@ func (this *EventController) EventLine() {
 	DataArrayStrSI := ""
 	var lastlng, lastlat float32
 
-	for k, v := range *dataArray {
-		if k < len(*dataArray)-1 {
+	for k, v := range dataArray {
+		if k < len(dataArray)-1 {
 			DataArrayStr += v.String() + ","
 			DataArrayStrPGA += v.StringPGA() + ","
 			DataArrayStrSI += v.StringSI() + ","
@@ -222,7 +222,7 @@ func (this *EventController) EventLine() {
 	this.Data["dataArrayPGA"] = DataArrayStrPGA
 	this.Data["dataArraySI"] = DataArrayStrSI
 
-	this.Data["dataSize"] = len(*dataArray)
+	this.Data["dataSize"] = len(dataArray)
 
 	this.Data["lastlng"] = lastlng
 	this.Data["lastlat"] = lastlat
@@ -244,21 +244,16 @@ func (this *EventController) EventLine() {
 }
 
 //网格化计算数据点
-func NetGridCompute(alarms *[]models.AlarmInfo, eventSignal models.EventSignal) (ng *[]models.NetGrid) {
+func NetGridCompute(alarms *[]models.AlarmInfo, eventSignal models.EventSignal) (ng []models.NetGrid) {
+	fmt.Println(alarms)
 	dataArray := make([]models.NetGrid, len(*alarms), len(*alarms)*2)
 	for k, v := range *alarms {
-		nd := models.NetGrid{}
-		nd.Longitude = v.Longitude
-		nd.Latitude = v.Latitude
-		nd.Value = v.Intensity
-		nd.PGAValue = v.PGA
-		nd.SIValue = v.SI
-		dataArray[k] = nd
+		dataArray[k] = models.NetGrid{Longitude: v.Longitude, Latitude: v.Latitude, Value: v.Intensity, PGAValue: v.PGA, SIValue: v.SI}
 	}
 	fmt.Println(dataArray)
 	//计算虚拟的网格值
 	if eventSignal.Id != "" {
 		//待添加算法
 	}
-	return &dataArray
+	return dataArray
 }
