@@ -4,9 +4,9 @@ import (
 	"dqs/dao"
 	"dqs/models"
 	"dqs/util"
+	"fmt"
 	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
-	"strconv"
 	"time"
 )
 
@@ -64,6 +64,52 @@ func (this *EventController) EventPageList() {
 	this.Data["pagedata"] = pagination
 	this.TplNames = "eventlist.html"
 	this.Render()
+}
+
+//事件列表Json
+func (this *EventController) EventJsonList() {
+
+	pagination := util.Pagination{}
+	page, err := this.GetInt("page")
+	if err != nil {
+		pagination.CurrentPage = 1
+	} else {
+		pagination.CurrentPage = int(page)
+	}
+	pagesize, err2 := this.GetInt("pagesize")
+	if err2 != nil {
+		pagination.PageSize = 10
+	} else {
+		pagination.PageSize = int(pagesize)
+	}
+
+	//查询参数
+	/*
+		eventid := this.GetString("eventid")
+		if eventid != "" {
+			pagination.AddParams("eventid", eventid)
+		}
+		begintime := this.GetString("begintime")
+		if begintime != "" {
+			pagination.AddParams("begintime", begintime)
+		} else {
+			now := time.Now()
+			pagination.AddParams("begintime", now.Format(dao.EventTimeLayout))
+		}
+		endtime := this.GetString("endtime")
+		if endtime != "" {
+			pagination.AddParams("endtime", endtime)
+		}
+	*/
+	//执行查询
+	err = dao.EventPageList(&pagination)
+	if err != nil {
+		log.Warnf("查询震情事件列表失败:%s", err.Error())
+	}
+	pagination.Compute()
+
+	this.Data["json"] = pagination.Data
+	this.ServeJson()
 }
 
 //确认事件列表
@@ -132,7 +178,7 @@ func (this *EventController) EventLine() {
 	this.CheckUser()
 
 	eventid := this.GetString(":id")
-	var eventSignal models.EventSignal
+	var eventSignal models.EventSignal = models.EventSignal{}
 	var dataArray *[]models.NetGrid
 	//查找当前事件
 	event, err0 := dao.GetEventById(eventid)
@@ -142,28 +188,44 @@ func (this *EventController) EventLine() {
 	if event.IsConfirm {
 		eventSignal, err0 = dao.GetEventSignalById(event.SignalId)
 	}
+
+	//查找报警数据
 	alarms, err := dao.GetAlarmsByEventId(eventid)
 	if err != nil {
 		log.Warnf("查找等值线的报警数据时出错:%s", err.Error())
 	}
 
 	//是否加入网格化虚拟站点
-	if eventSignal.Id != "" {
-		dataArray = NetGridCompute(alarms, eventSignal)
-	}
+	dataArray = NetGridCompute(alarms, eventSignal)
 
+	//传递的数据值
 	DataArrayStr := ""
-	for k, v := range *dataArray {
-		if k == len(*dataArray) {
-			DataArrayStr += strconv.FormatFloat(float64(v.Longitude), 'f', -1, 32) + "-" + strconv.FormatFloat(float64(v.Latitude), 'f', -1, 32) + "-" + strconv.FormatFloat(float64(v.Value), 'f', -1, 32)
+	DataArrayStrPGA := ""
+	DataArrayStrSI := ""
+	var lastlng, lastlat float32
 
+	for k, v := range *dataArray {
+		if k < len(*dataArray)-1 {
+			DataArrayStr += v.String() + ","
+			DataArrayStrPGA += v.StringPGA() + ","
+			DataArrayStrSI += v.StringSI() + ","
 		} else {
-			DataArrayStr += strconv.FormatFloat(float64(v.Longitude), 'f', -1, 32) + "-" + strconv.FormatFloat(float64(v.Latitude), 'f', -1, 32) + "-" + strconv.FormatFloat(float64(v.Value), 'f', -1, 32) + ","
+			DataArrayStr += v.String()
+			DataArrayStrPGA += v.StringPGA()
+			DataArrayStrSI += v.StringSI()
+			lastlng = v.Longitude
+			lastlat = v.Latitude
 		}
 	}
 	//添加系统参数
 	this.Data["dataArray"] = DataArrayStr
+	this.Data["dataArrayPGA"] = DataArrayStrPGA
+	this.Data["dataArraySI"] = DataArrayStrSI
+
 	this.Data["dataSize"] = len(*dataArray)
+
+	this.Data["lastlng"] = lastlng
+	this.Data["lastlat"] = lastlat
 
 	usegis := false
 	usegis, err = beego.AppConfig.Bool("map_gis")
@@ -176,11 +238,27 @@ func (this *EventController) EventLine() {
 		this.Data["gisServiceParams"] = beego.AppConfig.String("gis_service_params")
 		this.Data["gisBasicLayer"] = beego.AppConfig.String("gis_layer_basic")
 	}
-	this.TplNames = "index-gis.html"
+	this.TplNames = "eventline.html"
 	this.Render()
 
 }
 
+//网格化计算数据点
 func NetGridCompute(alarms *[]models.AlarmInfo, eventSignal models.EventSignal) (ng *[]models.NetGrid) {
-	return nil
+	dataArray := make([]models.NetGrid, len(*alarms), len(*alarms)*2)
+	for k, v := range *alarms {
+		nd := models.NetGrid{}
+		nd.Longitude = v.Longitude
+		nd.Latitude = v.Latitude
+		nd.Value = v.Intensity
+		nd.PGAValue = v.PGA
+		nd.SIValue = v.SI
+		dataArray[k] = nd
+	}
+	fmt.Println(dataArray)
+	//计算虚拟的网格值
+	if eventSignal.Id != "" {
+		//待添加算法
+	}
+	return &dataArray
 }

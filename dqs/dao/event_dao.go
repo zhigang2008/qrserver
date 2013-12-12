@@ -170,11 +170,13 @@ func EventPageList(p *util.Pagination) error {
 	}
 
 	timeparam := bson.M{}
+	hasTime := false
 	if begintime != nil {
 		sbtime, ok := begintime.(string)
 		if ok {
 			btime, _ := time.ParseInLocation(EventTimeLayout, sbtime, Local)
 			timeparam["$gte"] = btime
+			hasTime = true
 		}
 	}
 	if endtime != nil {
@@ -183,9 +185,12 @@ func EventPageList(p *util.Pagination) error {
 			etime, _ := time.ParseInLocation(EventTimeLayout, setime, Local)
 			etime = etime.Add(time.Hour * 24)
 			timeparam["$lt"] = etime
+			hasTime = true
 		}
 	}
-	m["eventtime"] = timeparam
+	if hasTime {
+		m["eventtime"] = timeparam
+	}
 
 	//查询总数
 	query := c.Find(&m).Sort("-eventtime")
@@ -224,11 +229,13 @@ func EventSignalPageList(p *util.Pagination) error {
 	}
 
 	timeparam := bson.M{}
+	hasTime := false
 	if begintime != nil {
 		sbtime, ok := begintime.(string)
 		if ok {
 			btime, _ := time.ParseInLocation(EventTimeLayout, sbtime, Local)
 			timeparam["$gte"] = btime
+			hasTime = true
 		}
 	}
 	if endtime != nil {
@@ -237,9 +244,12 @@ func EventSignalPageList(p *util.Pagination) error {
 			etime, _ := time.ParseInLocation(EventTimeLayout, setime, Local)
 			etime = etime.Add(time.Hour * 24)
 			timeparam["$lt"] = etime
+			hasTime = true
 		}
 	}
-	m["time"] = timeparam
+	if hasTime {
+		m["time"] = timeparam
+	}
 
 	//查询总数
 	query := c.Find(&m).Sort("-time")

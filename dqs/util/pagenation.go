@@ -64,5 +64,8 @@ func (p *Pagination) AddParams(k string, v interface{}) {
 
 //供数据库分页,跳过的数据量
 func (p *Pagination) SkipNum() int {
+	if p.CurrentPage == 0 {
+		p.CurrentPage = 1
+	}
 	return p.PageSize * (p.CurrentPage - 1)
 }

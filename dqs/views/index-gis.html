@@ -29,31 +29,24 @@
     </div>
     
     <div id="events-list">
-      <table class="table table-hover table-bordered table-condensed">
+      <table id="events-list-table" class="table table-hover table-bordered table-condensed">
        <thead>
 		   <tr>
 			   <th>#</th>
 			   <th>时间</th>
-			   <th>烈度</th>
+			   <th>报警</th>
 		   </tr>
 	     </thead>
 	     <tbody>
-
+        {{range $i,$v:=.events}}
+	     	{{if lt $i 5}}
 	     	<tr>
-	     		<td><span class="glyphicon glyphicon-flash"></span></td>
-	     		<td >2013-01-01</td>
-	     		<td >1</td>
+	     		<td onclick="javascript:showEvent('{{.EventId}}');">{{if .IsConfirm}}<span class="glyphicon glyphicon-flash text-info"></span>{{else}}<span class="glyphicon glyphicon-flash text-muted"></span>{{end}}</td>
+	     		<td>{{dateformat .EventTime "2006-01-02 15:04:05"}}</td>
+	     		<td>{{.AlarmCount}}</td>
 	     	</tr>
-        <tr>
-	     		<td><span class="glyphicon glyphicon-flash"></span></td>
-	     		<td >2013-01-01 10:00</td>
-	     		<td >2</td>
-	     	</tr>
-	     	<tr>
-	     		<td><span class="glyphicon glyphicon-flash"></span></td>
-	     		<td >2013-01-01 10:00</td>
-	     		<td >3</td>
-	     	</tr>
+	     	{{end}}
+	     	{{end}}
 	     </tbody>	
       </table>
     </div>
@@ -193,8 +186,18 @@ function updateMarker(item){
 });
 }
 
-//定时获取报警信息
+//展示事件的等值线
+function showEvent(sid){
+	//提示信息
+  Messenger().post({
+  message: '显示该事件的等值线,建设中...',
+  type: 'info',
+  showCloseButton: true
+});
+}
+//定时查询信息
 function queryAlarm(){
+	//定时获取报警信息
 	$.getJSON("/realtime_alarm?time=5", function(data){
 		//重置所有站点状态
 		$.each(sites,function(i,item){
@@ -204,6 +207,21 @@ function queryAlarm(){
    $.each(data, function(i,item){
    	   updateMarker(item);
    });
+  });
+  
+  //查询事件
+  $.getJSON("/eventjsonlist?pagesize=5", function(data){
+   $.each(data, function(i,item){
+   	  newtablestr+="<tr><td><span class=\"glyphicon glyphicon-flash ";
+   	 if(item.IsConfirm==true){
+   	 	 newtablestr+=" text-info ";
+   	 	}else{
+   	 		newtablestr+=" text-muted ";
+   	 	}
+   	 	newtablestr+=" \"></span></td> <td>"+item.EventTime+"</td><td>"+item.AlarmCount+"</td></tr>";
+   });
+   $("#events-list-table").find('tbody').html(newtablestr);
+ 
   });
 }
 

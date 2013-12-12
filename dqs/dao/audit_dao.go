@@ -59,11 +59,13 @@ func AuditList(p *util.Pagination) error {
 	}
 
 	timeparam := bson.M{}
+	hasTime := false
 	if begintime != nil {
 		sbtime, ok := begintime.(string)
 		if ok {
 			btime, _ := time.ParseInLocation(AuditTimeLayout, sbtime, Local)
 			timeparam["$gte"] = btime
+			hasTime = true
 		}
 	}
 	if endtime != nil {
@@ -72,9 +74,12 @@ func AuditList(p *util.Pagination) error {
 			etime, _ := time.ParseInLocation(AuditTimeLayout, setime, Local)
 			etime = etime.Add(time.Hour * 24)
 			timeparam["$lt"] = etime
+			hasTime = true
 		}
 	}
-	m["acttime"] = timeparam
+	if hasTime {
+		m["acttime"] = timeparam
+	}
 
 	//查询总数
 	query := c.Find(&m).Sort("acttime")

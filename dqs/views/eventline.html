@@ -25,8 +25,8 @@
 var map, basicLayer, vectorLayer,selector;
 var sites=[];
 //最后的坐标
-var lastlng=105.8;
-var lastlat=32.44;
+var lastlng={{.lastlng}}; //105.8;
+var lastlat={{.lastlat}}; //32.44;
 //放大倍数
 var zoomSize=10;
  
@@ -38,7 +38,6 @@ $(document).ready(function() {
 	//OpenLayers.Lang.setCode("zh-CN");
   map = new OpenLayers.Map('map');
   basicLayer = new OpenLayers.Layer.WMS("基础地图",
-         // "{{rawURL .gisServiceUrl}}&layers={{.gisBasicLayer}}",
          "{{rawURL .gisServiceUrl}}{{rawURL .gisServiceParams}}&layers={{.gisBasicLayer}}",
           {layers: 'basic'});
   map.addLayer(basicLayer);
@@ -70,8 +69,8 @@ $(document).ready(function() {
 			//format: format,
 			//VALUE_COLUMN:"AREA",
 			SIMPLIFY_METHOD: 2,
-			SIMPLIFY_SIZE:6,
-			DATA_ARRAY:"105.75824-32.41943-2,105.76824-32.42943-4,105.77824-32.42043-8,105.72854-32.42043-0,105.73824-32.46943-7,105.74824-32.46943-9",
+			SIMPLIFY_SIZE:{{.dataSize}},
+			DATA_ARRAY:"{{.dataArrayPGA}}",
 			'INTERVALS[]':"0,1,2,3,4,10",
 			'INTERVALS_COLORS[]':"0xffffffcc,0xff0000cc,0xffff00cc,0x00ff00cc,0x0000ffcc,0x0000ffcc",
 			RENDERER_TYPE:2,
