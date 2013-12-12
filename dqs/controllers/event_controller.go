@@ -4,7 +4,7 @@ import (
 	"dqs/dao"
 	"dqs/models"
 	"dqs/util"
-	"fmt"
+
 	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 	"time"
@@ -245,12 +245,11 @@ func (this *EventController) EventLine() {
 
 //网格化计算数据点
 func NetGridCompute(alarms *[]models.AlarmInfo, eventSignal models.EventSignal) (ng []models.NetGrid) {
-	fmt.Println(alarms)
+
 	dataArray := make([]models.NetGrid, len(*alarms), len(*alarms)*2)
 	for k, v := range *alarms {
 		dataArray[k] = models.NetGrid{Longitude: v.Longitude, Latitude: v.Latitude, Value: v.Intensity, PGAValue: v.PGA, SIValue: v.SI}
 	}
-	fmt.Println(dataArray)
 	//计算虚拟的网格值
 	if eventSignal.Id != "" {
 		//待添加算法
