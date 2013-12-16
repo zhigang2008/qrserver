@@ -376,5 +376,7 @@ func (dp *DataProcessor) dataMapping(a *AlarmInfo) float32 {
 	if err1 != nil {
 		log.Warnf("未能获取烈度的低位映射值:%s", err0.Error())
 	}
+	//
+
 	return value
 }

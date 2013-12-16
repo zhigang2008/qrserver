@@ -4,9 +4,10 @@ import (
 	"dqs/dao"
 	"dqs/models"
 	"dqs/util"
-
+	"encoding/xml"
 	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
+	"io/ioutil"
 	"time"
 )
 
@@ -319,4 +320,29 @@ func NetGridCompute(alarms *[]models.AlarmInfo, eventSignal models.EventSignal) 
 		//待添加算法
 	}
 	return dataArray
+}
+
+//添加地震事件
+func (this *EventController) AddEventSignal() {
+	body := this.Ctx.Request.Body
+	defer body.Close()
+
+	content, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Errorf("地震事件接口读入数据错误:%s", err.Error())
+		return
+	}
+	//xml解析
+	eventSignal := new(models.EventSignal)
+	if err = xml.Unmarshal(content, eventSignal); err != nil {
+		log.Errorf("地震事件接口xml解析错误:%s", err.Error())
+		return
+	}
+	eventSignal.ReceiveTime = time.Now()
+	err = dao.EventSignalAdd(eventSignal)
+	if err != nil {
+		log.Errorf("保存接收的地震事件失败:%s", err.Error())
+		return
+	}
+	return
 }
