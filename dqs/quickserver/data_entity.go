@@ -330,3 +330,11 @@ func FlashData2AlarmInfo(f *FlashData) *AlarmInfo {
 
 	return &a
 }
+
+//PGA与烈度对照数据
+type DataMapping struct {
+	Id        bson.ObjectId "_id"
+	SiteType  int
+	PGA       float32
+	Intensity float32 //仪器烈度值
+}

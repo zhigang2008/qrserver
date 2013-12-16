@@ -11,12 +11,13 @@ import (
 )
 
 const (
-	defaultDatabase              = "dqs"         //默认数据库名称
-	defaultDataCollection        = "data"        //默认数据Collection
-	defaultDeviceCollection      = "device"      //默认设备Collection
-	defaultWaveCollection        = "wavedata"    //默认波形记录Collection
-	defaultEventCollection       = "event"       //默认事件Collection
-	defaultEventSignalCollection = "eventsignal" //默认事件信号Collection
+	defaultDatabase              = "dqs"          //默认数据库名称
+	defaultDataCollection        = "data"         //默认数据Collection
+	defaultDeviceCollection      = "device"       //默认设备Collection
+	defaultWaveCollection        = "wavedata"     //默认波形记录Collection
+	defaultEventCollection       = "event"        //默认事件Collection
+	defaultEventSignalCollection = "eventsignal"  //默认事件信号Collection
+	defaultIntensityCollection   = "intensitymap" //默认事件信号Collection
 )
 
 var (
@@ -25,13 +26,14 @@ var (
 
 //数据库连接服务
 type DataManager struct {
-	session               *mgo.Session
-	databaseName          string
-	dataCollection        string
-	deviceCollection      string
-	waveCollection        string
-	eventCollection       string
-	eventSignalCollection string
+	session                    *mgo.Session
+	databaseName               string
+	dataCollection             string
+	deviceCollection           string
+	waveCollection             string
+	eventCollection            string
+	eventSignalCollection      string
+	intensityMappingCollection string
 }
 
 //初始化数据库连接
@@ -47,13 +49,14 @@ func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
 	session1.SetMode(mgo.Monotonic, true)
 	log.Info("创建了数据连接")
 	dataManager := &DataManager{
-		session:               session1,
-		databaseName:          defaultDatabase,
-		dataCollection:        defaultDataCollection,
-		deviceCollection:      defaultDeviceCollection,
-		waveCollection:        defaultWaveCollection,
-		eventCollection:       defaultEventCollection,
-		eventSignalCollection: defaultEventSignalCollection,
+		session:                    session1,
+		databaseName:               defaultDatabase,
+		dataCollection:             defaultDataCollection,
+		deviceCollection:           defaultDeviceCollection,
+		waveCollection:             defaultWaveCollection,
+		eventCollection:            defaultEventCollection,
+		eventSignalCollection:      defaultEventSignalCollection,
+		intensityMappingCollection: defaultIntensityCollection,
 	}
 	//设置配置文件指定值
 	if conf.DataBaseName != "" {
@@ -433,4 +436,36 @@ func (dm *DataManager) GetAlarmsByEvent(event *Event) (*[]AlarmInfo, error) {
 		return nil, err0
 	}
 	return &alist, nil
+}
+
+//获取烈度映射数据的低位值
+func (dm *DataManager) GetLowData(st int, val float32) (DataMapping, error) {
+	c := dm.session.DB(dm.databaseName).C(dm.intensityMappingCollection)
+
+	ldata := DataMapping{}
+	m := bson.M{}
+	m["sitetype"] = st
+	m["pga"] = bson.M{"$lte": val}
+
+	err0 := c.Find(&m).Sort("-intensity").One(&ldata)
+	if err0 != nil {
+		return ldata, err0
+	}
+	return ldata, nil
+}
+
+//获取烈度映射数据的高位值
+func (dm *DataManager) GetHighData(st int, val float32) (DataMapping, error) {
+	c := dm.session.DB(dm.databaseName).C(dm.intensityMappingCollection)
+
+	hdata := DataMapping{}
+	m := bson.M{}
+	m["sitetype"] = st
+	m["pga"] = bson.M{"$gte": val}
+
+	err0 := c.Find(&m).Sort("intensity").One(&hdata)
+	if err0 != nil {
+		return hdata, err0
+	}
+	return hdata, nil
 }
