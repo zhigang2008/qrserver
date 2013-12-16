@@ -7,16 +7,17 @@ import (
 )
 
 const (
-	I_Register      = 'z'
-	O_ConfRead      = 'g'
-	O_ConfSet       = 's'
-	I_Alert         = 'a'
-	I_AlertUp       = 'A'
-	O_Record        = 'r'
-	I_RecordAlert   = 'a'
-	I_RecordData    = 'r'
-	I_Status        = 'g'
-	AlarmTimeLayout = "060102150405"
+	I_Register       = 'z'
+	O_ConfRead       = 'g'
+	O_ConfSet        = 's'
+	I_Alert          = 'a'
+	I_AlertUp        = 'A'
+	O_Record         = 'r'
+	I_RecordAlert    = 'a'
+	I_RecordData     = 'r'
+	I_Status         = 'g'
+	AlarmTimeLayout  = "060102150405"
+	CommonTimeLayout = "2006-01-02 15:04:05"
 )
 
 var Local *time.Location
@@ -176,13 +177,14 @@ type WaveInfo struct {
 
 //地震事件
 type Event struct {
-	EventId    string
-	EventTime  time.Time
-	AlarmCount int
-	CreateTime time.Time
-	IsConfirm  bool
-	SignalId   string
-	Signal     EventSignal
+	EventId      string
+	EventTime    time.Time
+	EventTimeStr string //字符串格式的时间
+	AlarmCount   int
+	CreateTime   time.Time
+	IsConfirm    bool
+	SignalId     string
+	Signal       EventSignal
 }
 
 //地震事件确认信号

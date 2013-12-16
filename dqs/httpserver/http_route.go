@@ -39,6 +39,7 @@ func routeConfig() {
 	beego.Router("/eventjsonlist", &controllers.EventController{}, "*:EventJsonList")
 	beego.Router("/eventsignallist", &controllers.EventController{}, "*:EventSignalPageList")
 	beego.Router("/eventline/:id", &controllers.EventController{}, "*:EventLine")
+	beego.Router("/eventlinejson/:id", &controllers.EventController{}, "*:EventLineJson")
 
 	//用户管理
 	beego.RESTRouter("/user", &controllers.UserController{})

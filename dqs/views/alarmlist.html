@@ -43,7 +43,7 @@
 	 		<td>{{if eq .ObserveObject 0}} 深井 {{else if eq .ObserveObject 1}} 自由地表 {{end}}</td>
 	 		<td>{{if eq .Direction 0}} 南北向 {{else if eq .Direction 1}} 东西向 {{end}}</td>
 	 		<td>{{.RegionCode}}</td>
-	 		<td>{{.InitTime}}</td>
+	 		<td>{{dateformat .InitRealTime "2006-01-02 15:04:05" }}</td>
 	 		<td>{{.Period}}</td>
 	 		<td>{{.PGA}}</td><td>{{.SI}}</td>
 	 		<td>{{.Length}}</td>

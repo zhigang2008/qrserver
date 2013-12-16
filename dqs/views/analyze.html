@@ -4,12 +4,12 @@
  <div class="container">
  	
  	<div class="panel panel-default">
-  <div class="panel-heading">观测到的震情事件 <span class="pull-right"><a href="/eventlist" class="btn btn-info btn-sm" role="button">高级查询</a></span></div>
+  <div class="panel-heading">观测到的震情事件 <span class="pull-right"><a href="/eventlist" class="btn btn-info btn-sm" role="button">查看更多</a></span></div>
   <div class="panel-body">
    <table id="event-list-table" class="table table-condensed">
        <thead>
 		   <tr>
-			   <th>事件ID</th>
+			   <!--<th>事件ID</th>-->
 			   <th>震情时间</th>
 			    <th>报警数</th>
 			   <th>记录时间</th>
@@ -20,7 +20,7 @@
 	     <tbody>
 	     	{{range $i,$v:=.eventList}}
 	     	<tr>
-	 		    <td>{{.EventId}}</td>
+	 		    <!--<td>{{.EventId}}</td>-->
 	 		    <td>{{dateformat .EventTime "2006-01-02 15:04:05"}}</td>
 	 		     <td><span class="badge">{{.AlarmCount}}</span></td>
 	 		    <td>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</td>
@@ -35,7 +35,7 @@
    </div>
   <div class="panel panel-default">
   <!--地震信息-->
-  <div class="panel-heading">接收到的地震信息<span class="pull-right"><a href="/eventsignallist" class="btn btn-info btn-sm" role="button">高级查询</a></span></div>
+  <div class="panel-heading">接收到的地震信息<span class="pull-right"><a href="/eventsignallist" class="btn btn-info btn-sm" role="button">查看更多</a></span></div>
   <div class="panel-body">
    <table id="event-list-table" class="table  table-condensed">
        <thead>
@@ -65,7 +65,7 @@
 {{template "scripts"}}
 <script type="text/javascript" src="/static/js/bootstrap-paginator.min.js" charset="UTF-8"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
+/*	$(document).ready(function() {
 		//设备列表分页
 	 var options = {
             currentPage: 1,
@@ -73,16 +73,6 @@
             numberOfPages:10,
             alignment:'center',
             size:'small',
-            /*shouldShowPage:function(type, page, current){
-                switch(type)
-                {
-                    case "first":
-                    case "last":
-                        return false;
-                    default:
-                        return true;
-                }
-            },*/
             onPageClicked: function(e,originalEvent,type,page){
                 PageEvent(page);
             }
@@ -95,23 +85,13 @@
             numberOfPages:10,
             alignment:'center',
             size:'small',
-            /*shouldShowPage:function(type, page, current){
-                switch(type)
-                {
-                    case "first":
-                    case "last":
-                        return false;
-                    default:
-                        return true;
-                }
-            },*/
             onPageClicked: function(e,originalEvent,type,page){
                 PageSignal(page);
             }
         }
     $('#signal-pager').bootstrapPaginator(options2);
 	});
-
+*/
 </script>
 
 {{template "footer"}}

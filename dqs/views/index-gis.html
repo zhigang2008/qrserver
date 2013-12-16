@@ -8,8 +8,8 @@
       <table id="devices-list-table" class="table table-hover table-bordered table-condensed">
        <thead>
 		   <tr>
-			   <th>#</th>
-			   <th>编号</th>
+			   <th><span class="glyphicon glyphicon-tags text-muted"></span></th>
+			   <th>设备编号</th>
 			   <th>观测点</th>
 		   </tr>
 	     </thead>
@@ -29,20 +29,21 @@
     </div>
     
     <div id="events-list">
+    	<!--<button type="button" class="btn btn-default btn-sm" >移除等值线图层</button>-->
       <table id="events-list-table" class="table table-hover table-bordered table-condensed">
        <thead>
-		   <tr>
-			   <th>#</th>
-			   <th>时间</th>
+		   <tr onclick="javascript:removeWMSLayer();">
+			   <th><a href="javascript:removeWMSLayer();" data-toggle="tooltip"  data-placement="top" title="点击此栏可以移除等值线图层"><span class="glyphicon glyphicon-bell text-muted"></span></a></th>
+			   <th>震情时间</th>
 			   <th>报警</th>
 		   </tr>
 	     </thead>
 	     <tbody>
         {{range $i,$v:=.events}}
 	     	{{if lt $i 5}}
-	     	<tr>
-	     		<td onclick="javascript:showEvent('{{.EventId}}');">{{if .IsConfirm}}<span class="glyphicon glyphicon-flash text-info"></span>{{else}}<span class="glyphicon glyphicon-flash text-muted"></span>{{end}}</td>
-	     		<td>{{dateformat .EventTime "2006-01-02 15:04:05"}}</td>
+	     	<tr onclick="javascript:showEvent('{{.EventId}}');">
+	     		<td>{{if .IsConfirm}}<span class="glyphicon glyphicon-flash text-info"></span>{{else}}<span class="glyphicon glyphicon-flash text-muted"></span>{{end}}</td>
+	     		<td>{{.EventTimeStr}}</td>
 	     		<td>{{.AlarmCount}}</td>
 	     	</tr>
 	     	{{end}}
@@ -79,7 +80,7 @@
 }
 </script>
 <script language="javascript">
-var map, basicLayer, vectorLayer,selector;
+var map, basicLayer, vectorLayer,selector,wmsLayer;
 var sites=[];
 //最后的坐标
 var lastlng,lastlat;
@@ -189,14 +190,52 @@ function updateMarker(item){
 //展示事件的等值线
 function showEvent(sid){
 	//提示信息
-  Messenger().post({
+  /*Messenger().post({
   message: '显示该事件的等值线,建设中...',
   type: 'info',
   showCloseButton: true
-});
+ });
+ */
+ if(wmsLayer){
+ 	wmsLayer.destroy();
+ }
+ $.getJSON("/eventlinejson/"+sid, function(data){
+ 	 wmsLayer = new OpenLayers.Layer.WMS("烈度等值线", 
+    "{{rawURL .gisServiceUrl}}",
+		{
+			//LAYERS: 'maptest',
+			TRANSPARENT: true,
+			STYLES: '',
+			//format: format,
+			//VALUE_COLUMN:"AREA",
+			SIMPLIFY_METHOD: 2,
+			SIMPLIFY_SIZE:data.dataSize,
+			DATA_ARRAY:data.dataArrayPGA,
+			'INTERVALS[]':"0,1,2,3,4,10",
+			'INTERVALS_COLORS[]':"0xffffffcc,0xff0000cc,0xffff00cc,0x00ff00cc,0x0000ffcc,0x0000ffcc",
+			RENDERER_TYPE:2,
+			INTERPOLATION_STRATEGY:2,
+			RADIUS:40,
+			SERVICE:"AMS"
+		},
+		{
+			singleTile: true,
+			transparent: true,
+			isBaseLayer:false, 
+			opacity: 0.5,
+			ratio: 1} 
+	);
+ map.addLayer(wmsLayer);
+ });
+}
+//移除等值线图层
+function removeWMSLayer(){
+	if(wmsLayer){
+ 	wmsLayer.destroy();
+ }
 }
 //定时查询信息
-function queryAlarm(){
+function timeQueryData(){
 	//定时获取报警信息
 	$.getJSON("/realtime_alarm?time=5", function(data){
 		//重置所有站点状态
@@ -210,17 +249,18 @@ function queryAlarm(){
   });
   
   //查询事件
+  var eventtablestr="";
   $.getJSON("/eventjsonlist?pagesize=5", function(data){
    $.each(data, function(i,item){
-   	  newtablestr+="<tr><td><span class=\"glyphicon glyphicon-flash ";
+   	  eventtablestr+="<tr  onclick=\"javascript:showEvent('"+item.EventId+"');\"><td><span class=\"glyphicon glyphicon-flash ";
    	 if(item.IsConfirm==true){
-   	 	 newtablestr+=" text-info ";
+   	 	 eventtablestr+=" text-info ";
    	 	}else{
-   	 		newtablestr+=" text-muted ";
+   	 		eventtablestr+=" text-muted ";
    	 	}
-   	 	newtablestr+=" \"></span></td> <td>"+item.EventTime+"</td><td>"+item.AlarmCount+"</td></tr>";
+   	 	eventtablestr+=" \"></span></td> <td>"+item.EventTimeStr+"</td><td>"+item.AlarmCount+"</td></tr>";
    });
-   $("#events-list-table").find('tbody').html(newtablestr);
+   $("#events-list-table").find('tbody').html(eventtablestr);
  
   });
 }
@@ -274,12 +314,6 @@ $(document).ready(function() {
           "{{rawURL .gisServiceUrl}}{{rawURL .gisServiceParams}}&layers={{.gisBasicLayer}}",
           {layers: 'basic'});
   map.addLayer(basicLayer);
-  /*riverLayer = new OpenLayers.Layer.WMS("河流",
-          "{{rawURL .gisServiceUrl}}&layers=dqs:River5_polyline",
-          {layers: 'basic',transparent: true},
-          { isBaseLayer: false });
-  map.addLayer(riverLayer);
-  */
   projectTo = map.getProjectionObject();
  
  /*
@@ -313,7 +347,7 @@ $(document).ready(function() {
 });
 
 //执行定时查询
-	setInterval("queryAlarm()",60000); 
+	setInterval("timeQueryData()",60000); 
 </script>
 
 {{template "footer"}}

@@ -59,6 +59,7 @@ type FilesConfig struct {
 	XMLName   xml.Name `xml:"FileConfig"`
 	WriteFile bool
 	FileDir   string
+	ReportFileDir   string
 }
 
 //读取配置文件,并进行校验

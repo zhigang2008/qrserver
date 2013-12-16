@@ -37,6 +37,8 @@
 	   <!--enable data output-->
 	   <WriteFile>true</WriteFile>
 	   <!--dir path-->
-	   <FileDir>./outfiles</FileDir>
+	   <FileDir>./output/alarms</FileDir>
+	   <!--report file dir-->
+	   <ReportFileDir>./output/reports</ReportFileDir>
 	</FileConfig>
 </Server>

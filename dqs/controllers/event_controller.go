@@ -213,6 +213,9 @@ func (this *EventController) EventLine() {
 			DataArrayStr += v.String()
 			DataArrayStrPGA += v.StringPGA()
 			DataArrayStrSI += v.StringSI()
+		}
+		//设置地图中心点位置
+		if k == 0 {
 			lastlng = v.Longitude
 			lastlat = v.Latitude
 		}
@@ -240,6 +243,67 @@ func (this *EventController) EventLine() {
 	}
 	this.TplNames = "eventline.html"
 	this.Render()
+
+}
+
+//根据地震事件构造等值线
+func (this *EventController) EventLineJson() {
+
+	eventid := this.GetString(":id")
+	var eventSignal models.EventSignal = models.EventSignal{}
+	//查找当前事件
+	event, err0 := dao.GetEventById(eventid)
+	if err0 != nil {
+		log.Warnf("查找事件[%s]失败:%s", eventid, err0.Error())
+	}
+	if event.IsConfirm {
+		eventSignal, err0 = dao.GetEventSignalById(event.SignalId)
+	}
+
+	//查找报警数据
+	alarms, err := dao.GetAlarmsByEventId(eventid)
+	if err != nil {
+		log.Warnf("查找等值线的报警数据时出错:%s", err.Error())
+	}
+
+	//是否加入网格化虚拟站点
+	dataArray := NetGridCompute(alarms, eventSignal)
+
+	//传递的数据值
+	data := make(map[string]interface{})
+	DataArrayStr := ""
+	DataArrayStrPGA := ""
+	DataArrayStrSI := ""
+	var lastlng, lastlat float32
+
+	for k, v := range dataArray {
+		if k < len(dataArray)-1 {
+			DataArrayStr += v.String() + ","
+			DataArrayStrPGA += v.StringPGA() + ","
+			DataArrayStrSI += v.StringSI() + ","
+		} else {
+			DataArrayStr += v.String()
+			DataArrayStrPGA += v.StringPGA()
+			DataArrayStrSI += v.StringSI()
+		}
+		//设置地图中心点位置
+		if k == 0 {
+			lastlng = v.Longitude
+			lastlat = v.Latitude
+		}
+	}
+	//添加系统参数
+	data["dataArray"] = DataArrayStr
+	data["dataArrayPGA"] = DataArrayStrPGA
+	data["dataArraySI"] = DataArrayStrSI
+
+	data["dataSize"] = len(dataArray)
+
+	data["lastlng"] = lastlng
+	data["lastlat"] = lastlat
+
+	this.Data["json"] = data
+	this.ServeJson()
 
 }
 

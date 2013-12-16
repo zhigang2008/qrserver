@@ -49,7 +49,7 @@
 	<thead>
 		<tr>
 			<th>序号</th>
-			<th>ID</th>
+			<th>地震时间</th>
 			<th>位置</th>
 			<th>震级</th>
 			<th>记录时间</th>
@@ -59,7 +59,7 @@
 		{{range $i,$v:=.Data}}
 	 	<tr>
 	 		<td>{{seqno $i $pagesize $curpage}}</td>
-	 		<td>{{.Id}}</td>
+	 		<td>{{dateformat .Time "2006-01-02 15:04:05"}}</td>
 	 		<td>[{{.Longitude}},{{.Latitude}}]</td>
 	 		<td>{{.Level}}</td>
 	 		<td>{{dateformat .ReceiveTime "2006-01-02 15:04:05"}}</td>
@@ -95,7 +95,7 @@
              endDate: moment(),
              minDate: '01/01/2013',
              //maxDate: '12/31/2016',
-             dateLimit: { days: 60 },
+             //dateLimit: { days: 60 },
              showDropdowns: true,
              showWeekNumbers: true,
              timePicker: false,

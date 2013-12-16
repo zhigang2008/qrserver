@@ -40,6 +40,7 @@
 	   <!--是否有报警时写入文件中-->
 	   <WriteFile>true</WriteFile>
 	   <!--文件保存路径-->
-	   <FileDir>./outfiles</FileDir>
+	   <FileDir>./output/alarms</FileDir>
+	   <ReportFileDir>./output/reports</ReportFileDir>
 	</FileConfig>
 </Server>

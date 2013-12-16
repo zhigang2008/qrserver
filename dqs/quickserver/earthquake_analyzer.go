@@ -112,6 +112,7 @@ func (eq *EarthquakeAnalyzer) eventRecord(a *AlarmInfo) {
 	} else {
 		newEvent.EventTime = a.InitRealTime
 	}
+	newEvent.EventTimeStr = newEvent.EventTime.Format(CommonTimeLayout)
 
 	err := eq.dm.EventAdd(newEvent)
 	if err != nil {
