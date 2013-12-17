@@ -327,22 +327,51 @@ func (this *EventController) AddEventSignal() {
 	body := this.Ctx.Request.Body
 	defer body.Close()
 
-	content, err := ioutil.ReadAll(r.Body)
+	content, err := ioutil.ReadAll(body)
 	if err != nil {
 		log.Errorf("地震事件接口读入数据错误:%s", err.Error())
+		this.writeResponse(false, err.Error())
 		return
 	}
 	//xml解析
-	eventSignal := new(models.EventSignal)
-	if err = xml.Unmarshal(content, eventSignal); err != nil {
+	earthQuake := new(models.EarthQuake)
+	if err = xml.Unmarshal(content, earthQuake); err != nil {
 		log.Errorf("地震事件接口xml解析错误:%s", err.Error())
+		this.writeResponse(false, err.Error())
 		return
 	}
+	eventSignal := new(models.EventSignal)
+
+	eventSignal.Id = util.GUID()
+	eventSignal.Longitude = earthQuake.Longitude
+	eventSignal.Latitude = earthQuake.Latitude
+	eventSignal.Level = earthQuake.Level
+	tm, errt := time.Parse(CommonTimeLayout, earthQuake.Time)
+	if errt != nil {
+		eventSignal.Time = time.Now()
+	}
+	eventSignal.Time = tm
 	eventSignal.ReceiveTime = time.Now()
+
 	err = dao.EventSignalAdd(eventSignal)
 	if err != nil {
 		log.Errorf("保存接收的地震事件失败:%s", err.Error())
+		this.writeResponse(false, err.Error())
 		return
 	}
+	log.Infof("成功接收了地震事件%s [%f,%f] %d级", earthQuake.Time, earthQuake.Longitude, earthQuake.Latitude, earthQuake.Level)
+	this.writeResponse(true, "success")
 	return
+}
+
+//写入回复数据
+func (this *EventController) writeResponse(ok bool, msg string) {
+	reswriter := this.Ctx.ResponseWriter
+	fb := models.Feedback{}
+	fb.Ok = ok
+	fb.Message = msg
+	cont, err := xml.Marshal(fb)
+	if err == nil {
+		reswriter.Write(cont)
+	}
 }

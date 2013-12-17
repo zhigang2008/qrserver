@@ -1,6 +1,7 @@
 package models
 
 import (
+	"encoding/xml"
 	"time"
 )
 
@@ -19,9 +20,25 @@ type Event struct {
 //地震事件确认信号
 type EventSignal struct {
 	Id          string
-	time        time.Time //震情时间
+	Time        time.Time //震情时间
 	Longitude   float32   //震中位置
 	Latitude    float32
 	Level       int       //震级
 	ReceiveTime time.Time //信号接收时间
+}
+
+//传入的地震事件
+type EarthQuake struct {
+	Id        string
+	Time      string  //震情时间
+	Longitude float32 //震中位置
+	Latitude  float32
+	Level     int //震级
+}
+
+//反馈的信息
+type Feedback struct {
+	XMLName xml.Name `xml:"xml"`
+	Ok      bool     `xml:"ok"`
+	Message string   `xml:"message"`
 }

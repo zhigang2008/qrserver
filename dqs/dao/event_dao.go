@@ -27,8 +27,8 @@ func EventSignalList(n int) (*[]models.EventSignal, error) {
 	c := GetSession().DB(DatabaseName).C(EventSignalCollection)
 
 	eventSignals := []models.EventSignal{}
-	//先查找设备
-	err := c.Find(bson.M{}).Sort("-eventtime").Limit(n).All(&eventSignals)
+	//先查找
+	err := c.Find(bson.M{}).Sort("-time").Limit(n).All(&eventSignals)
 	if err != nil {
 		return nil, err
 	}
@@ -211,7 +211,7 @@ func EventPageList(p *util.Pagination) error {
 
 //分页查询
 func EventSignalPageList(p *util.Pagination) error {
-	c := GetSession().DB(DatabaseName).C(EventCollection)
+	c := GetSession().DB(DatabaseName).C(EventSignalCollection)
 	signals := []models.EventSignal{}
 
 	//构造查询参数

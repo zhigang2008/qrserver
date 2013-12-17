@@ -1,9 +1,9 @@
 package quickserver
 
 import (
-	"errors"
-	//"fmt"
 	"dqs/util"
+	"errors"
+	"fmt"
 	log "github.com/cihub/seelog"
 	"net"
 	"time"
@@ -377,6 +377,7 @@ func (dp *DataProcessor) dataMapping(a *AlarmInfo) float32 {
 		log.Warnf("未能获取烈度的低位映射值:%s", err0.Error())
 	}
 	//
+	fmt.Printf("%f-%f", lowData, highData)
 
 	return value
 }

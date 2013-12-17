@@ -49,7 +49,7 @@
 	     <tbody>
 	     	{{range $i,$v:=.eventSignalList}}
 	     	<tr>
-	 		    <td>{{dateformat .time "2006-01-02 15:04:05"}}</td>
+	 		    <td>{{dateformat .Time "2006-01-02 15:04:05"}}</td>
 	 		     <td>[{{.Longitude}},{{.Latitude}}]</td>
 	 		     <td>{{.Level}}</td>
 	 		    <td>{{dateformat .ReceiveTime "2006-01-02 15:04:05"}}</td>
