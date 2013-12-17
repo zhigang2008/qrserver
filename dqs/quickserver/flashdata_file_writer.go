@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	FileTimeLayout = "20060102150405000000"
+	FileTimeLayout = "20060102150405.000000"
 )
 
 func writeAlarm(a *AlarmInfo) {

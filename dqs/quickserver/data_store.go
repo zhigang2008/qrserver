@@ -18,6 +18,7 @@ const (
 	defaultEventCollection       = "event"        //默认事件Collection
 	defaultEventSignalCollection = "eventsignal"  //默认事件信号Collection
 	defaultIntensityCollection   = "intensitymap" //默认事件信号Collection
+	defaultConfigCollection      = "configs"      //默认配置信息表
 )
 
 var (
@@ -34,6 +35,7 @@ type DataManager struct {
 	eventCollection            string
 	eventSignalCollection      string
 	intensityMappingCollection string
+	configCollection           string
 }
 
 //初始化数据库连接
@@ -57,6 +59,7 @@ func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
 		eventCollection:            defaultEventCollection,
 		eventSignalCollection:      defaultEventSignalCollection,
 		intensityMappingCollection: defaultIntensityCollection,
+		configCollection:           defaultConfigCollection,
 	}
 	//设置配置文件指定值
 	if conf.DataBaseName != "" {
@@ -468,4 +471,15 @@ func (dm *DataManager) GetHighData(st int, val float32) (DataMapping, error) {
 		return hdata, err0
 	}
 	return hdata, nil
+}
+
+//获取数据库中的配置信息
+func (dm *DataManager) GetDBConfigs() (DatabaseConfig, error) {
+	c := dm.session.DB(dm.databaseName).C(dm.configCollection)
+	dbcfg := DatabaseConfig{}
+	err0 := c.Find(&bson.M{}).One(&dbcfg)
+	if err0 != nil {
+		return dbcfg, err0
+	}
+	return dbcfg, nil
 }

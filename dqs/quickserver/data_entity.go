@@ -338,3 +338,15 @@ type DataMapping struct {
 	PGA       float32
 	Intensity float32 //仪器烈度值
 }
+
+//报表数据
+type Report struct {
+	ReportId     string
+	EventId      string
+	GenerateTime time.Time
+	Summary      map[string]interface{}
+	ImageFile    string
+	Sended       bool
+	Verify       bool
+	Event        Event
+}
