@@ -109,27 +109,32 @@ func (eq *EarthquakeAnalyzer) eventJudge(a *AlarmInfo) {
 
 //确定震情事件
 func (eq *EarthquakeAnalyzer) eventRecord(a *AlarmInfo) {
-	newEvent := new(Event)
-	newEvent.EventId = util.GUID()
-	newEvent.AlarmCount = 1
-	newEvent.IsConfirm = false
-	newEvent.MaxLevel = a.Intensity
 
-	if a.InitRealTime.IsZero() {
-		newEvent.EventTime = time.Now()
-	} else {
-		newEvent.EventTime = a.InitRealTime
-	}
-	newEvent.EventTimeStr = newEvent.EventTime.Format(CommonTimeLayout)
+	//先判断该次报警的级别,达到规定级别才记录事件
+	if a.Intensity >= GlobalConfig.EventParams.MinEventRecordLevel {
 
-	//创建观测事件
-	eq.saveEvent(newEvent)
+		newEvent := new(Event)
+		newEvent.EventId = util.GUID()
+		newEvent.AlarmCount = 1
+		newEvent.IsConfirm = false
+		newEvent.MaxLevel = a.Intensity
 
-	a.EventId = newEvent.EventId
+		if a.InitRealTime.IsZero() {
+			newEvent.EventTime = time.Now()
+		} else {
+			newEvent.EventTime = a.InitRealTime
+		}
+		newEvent.EventTimeStr = newEvent.EventTime.Format(CommonTimeLayout)
 
-	err := eq.dm.updateAlarmEvent(a)
-	if err != nil {
-		log.Warnf("更新震情报警事件[%s-%s]失败:%s", a.SensorId, a.SeqNo, err.Error())
+		//创建观测事件
+		eq.saveEvent(newEvent)
+
+		a.EventId = newEvent.EventId
+
+		err := eq.dm.updateAlarmEvent(a)
+		if err != nil {
+			log.Warnf("更新震情报警事件[%s-%s]失败:%s", a.SensorId, a.SeqNo, err.Error())
+		}
 	}
 
 }

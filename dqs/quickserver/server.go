@@ -260,11 +260,14 @@ func initGlobalConfigs() {
 			GlobalConfig.EventParams.ValidEventAlarmCount = 3
 			GlobalConfig.EventParams.NewEventTimeGap = 15
 			GlobalConfig.EventParams.NewEventGapMultiple = 2.2
+			GlobalConfig.EventParams.MinEventRecordLevel = 3
 			GlobalConfig.FileConfig.WriteFile = true
 			GlobalConfig.FileConfig.FileDir = "./output/alarms"
 			GlobalConfig.FileConfig.ReportFileDir = "./output/reports"
 			GlobalConfig.ReportCfg.SleepTime = 3
-			GlobalConfig.ReportCfg.ReportLevel = 6
+			GlobalConfig.ReportCfg.ReportLevel = 5
+			GlobalConfig.ReportCfg.AuditBeforeSend = true
+			GlobalConfig.ReportCfg.MinDirectSendLevel = 7
 
 			errc := server.dataManager.CreateGlobalConfigs(&GlobalConfig)
 			if errc != nil {

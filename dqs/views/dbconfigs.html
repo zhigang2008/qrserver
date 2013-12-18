@@ -33,7 +33,7 @@
   </div>
   <!--基本参数-->
  <div class="panel panel-primary">
-  <div class="panel-heading">基本参数</div>
+  <div class="panel-heading">基本设置</div>
   <div class="panel-body">
 	 <div class="form-group">
     <label class="col-sm-3 control-label" for="CRC" >进行CRC校验</label>
@@ -65,7 +65,7 @@
  <!--震情事件判断的参数-->
   {{with .EventParams}}
  <div class="panel panel-primary">
-  <div class="panel-heading">震情事件判断的参数</div>
+  <div class="panel-heading">震情事件计算参数</div>
   <div class="panel-body">
 	 <div class="form-group">
     <label class="col-sm-3 control-label" for="SignalTimeSpan" >时间宽度</label>
@@ -93,6 +93,13 @@
     <div class="col-sm-6">
     	<input id="NewEventGapMultiple" type="text" class="form-control input-sm" name="NewEventGapMultiple"  placeholder="NewEventGapMultiple"  value="{{.NewEventGapMultiple}}" disabled />
       <p class="help-block">与上个观测事件报警时间平均量的倍数,超过该数值,则判断为新观测事件</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="MinEventRecordLevel" >事件记录的最低烈度级别</label>
+    <div class="col-sm-6">
+    	<input id="MinEventRecordLevel" type="text" class="form-control input-sm" name="MinEventRecordLevel"  placeholder="MinEventRecordLevel"  value="{{.MinEventRecordLevel}}" disabled />
+      <p class="help-block">仪器观测烈度达到该级别以上,才可以被记录为观测事件.</p>
     </div>
   </div>
   </div>
@@ -135,7 +142,7 @@
    <!--速报相关的配置-->
   {{with .ReportCfg}}
  <div class="panel panel-primary">
-  <div class="panel-heading">速报生成及发送配置</div>
+  <div class="panel-heading">速报生成及发送参数</div>
   <div class="panel-body">
 	 <div class="form-group">
     <label class="col-sm-3 control-label" for="SleepTime" >延时处理时间</label>
@@ -145,10 +152,29 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-3 control-label" for="ReportLevel" >最低烈度级别要求</label>
+    <label class="col-sm-3 control-label" for="ReportLevel" >速报最低烈度级别要求</label>
     <div class="col-sm-6">
     	<input id="ReportLevel" type="text" class="form-control input-sm" name="ReportLevel"  placeholder="ReportLevel"  value="{{.ReportLevel}}" disabled />
-      <p class="help-block">烈度达到该级别及以上级别时,才进行速报的生成</p>
+      <p class="help-block">烈度达到该级别及以上级别时,才进行速报的生成(应大于等于"震情事件计算参数-事件记录最低烈度级别")</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="AuditBeforeSend" >发送前审核</label>
+    <div class="col-sm-6">
+    		<label class="radio-inline">
+        <input type="radio" name="AuditBeforeSend"  value="true" {{if .AuditBeforeSend}} checked {{end}} disabled> 是
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="AuditBeforeSend"  value="false" {{if not .AuditBeforeSend}} checked {{end}} disabled> 否
+      </label>
+      <p class="help-block">速报是否需要在发送前进行审核</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="MinDirectSendLevel" >直接发送的最小级别要求</label>
+    <div class="col-sm-6">
+    	<input id="MinDirectSendLevel" type="text" class="form-control input-sm" name="MinDirectSendLevel"  placeholder="MinDirectSendLevel"  value="{{.MinDirectSendLevel}}" disabled />
+      <p class="help-block">该烈度级别以上的速报自动发送,无需审核</p>
     </div>
   </div>
   </div>
@@ -190,6 +216,10 @@ $(document).ready(function(){
       required: true,
       number:true
     },
+    MinEventRecordLevel: {
+      required: true,
+      digits:true
+    },
     WriteFile: {
       required: true
     },
@@ -227,6 +257,7 @@ $(document).ready(function(){
          	$("#btn-update").text("更改参数");
          	$("#form1 :text").attr('disabled',true);
          	$("#form1 :checkbox").attr('disabled',true);
+         	$("#form1  :radio").attr('disabled',true);
         }
     });
    //提交操作
@@ -242,7 +273,7 @@ $(document).ready(function(){
              success: function(json){
                if(json.Ok==true){
                     showSuccess("配置信息修改成功!");
-               	 
+               	    $("#btn-update").trigger('click');
                 }else{
                  showError(json.Msg);
                 }

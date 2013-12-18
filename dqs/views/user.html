@@ -192,6 +192,7 @@ $(document).ready(function(){
          	$("#btn-update").text("更改信息");
          	$("#userform :text").attr('disabled',true);
          	$("#userform :checkbox").attr('disabled',true);
+         	$("#userform  :radio").attr('disabled',true);
         }
     });
    //提交操作
@@ -207,6 +208,7 @@ $(document).ready(function(){
              success: function(json){
                if(json.Ok==true){
                     showSuccess("用户信息修改成功!");
+                    $("#btn-update").trigger('click');
                	 
                 }else{
                  showError(json.Msg);

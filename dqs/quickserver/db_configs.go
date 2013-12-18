@@ -23,6 +23,7 @@ type EventParameters struct {
 	ValidEventAlarmCount int      //确认一个震情事件是否有效,报警站点最低数量
 	NewEventTimeGap      int      //一个报警消息是否属于新的震情事件,其与上个事件的时间间隔
 	NewEventGapMultiple  float64  //报警信息与上个事件报警信息平均量的间隔时间倍数
+	MinEventRecordLevel  int      //报警信息达到该级别才进行事件记录
 }
 
 //数据文件保存设置
@@ -34,7 +35,9 @@ type FilesConfig struct {
 }
 
 type ReportParameter struct {
-	SleepTime   int //延后时间,单位分钟
-	ReportLevel int //最低的报警级别
+	SleepTime          int  //延后时间,单位分钟
+	ReportLevel        int  //最低的报警级别
+	AuditBeforeSend    bool //发送前是否进行审核
+	MinDirectSendLevel int  //该级别以上自动发送,无需审核
 
 }

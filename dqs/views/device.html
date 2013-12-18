@@ -687,6 +687,7 @@ $(document).ready(function(){
              success: function(json){
                if(json.Ok==true){
                     showSuccess("设备参数更改成功!");
+                    $("#setparams").trigger('click');
                	 
                 }else{
                  showError(json.Msg);
@@ -711,6 +712,7 @@ $(document).ready(function(){
              success: function(json){
                if(json.Ok==true){
                     showSuccess("自定义数据保存成功!");
+                    $("#setparams2").trigger('click');
                 }else{
                  showError(json.Msg);
                 }
