@@ -71,28 +71,28 @@
     <label class="col-sm-3 control-label" for="SignalTimeSpan" >时间宽度</label>
     <div class="col-sm-6">
     	<input id="SignalTimeSpan" type="text" class="form-control input-sm" name="SignalTimeSpan"  placeholder="SignalTimeSpan"  value="{{.SignalTimeSpan}}" disabled />
-      <p class="help-block">有效震情信号判断用到的时间宽度设定.单位:分钟</p>
+      <p class="help-block">有效震情信号列表判断用到的时间宽度设定.单位:分钟</p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-3 control-label" for="ValidEventAlarmCount" >报警点最低数量</label>
     <div class="col-sm-6">
     	<input id="ValidEventAlarmCount" type="text" class="form-control input-sm" name="ValidEventAlarmCount"  placeholder="ValidEventAlarmCount"  value="{{.ValidEventAlarmCount}}" disabled />
-      <p class="help-block">有效震情信号判断用到的时间宽度设定</p>
+      <p class="help-block">确认一个震情事件是否有效,报警站点最低数量要求</p>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-3 control-label" for="NewEventTimeGap" >与上一个事件的时间间隔</label>
+    <label class="col-sm-3 control-label" for="NewEventTimeGap" >新事件的时间间隔要求</label>
     <div class="col-sm-6">
     	<input id="NewEventTimeGap" type="text" class="form-control input-sm" name="NewEventTimeGap"  placeholder="NewEventTimeGap"  value="{{.NewEventTimeGap}}" disabled />
-      <p class="help-block">一个报警消息是否属于新的震情事件,其与上个事件的时间间隔.单位:分钟</p>
+      <p class="help-block">一个新报警信息与当前观测事件的时间间隔.达到该数据,则判定为新的观测事件产生.单位:分钟</p>
     </div>
   </div>
   <div class="form-group">
     <label class="col-sm-3 control-label" for="NewEventGapMultiple" >间隔时间倍数</label>
     <div class="col-sm-6">
     	<input id="NewEventGapMultiple" type="text" class="form-control input-sm" name="NewEventGapMultiple"  placeholder="NewEventGapMultiple"  value="{{.NewEventGapMultiple}}" disabled />
-      <p class="help-block">报警信息与上个事件报警信息平均量的间隔时间倍数</p>
+      <p class="help-block">与上个观测事件报警时间平均量的倍数,超过该数值,则判断为新观测事件</p>
     </div>
   </div>
   </div>
@@ -104,7 +104,7 @@
   <div class="panel-heading">数据文件保存设置</div>
   <div class="panel-body">
 	 <div class="form-group">
-    <label class="col-sm-3 control-label" for="WriteFile" >是否保存文件</label>
+    <label class="col-sm-3 control-label" for="WriteFile" >是否保存报警文件</label>
     <div class="col-sm-6">
     		<label class="radio-inline">
         <input type="radio" name="WriteFile"  value="true" {{if .WriteFile}} checked {{end}} disabled> 是
@@ -112,21 +112,21 @@
       <label class="radio-inline">
         <input type="radio" name="WriteFile"  value="false" {{if not .WriteFile}} checked {{end}} disabled> 否
       </label>
-      <p class="help-block">是否在每次报警时,都以文件形式保存报警数据.(xml形式,供外部系统调用)</p>
+      <p class="help-block">是否在每次仪器报警时,都以文件形式保存报警数据(xml格式,供外部系统调用)</p>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-3 control-label" for="FileDir" >文件保存路径</label>
+    <label class="col-sm-3 control-label" for="FileDir" >报警文件保存目录</label>
     <div class="col-sm-6">
     	<input id="FileDir" type="text" class="form-control input-sm" name="FileDir"  placeholder="FileDir"  value="{{.FileDir}}" disabled />
-      <p class="help-block">报警数据文件保存的路径</p>
+      <p class="help-block">报警数据文件在服务器上的目录位置(供外部系统调取)</p>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-3 control-label" for="ReportFileDir" >速报文件路径</label>
+    <label class="col-sm-3 control-label" for="ReportFileDir" >速报文件目录</label>
     <div class="col-sm-6">
     	<input id="ReportFileDir" type="text" class="form-control input-sm" name="ReportFileDir"  placeholder="ReportFileDir"  value="{{.ReportFileDir}}" disabled />
-      <p class="help-block">速报文件保存路径</p>
+      <p class="help-block">速报文件在服务器上的存放目录</p>
     </div>
   </div>
   </div>
@@ -141,14 +141,14 @@
     <label class="col-sm-3 control-label" for="SleepTime" >延时处理时间</label>
     <div class="col-sm-6">
     	<input id="SleepTime" type="text" class="form-control input-sm" name="SleepTime"  placeholder="SleepTime"  value="{{.SleepTime}}" disabled />
-      <p class="help-block">新事件产生时,延时触发速报生成(以备系统收集足够信息),单位:分钟</p>
+      <p class="help-block">新观测事件产生时,延时触发速报生成(以备系统收集足够信息).单位:分钟</p>
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-3 control-label" for="ReportLevel" >速报报送的最低级别</label>
+    <label class="col-sm-3 control-label" for="ReportLevel" >最低烈度级别要求</label>
     <div class="col-sm-6">
     	<input id="ReportLevel" type="text" class="form-control input-sm" name="ReportLevel"  placeholder="ReportLevel"  value="{{.ReportLevel}}" disabled />
-      <p class="help-block">烈度到达最低级别后,才允许报送速报</p>
+      <p class="help-block">烈度达到该级别及以上级别时,才进行速报的生成</p>
     </div>
   </div>
   </div>

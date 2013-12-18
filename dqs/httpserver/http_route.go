@@ -11,8 +11,6 @@ func routeConfig() {
 	beego.Router("/", &controllers.MainController{})
 
 	beego.Router("/loglist", &controllers.LogsController{})
-	beego.Router("/analyze", &controllers.AnalyzeController{})
-	beego.Router("/report", &controllers.ReportController{})
 	beego.RESTRouter("/device", &controllers.DeviceController{})
 
 	//报警
@@ -35,6 +33,7 @@ func routeConfig() {
 	beego.Router("/customparams/update/:id", &controllers.DeviceController{}, "*:UpdateCustomParams")
 
 	//震情事件
+	beego.Router("/analyze", &controllers.AnalyzeController{})
 	beego.Router("/eventlist", &controllers.EventController{}, "*:EventPageList")
 	beego.Router("/eventjsonlist", &controllers.EventController{}, "*:EventJsonList")
 	beego.Router("/eventsignallist", &controllers.EventController{}, "*:EventSignalPageList")
@@ -42,6 +41,8 @@ func routeConfig() {
 	beego.Router("/eventlinejson/:id", &controllers.EventController{}, "*:EventLineJson")
 	//传入地震事件
 	beego.Router("/earthquake", &controllers.EventController{}, "*:AddEventSignal")
+	//速报管理
+	beego.Router("/report", &controllers.ReportController{}, "*:Get")
 
 	//用户管理
 	beego.RESTRouter("/user", &controllers.UserController{})

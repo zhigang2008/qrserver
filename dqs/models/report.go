@@ -14,4 +14,5 @@ type Report struct {
 	Sended       bool
 	Verify       bool
 	Event        Event
+	SendNumber   int //发送数
 }

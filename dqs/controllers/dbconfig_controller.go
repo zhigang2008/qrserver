@@ -64,7 +64,7 @@ func (this *DBConfigController) Put() {
 			answer.Ok = true
 			answer.Msg = "更新配置信息成功"
 			log.Infof("更新配置信息成功")
-			this.AuditLog("更新配置信息", true)
+			this.AuditLog("更新系统参数", true)
 
 			//更新服务端配置内容
 			reerr := quickserver.CommandRefreshConfig()

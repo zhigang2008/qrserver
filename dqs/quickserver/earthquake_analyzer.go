@@ -47,6 +47,7 @@ func (eq *EarthquakeAnalyzer) analyze(a *AlarmInfo) {
 			event.EventId = util.GUID()
 			event.AlarmCount = 1
 			event.MaxLevel = a.Intensity
+			event.MaxLevel = a.Intensity
 			event.EventTime = time.Now()
 			event.IsConfirm = true
 			event.SignalId = es.Id
@@ -112,6 +113,8 @@ func (eq *EarthquakeAnalyzer) eventRecord(a *AlarmInfo) {
 	newEvent.EventId = util.GUID()
 	newEvent.AlarmCount = 1
 	newEvent.IsConfirm = false
+	newEvent.MaxLevel = a.Intensity
+
 	if a.InitRealTime.IsZero() {
 		newEvent.EventTime = time.Now()
 	} else {
@@ -119,13 +122,12 @@ func (eq *EarthquakeAnalyzer) eventRecord(a *AlarmInfo) {
 	}
 	newEvent.EventTimeStr = newEvent.EventTime.Format(CommonTimeLayout)
 
-	err := eq.dm.EventAdd(newEvent)
-	if err != nil {
-		log.Warnf("创建新的震情事件记录失败:%s", err.Error())
-	}
+	//创建观测事件
+	eq.saveEvent(newEvent)
+
 	a.EventId = newEvent.EventId
 
-	err = eq.dm.updateAlarmEvent(a)
+	err := eq.dm.updateAlarmEvent(a)
 	if err != nil {
 		log.Warnf("更新震情报警事件[%s-%s]失败:%s", a.SensorId, a.SeqNo, err.Error())
 	}
@@ -159,7 +161,11 @@ func (eq *EarthquakeAnalyzer) saveEvent(event *Event) {
 	err := eq.dm.EventAdd(event)
 	if err != nil {
 		log.Warnf("添加地震事件[%s]出错:%s", event.EventId, err.Error())
+
 	}
+	//-------速报制作过程---------------
+	go DelayGenerateReport(event)
+
 }
 
 //更新震情事件

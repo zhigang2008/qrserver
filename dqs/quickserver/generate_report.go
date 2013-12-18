@@ -20,8 +20,14 @@ func DelayGenerateReport(event *Event) {
 		log.Warnf("速报处理-查询最新的时间信息失败:%s", err.Error())
 		newEvent = *event
 	}
-	//制作速报信息
-	GenerateReport(&newEvent)
+
+	//log.Infof("级别判断%d-%d", event.MaxLevel, GlobalConfig.ReportCfg.ReportLevel)
+	if event.MaxLevel >= GlobalConfig.ReportCfg.ReportLevel {
+		log.Infof("准备生成速报...")
+		//制作速报信息
+		GenerateReport(&newEvent)
+	}
+
 }
 
 //生成速报
@@ -48,8 +54,9 @@ func GenerateReport(event *Event) {
 }
 
 //生成概要信息
-func generateReportSummary(event *Event) (sumary map[string]interface{}) {
+func generateReportSummary(event *Event) map[string]interface{} {
 
+	sumary := make(map[string]interface{})
 	//基本信息
 	sumary["时间"] = event.EventTimeStr
 	sumary["报警数"] = event.AlarmCount
@@ -82,7 +89,7 @@ func generateReportSummary(event *Event) (sumary map[string]interface{}) {
 		stime := signal.Time.Format(CommonTimeLayout)
 		sumary["地震信息"] = fmt.Sprintf("%s 发生于[%f,%f] 震级%d级", stime, signal.Longitude, signal.Latitude, signal.Level)
 	}
-	return
+	return sumary
 }
 
 //生成速报的图片信息
