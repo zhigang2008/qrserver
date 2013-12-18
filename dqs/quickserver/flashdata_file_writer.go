@@ -21,7 +21,7 @@ func writeAlarm(a *AlarmInfo) {
 		return
 	}
 
-	dir := ServerConfigs.FileConfig.FileDir
+	dir := GlobalConfig.FileConfig.FileDir
 	//先判断目录是否存在,不存在则创建
 	if util.IsDirExist(dir) == false {
 		os.MkdirAll(dir, 0777)

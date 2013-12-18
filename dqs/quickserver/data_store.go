@@ -2,6 +2,7 @@ package quickserver
 
 import (
 	//	"fmt"
+	"errors"
 	log "github.com/cihub/seelog"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
@@ -19,10 +20,12 @@ const (
 	defaultEventSignalCollection = "eventsignal"  //默认事件信号Collection
 	defaultIntensityCollection   = "intensitymap" //默认事件信号Collection
 	defaultConfigCollection      = "configs"      //默认配置信息表
+	defaultReportCollection      = "reports"      //默认配置信息表
 )
 
 var (
-	mux sync.Mutex
+	mux         sync.Mutex
+	ErrNotFound = errors.New("not found")
 )
 
 //数据库连接服务
@@ -36,6 +39,7 @@ type DataManager struct {
 	eventSignalCollection      string
 	intensityMappingCollection string
 	configCollection           string
+	reportCollection           string
 }
 
 //初始化数据库连接
@@ -60,6 +64,7 @@ func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
 		eventSignalCollection:      defaultEventSignalCollection,
 		intensityMappingCollection: defaultIntensityCollection,
 		configCollection:           defaultConfigCollection,
+		reportCollection:           defaultReportCollection,
 	}
 	//设置配置文件指定值
 	if conf.DataBaseName != "" {
@@ -474,12 +479,47 @@ func (dm *DataManager) GetHighData(st int, val float32) (DataMapping, error) {
 }
 
 //获取数据库中的配置信息
-func (dm *DataManager) GetDBConfigs() (DatabaseConfig, error) {
+func (dm *DataManager) GetGlobalConfigs() (DatabaseConfig, error) {
 	c := dm.session.DB(dm.databaseName).C(dm.configCollection)
 	dbcfg := DatabaseConfig{}
 	err0 := c.Find(&bson.M{}).One(&dbcfg)
 	if err0 != nil {
+		if err0 == mgo.ErrNotFound {
+			return dbcfg, ErrNotFound
+		}
 		return dbcfg, err0
 	}
 	return dbcfg, nil
+}
+
+//添加配置信息
+func (dm *DataManager) CreateGlobalConfigs(cfg *DatabaseConfig) error {
+	c := dm.session.DB(dm.databaseName).C(dm.configCollection)
+
+	_, err0 := c.Upsert(nil, cfg)
+	if err0 != nil {
+		return err0
+	}
+	return nil
+}
+
+//添加速报信息
+func (dm *DataManager) ReportSave(r *Report) error {
+	c := dm.session.DB(dm.databaseName).C(dm.reportCollection)
+	err := c.Insert(r)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//获取速报
+func (dm *DataManager) GetReportById(id string) (rep Report, err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.reportCollection)
+	m := bson.M{"reportid": id}
+	err = c.Find(&m).One(&rep)
+	if err != nil {
+		return Report{}, err
+	}
+	return rep, nil
 }

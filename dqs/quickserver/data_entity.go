@@ -156,7 +156,7 @@ type AlarmInfo struct {
 	Period        float32
 	PGA           float32
 	SI            float32
-	Intensity     float32 //仪器烈度值
+	Intensity     int //仪器烈度值
 	Length        float32
 	CreateTime    time.Time
 	HasWaveInfo   bool
@@ -173,28 +173,6 @@ type WaveInfo struct {
 	Y_data   [6000]int16
 	Z_data   [6000]int16
 	LUD      time.Time //最后更新时间
-}
-
-//地震事件
-type Event struct {
-	EventId      string
-	EventTime    time.Time
-	EventTimeStr string //字符串格式的时间
-	AlarmCount   int
-	CreateTime   time.Time
-	IsConfirm    bool
-	SignalId     string
-	Signal       EventSignal
-}
-
-//地震事件确认信号
-type EventSignal struct {
-	Id          string
-	Time        time.Time //震情时间
-	Longitude   float32   //震中位置
-	Latitude    float32
-	Level       int       //震级
-	ReceiveTime time.Time //信号接收时间
 }
 
 //设备信息
@@ -331,12 +309,35 @@ func FlashData2AlarmInfo(f *FlashData) *AlarmInfo {
 	return &a
 }
 
+//地震事件
+type Event struct {
+	EventId      string
+	EventTime    time.Time
+	EventTimeStr string //字符串格式的时间
+	AlarmCount   int
+	MaxLevel     int //最高级别
+	CreateTime   time.Time
+	IsConfirm    bool
+	SignalId     string
+	Signal       EventSignal
+}
+
+//地震事件确认信号
+type EventSignal struct {
+	Id          string
+	Time        time.Time //震情时间
+	Longitude   float32   //震中位置
+	Latitude    float32
+	Level       int       //震级
+	ReceiveTime time.Time //信号接收时间
+}
+
 //PGA与烈度对照数据
 type DataMapping struct {
 	Id        bson.ObjectId "_id"
 	SiteType  int
 	PGA       float32
-	Intensity float32 //仪器烈度值
+	Intensity int //仪器烈度值
 }
 
 //报表数据

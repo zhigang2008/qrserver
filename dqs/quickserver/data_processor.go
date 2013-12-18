@@ -54,7 +54,7 @@ func (dp *DataProcessor) DataProcess(content []byte, remote string, conn *net.Co
 		} else {
 			dp.ProcessFlashData(content)
 			//是否报警后,发送波形数据
-			if ServerConfigs.ReadWaveAfterAlarm {
+			if GlobalConfig.ReadWaveAfterAlarm {
 				dp.sendFlashReadCommand(string(content[0:10]), remote, conn)
 			}
 		}
@@ -92,7 +92,7 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 	//进行数据处理
 	id := string(content[0:10])
 
-	if ServerConfigs.CRC {
+	if GlobalConfig.CRC {
 		//先进行CRC校验.无效数据直接抛弃.
 		if DllUtil.CheckCRCCode(content) != true {
 			log.Warnf("[%s]设备报警数据CRC校验失败", id)
@@ -119,7 +119,7 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 	log.Infof("报警信息保存成功")
 
 	//------写入文件-----
-	if ServerConfigs.FileConfig.WriteFile {
+	if GlobalConfig.FileConfig.WriteFile {
 		go writeAlarm(sData)
 	}
 	//-----进入震情分析过程------
@@ -132,7 +132,7 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 func (dp *DataProcessor) ProcessStatusData(content []byte) error {
 	id := string(content[0:10])
 
-	if ServerConfigs.CRC {
+	if GlobalConfig.CRC {
 		//先进行CRC校验.无效数据直接抛弃.
 		if DllUtil.CheckCRCCode(content) != true {
 			log.Warnf("[%s]设备状态数据CRC校验失败", id)
@@ -240,7 +240,7 @@ func (dp *DataProcessor) ProcessWaveFlashData(content []byte) (err error) {
 	//进行数据处理
 	id := string(content[0:10])
 
-	if ServerConfigs.CRC {
+	if GlobalConfig.CRC {
 		//先进行CRC校验.无效数据直接抛弃.
 		if DllUtil.CheckCRCCode(content) != true {
 			log.Warnf("[%s]设备报警数据CRC校验失败", id)
@@ -300,7 +300,7 @@ func (dp *DataProcessor) ProcessWaveData(content []byte) (err error) {
 	//进行数据处理
 	id := string(content[0:10])
 
-	if ServerConfigs.CRC {
+	if GlobalConfig.CRC {
 		//先进行CRC校验.无效数据直接抛弃.
 		if DllUtil.CheckCRCCode(content) != true {
 			log.Warnf("[%s]设备波形图数据CRC校验失败", id)

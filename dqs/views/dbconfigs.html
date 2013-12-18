@@ -1,0 +1,264 @@
+﻿{{template "header" .}}
+ 
+{{with .configs}}
+<div class="container">
+	 <div class="panel panel-info">
+  <!-- Default panel contents -->
+  <div class="panel-heading">
+  	<ol class="breadcrumb">
+     <li><a href="/"><span class="glyphicon glyphicon-home">&nbsp;</span>首页</a></li>
+     <li class="active">系统参数配置</li>
+  </ol>
+  </div>
+  <div class="panel-body">
+  
+  <!--提示框-->
+  <div  id="msg" class="alert alert-success alert-dismissable" style="display:none">
+     <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
+     <p id="msgcontent"></p>
+ </div>
+ <div id="process-div" class="progress progress-striped active" style="display:none">
+  <div id="process-bar" class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 5%">
+  </div>
+</div>
+
+<div id="customparams" class="tab-pane " >
+	<form id="form1" class="form-horizontal" role="form" action="#" type="post">
+ 	 <div class="form-group">
+    <div class="col-sm-10">
+      <button id="btn-update" type="button" class="btn btn-warning ">更改参数</button>
+      &nbsp;&nbsp;
+      <button id="btn-save" type="button" class="btn btn-success" style="display:none">保存设置</button>
+    </div>
+  </div>
+  <!--基本参数-->
+ <div class="panel panel-primary">
+  <div class="panel-heading">基本参数</div>
+  <div class="panel-body">
+	 <div class="form-group">
+    <label class="col-sm-3 control-label" for="CRC" >进行CRC校验</label>
+    <div class="col-sm-6">
+    		<label class="radio-inline">
+        <input type="radio" name="CRC"  value="true" {{if .CRC}} checked {{end}} disabled> 是
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="CRC"  value="false" {{if not .CRC}} checked {{end}} disabled> 否
+      </label>
+      <p class="help-block">与终端设备通讯时,是否对数据进行CRC校验</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="ReadWaveAfterAlarm" >立即读取波形记录</label>
+    <div class="col-sm-6">
+    		<label class="radio-inline">
+        <input type="radio" name="ReadWaveAfterAlarm"  value="true" {{if .ReadWaveAfterAlarm}} checked {{end}} disabled> 是
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="ReadWaveAfterAlarm"  value="false" {{if not .ReadWaveAfterAlarm}} checked {{end}} disabled> 否
+      </label>
+      <p class="help-block">是否接收报警后立即读取波形记录</p>
+    </div>
+  </div>
+  </div>
+ </div>
+
+ <!--震情事件判断的参数-->
+  {{with .EventParams}}
+ <div class="panel panel-primary">
+  <div class="panel-heading">震情事件判断的参数</div>
+  <div class="panel-body">
+	 <div class="form-group">
+    <label class="col-sm-3 control-label" for="SignalTimeSpan" >时间宽度</label>
+    <div class="col-sm-6">
+    	<input id="SignalTimeSpan" type="text" class="form-control input-sm" name="SignalTimeSpan"  placeholder="SignalTimeSpan"  value="{{.SignalTimeSpan}}" disabled />
+      <p class="help-block">有效震情信号判断用到的时间宽度设定.单位:分钟</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="ValidEventAlarmCount" >报警点最低数量</label>
+    <div class="col-sm-6">
+    	<input id="ValidEventAlarmCount" type="text" class="form-control input-sm" name="ValidEventAlarmCount"  placeholder="ValidEventAlarmCount"  value="{{.ValidEventAlarmCount}}" disabled />
+      <p class="help-block">有效震情信号判断用到的时间宽度设定</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="NewEventTimeGap" >与上一个事件的时间间隔</label>
+    <div class="col-sm-6">
+    	<input id="NewEventTimeGap" type="text" class="form-control input-sm" name="NewEventTimeGap"  placeholder="NewEventTimeGap"  value="{{.NewEventTimeGap}}" disabled />
+      <p class="help-block">一个报警消息是否属于新的震情事件,其与上个事件的时间间隔.单位:分钟</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="NewEventGapMultiple" >间隔时间倍数</label>
+    <div class="col-sm-6">
+    	<input id="NewEventGapMultiple" type="text" class="form-control input-sm" name="NewEventGapMultiple"  placeholder="NewEventGapMultiple"  value="{{.NewEventGapMultiple}}" disabled />
+      <p class="help-block">报警信息与上个事件报警信息平均量的间隔时间倍数</p>
+    </div>
+  </div>
+  </div>
+ </div>
+ {{end}}
+   <!--数据文件保存设置-->
+  {{with .FileConfig}}
+ <div class="panel panel-primary">
+  <div class="panel-heading">数据文件保存设置</div>
+  <div class="panel-body">
+	 <div class="form-group">
+    <label class="col-sm-3 control-label" for="WriteFile" >是否保存文件</label>
+    <div class="col-sm-6">
+    		<label class="radio-inline">
+        <input type="radio" name="WriteFile"  value="true" {{if .WriteFile}} checked {{end}} disabled> 是
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="WriteFile"  value="false" {{if not .WriteFile}} checked {{end}} disabled> 否
+      </label>
+      <p class="help-block">是否在每次报警时,都以文件形式保存报警数据.(xml形式,供外部系统调用)</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="FileDir" >文件保存路径</label>
+    <div class="col-sm-6">
+    	<input id="FileDir" type="text" class="form-control input-sm" name="FileDir"  placeholder="FileDir"  value="{{.FileDir}}" disabled />
+      <p class="help-block">报警数据文件保存的路径</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="ReportFileDir" >速报文件路径</label>
+    <div class="col-sm-6">
+    	<input id="ReportFileDir" type="text" class="form-control input-sm" name="ReportFileDir"  placeholder="ReportFileDir"  value="{{.ReportFileDir}}" disabled />
+      <p class="help-block">速报文件保存路径</p>
+    </div>
+  </div>
+  </div>
+ </div>
+ {{end}}
+   <!--速报相关的配置-->
+  {{with .ReportCfg}}
+ <div class="panel panel-primary">
+  <div class="panel-heading">速报生成及发送配置</div>
+  <div class="panel-body">
+	 <div class="form-group">
+    <label class="col-sm-3 control-label" for="SleepTime" >延时处理时间</label>
+    <div class="col-sm-6">
+    	<input id="SleepTime" type="text" class="form-control input-sm" name="SleepTime"  placeholder="SleepTime"  value="{{.SleepTime}}" disabled />
+      <p class="help-block">新事件产生时,延时触发速报生成(以备系统收集足够信息),单位:分钟</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="ReportLevel" >速报报送的最低级别</label>
+    <div class="col-sm-6">
+    	<input id="ReportLevel" type="text" class="form-control input-sm" name="ReportLevel"  placeholder="ReportLevel"  value="{{.ReportLevel}}" disabled />
+      <p class="help-block">烈度到达最低级别后,才允许报送速报</p>
+    </div>
+  </div>
+  </div>
+ </div>
+ {{end}}
+ 
+</form>
+</div>
+
+
+</div> <!--end panel-body-->
+</div> <!--end panel-->
+</div>
+{{template "scripts"}}
+<script src="/static/js/validate.min.js"></script>
+<script src="/static/js/validate.additional-methods.min.js"></script>
+<script src="/static/js/validate.messages_zh.js"></script>
+<script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
+<script>
+//初始化    
+$(document).ready(function(){
+	
+	//表单校验
+  $("#form1").validate({
+   rules: {
+     SignalTimeSpan: {
+      required: true,
+      digits:true
+    },
+    ValidEventAlarmCount: {
+      required: true,
+      digits:true
+    },
+    NewEventTimeGap: {
+      required: true,
+      digits:true
+    },
+    NewEventGapMultiple: {
+      required: true,
+      number:true
+    },
+    WriteFile: {
+      required: true
+    },
+    FileDir: {
+      required: true
+    },
+    ReportFileDir: {
+      required: true
+    },
+    SleepTime: {
+      required: true,
+      digits:true
+    },
+    ReportLevel: {
+      required: true,
+      digits:true
+    }
+    
+  }
+});	
+
+    //设置参数按钮
+  var setchange=false;
+    $("#btn-update").bind('click',function(){
+         $("#btn-save").toggle();
+         if(setchange==false){
+         	setchange=true;
+         	$("#btn-update").text("取消更改");
+         	$("#form1  :text").attr('disabled',false);
+         	$("#form1  :checkbox").attr('disabled',false);
+         	$("#form1  :radio").attr('disabled',false);
+         	
+        }else{
+        	setchange=false;
+         	$("#btn-update").text("更改参数");
+         	$("#form1 :text").attr('disabled',true);
+         	$("#form1 :checkbox").attr('disabled',true);
+        }
+    });
+   //提交操作
+ 	$("#btn-save").bind('click', function() {
+ 		if($("#form1").valid()){
+      $.ajax({
+             type: "PUT",
+             url: "/dbconfig",
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             data: $("#form1").serialize() ,
+             success: function(json){
+               if(json.Ok==true){
+                    showSuccess("配置信息修改成功!");
+               	 
+                }else{
+                 showError(json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 showError("修改失败,报告管理员:"+textStatus);
+             }
+           });
+           
+           }else{
+  	      showWarning("请校正填写数据.");
+         }
+    });
+    
+});
+</script> 
+ {{end}}
+
+{{template "footer"}}

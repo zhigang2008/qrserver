@@ -181,3 +181,13 @@ func CommandFlashRead(id, remote string) error {
 	}
 	return nil
 }
+
+//刷新数据参数
+func CommandRefreshConfig() error {
+	newConfig, err := server.dataManager.GetGlobalConfigs()
+	if err != nil {
+		return err
+	}
+	GlobalConfig = newConfig
+	return nil
+}

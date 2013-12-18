@@ -46,8 +46,11 @@ func InitAndStart(conf ServerConfig) {
 	}
 	server.dataManager, err = InitDatabase(conf.Database)
 	if err != nil {
+		log.Warnf("初始化数据库连接失败:%s", err.Error())
 		return
 	}
+	//获取数据库配置信息
+	initGlobalConfigs()
 	//初始化数据处理器
 	InitDataProcessor(server.dataManager)
 	//初始化设备下线状态
@@ -240,4 +243,38 @@ func Stop() {
 	server.dataManager.DataClose()
 	DllUtil.FreeDLL()
 	log.Warn("Server Stop")
+}
+
+//初始化系统参数
+func initGlobalConfigs() {
+
+	configs, err := server.dataManager.GetGlobalConfigs()
+	if err != nil {
+		log.Warnf("从数据库中获取配置信息失败:%s", err.Error())
+		if err == ErrNotFound {
+			log.Warnf("系统将自动初始化配置参数")
+			GlobalConfig = DatabaseConfig{}
+			GlobalConfig.CRC = false
+			GlobalConfig.ReadWaveAfterAlarm = true
+			GlobalConfig.EventParams.SignalTimeSpan = 5
+			GlobalConfig.EventParams.ValidEventAlarmCount = 3
+			GlobalConfig.EventParams.NewEventTimeGap = 15
+			GlobalConfig.EventParams.NewEventGapMultiple = 2.2
+			GlobalConfig.FileConfig.WriteFile = true
+			GlobalConfig.FileConfig.FileDir = "./output/alarms"
+			GlobalConfig.FileConfig.ReportFileDir = "./output/reports"
+			GlobalConfig.ReportCfg.SleepTime = 3
+			GlobalConfig.ReportCfg.ReportLevel = 6
+
+			errc := server.dataManager.CreateGlobalConfigs(&GlobalConfig)
+			if errc != nil {
+				log.Warnf("初始化配置参数失败:%s", errc.Error())
+				return
+			}
+		} else {
+			return
+		}
+	} else {
+		GlobalConfig = configs
+	}
 }

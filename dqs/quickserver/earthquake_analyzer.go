@@ -36,12 +36,17 @@ func (eq *EarthquakeAnalyzer) analyze(a *AlarmInfo) {
 			eq.updateAlarmEvent(a)
 			//更新事件信息
 			event.AlarmCount++
+			//更新最高级别
+			if a.Intensity > event.MaxLevel {
+				event.MaxLevel = a.Intensity
+			}
 			eq.updateEvent(&event)
 		} else {
 			//创建Event
 			event = Event{}
 			event.EventId = util.GUID()
 			event.AlarmCount = 1
+			event.MaxLevel = a.Intensity
 			event.EventTime = time.Now()
 			event.IsConfirm = true
 			event.SignalId = es.Id
@@ -63,7 +68,7 @@ func (eq *EarthquakeAnalyzer) analyze(a *AlarmInfo) {
 func (eq *EarthquakeAnalyzer) hasEventSignal() (signal EventSignal, ok bool) {
 
 	//通过数据库数据判定
-	timespan := ServerConfigs.EventParams.SignalTimeSpan
+	timespan := GlobalConfig.EventParams.SignalTimeSpan
 
 	now := time.Now()
 	btime := now.Add(time.Minute * -time.Duration(timespan))
@@ -175,7 +180,7 @@ func (eq *EarthquakeAnalyzer) isNewEvent(a AlarmInfo, le *Event) bool {
 
 	//如果时间距离够长,则判断为新事件
 	eventGap = alarmTime.Sub(lastEventTime)
-	if eventGap > time.Minute*time.Duration(ServerConfigs.EventParams.NewEventTimeGap) {
+	if eventGap > time.Minute*time.Duration(GlobalConfig.EventParams.NewEventTimeGap) {
 		return true
 	}
 
@@ -190,7 +195,7 @@ func (eq *EarthquakeAnalyzer) isNewEvent(a AlarmInfo, le *Event) bool {
 	//eq.updateEvent(&le)
 
 	//当报警数过少时,则无法进行群体分析,则断定为同一事件
-	if len(*lastAlarms) < ServerConfigs.EventParams.ValidEventAlarmCount {
+	if len(*lastAlarms) < GlobalConfig.EventParams.ValidEventAlarmCount {
 		log.Infof("最近的震情事件[%s]报警数量仅有[%d]个,该次报警判断属于同一事件.", le.EventId, len(*lastAlarms))
 		return false
 	}
@@ -216,7 +221,7 @@ func (eq *EarthquakeAnalyzer) isNewEvent(a AlarmInfo, le *Event) bool {
 	alarmMultiple := float64(eventGap) / float64(averageGap)
 
 	//离散度过大,则判断为新事件
-	if alarmMultiple > initMultiple*ServerConfigs.EventParams.NewEventGapMultiple {
+	if alarmMultiple > initMultiple*GlobalConfig.EventParams.NewEventGapMultiple {
 		return true
 	}
 

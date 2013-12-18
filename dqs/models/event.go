@@ -11,6 +11,7 @@ type Event struct {
 	EventTime    time.Time
 	EventTimeStr string
 	AlarmCount   int
+	MaxLevel     int //最高震级
 	CreateTime   time.Time
 	IsConfirm    bool
 	SignalId     string

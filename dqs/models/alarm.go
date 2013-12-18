@@ -21,7 +21,7 @@ type AlarmInfo struct {
 	Period        float32
 	PGA           float32
 	SI            float32
-	Intensity     float32 //仪器烈度值
+	Intensity     int //仪器烈度值
 	Length        float32
 	CreateTime    time.Time
 	HasWaveInfo   bool
