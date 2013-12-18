@@ -21,24 +21,4 @@
 	</DataServer>
 	<!--if use http server. it can be set to [true|false].default is false -->
 	<HttpServerEnable>[httpenable]</HttpServerEnable>
-	<!--if use CRC check, it can be set to [true|false]. -->
-	<CRC>false</CRC>
-	<!--read wave data after alarm-->
-	<ReadWaveAfterAlarm>true</ReadWaveAfterAlarm>
-	<!--Event sets-->
-	<EventParams>
-	   <SignalTimeSpan>5</SignalTimeSpan>
-	   <ValidEventAlarmCount>3</ValidEventAlarmCount>
-	   <!--minutes-->
-	   <NewEventTimeGap>15</NewEventTimeGap>
-	   <NewEventGapMultiple>2.5</NewEventGapMultiple>
-	</EventParams>
-	<FileConfig>
-	   <!--enable data output-->
-	   <WriteFile>true</WriteFile>
-	   <!--dir path-->
-	   <FileDir>./output/alarms</FileDir>
-	   <!--report file dir-->
-	   <ReportFileDir>./output/reports</ReportFileDir>
-	</FileConfig>
 </Server>
