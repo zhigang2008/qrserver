@@ -168,6 +168,7 @@ func (eq *EarthquakeAnalyzer) saveEvent(event *Event) {
 		log.Warnf("添加地震事件[%s]出错:%s", event.EventId, err.Error())
 
 	}
+	log.Infof("产生新的震情事件[%s]", event.EventTimeStr)
 	//-------速报制作过程---------------
 	go DelayGenerateReport(event)
 

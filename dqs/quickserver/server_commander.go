@@ -186,8 +186,10 @@ func CommandFlashRead(id, remote string) error {
 func CommandRefreshConfig() error {
 	newConfig, err := server.dataManager.GetGlobalConfigs()
 	if err != nil {
+		log.Warnf("数据服务器刷新系统参数失败:%s", err.Error())
 		return err
 	}
 	GlobalConfig = newConfig
+	log.Infof("数据服务器已经成功刷新系统参数")
 	return nil
 }

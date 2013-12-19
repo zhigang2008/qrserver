@@ -5,7 +5,7 @@ import (
 	"dqs/models"
 	"dqs/util"
 	"encoding/xml"
-	"github.com/astaxie/beego"
+	//"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 	"io/ioutil"
 	"time"
@@ -17,7 +17,7 @@ type EventController struct {
 
 //事件列表
 func (this *EventController) EventPageList() {
-	this.Data["title"] = "震情事件"
+	this.Data["title"] = "仪器观测事件"
 	this.Data["author"] = "wangzhigang"
 	//权限检查
 	//this.AuthRoles("role_admin")
@@ -231,18 +231,16 @@ func (this *EventController) EventLine() {
 	this.Data["lastlng"] = lastlng
 	this.Data["lastlat"] = lastlat
 
-	usegis := false
-	usegis, err = beego.AppConfig.Bool("map_gis")
-	if err != nil {
-		usegis = false
-		log.Warnf("无法从配置文件中获取gis启用信息.将使用地图模式.")
-	}
+	usegis := SystemConfigs.UseGis
 	if usegis {
-		this.Data["gisServiceUrl"] = beego.AppConfig.String("gis_service_url")
-		this.Data["gisServiceParams"] = beego.AppConfig.String("gis_service_params")
-		this.Data["gisBasicLayer"] = beego.AppConfig.String("gis_layer_basic")
+		this.Data["gisServiceUrl"] = SystemConfigs.GisServiceUrl
+		this.Data["gisServiceParams"] = SystemConfigs.GisServiceParams
+		this.Data["gisBasicLayer"] = SystemConfigs.GisLayerBasic
+		this.Data["gisChinaLayer"] = SystemConfigs.GisLayerChina
+		this.TplNames = "eventline.html"
+	} else {
+		this.TplNames = "eventline-nogis.html"
 	}
-	this.TplNames = "eventline.html"
 	this.Render()
 
 }
@@ -306,6 +304,32 @@ func (this *EventController) EventLineJson() {
 	this.Data["json"] = data
 	this.ServeJson()
 
+}
+
+//地震事件定位
+func (this *EventController) QuakeLocation() {
+	this.Data["title"] = "地震定位"
+	this.Data["author"] = "wangzhigang"
+
+	sid := this.GetString(":id")
+	signal, err := dao.GetEventSignalById(sid)
+	if err != nil {
+		log.Warnf("获取地震数据失败:%s", err.Error())
+	}
+	this.Data["signal"] = signal
+
+	usegis := SystemConfigs.UseGis
+	if usegis {
+		this.Data["gisServiceUrl"] = SystemConfigs.GisServiceUrl
+		this.Data["gisServiceParams"] = SystemConfigs.GisServiceParams
+		this.Data["gisBasicLayer"] = SystemConfigs.GisLayerBasic
+		this.Data["gisChinaLayer"] = SystemConfigs.GisLayerChina
+		this.TplNames = "quakelocation.html"
+	} else {
+		this.TplNames = "quakelocation-nogis.html"
+	}
+
+	this.Render()
 }
 
 //网格化计算数据点

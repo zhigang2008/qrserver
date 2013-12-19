@@ -23,15 +23,16 @@ func DelayGenerateReport(event *Event) {
 
 	//log.Infof("级别判断%d-%d", event.MaxLevel, GlobalConfig.ReportCfg.ReportLevel)
 	if event.MaxLevel >= GlobalConfig.ReportCfg.ReportLevel {
-		log.Infof("准备生成速报...")
 		//制作速报信息
 		GenerateReport(&newEvent)
+
 	}
 
 }
 
 //生成速报
 func GenerateReport(event *Event) {
+	log.Infof("准备生成速报...")
 
 	summary := generateReportSummary(event)
 	imgfile := generateReportMap(event)
@@ -45,11 +46,14 @@ func GenerateReport(event *Event) {
 	report.ImageFile = imgfile
 	report.Verify = false
 	report.Sended = false
+	report.Valid = true
 
 	//保存速报
 	err := server.dataManager.ReportSave(report)
 	if err != nil {
 		log.Warnf("速报保存失败:%s", err.Error())
+	} else {
+		log.Info("速报已生成.")
 	}
 }
 
@@ -74,6 +78,8 @@ func generateReportSummary(event *Event) map[string]interface{} {
 			}
 
 		}
+	} else {
+		log.Infof("获取震情事件的所有报警信息失败:%s", err.Error())
 	}
 
 	alarmSumary := ""

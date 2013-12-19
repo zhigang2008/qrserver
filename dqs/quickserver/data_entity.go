@@ -350,5 +350,6 @@ type Report struct {
 	Sended       bool
 	Verify       bool
 	Event        Event
-	SendNumber   int //发送数
+	SendNumber   int  //发送数
+	Valid        bool //是否有效
 }

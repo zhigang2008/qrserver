@@ -1,0 +1,186 @@
+﻿{{template "header" .}}
+ 
+{{with .configs}}
+<div class="container">
+	 <div class="panel panel-info">
+  <!-- Default panel contents -->
+  <div class="panel-heading">
+  	<ol class="breadcrumb">
+     <li><a href="/"><span class="glyphicon glyphicon-home">&nbsp;</span>首页</a></li>
+     <li class="active">系统设置</li>
+  </ol>
+  </div>
+  <div class="panel-body">
+  
+  <!--提示框-->
+  <div  id="msg" class="alert alert-success alert-dismissable" style="display:none">
+     <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
+     <p id="msgcontent"></p>
+ </div>
+ <div id="process-div" class="progress progress-striped active" style="display:none">
+  <div id="process-bar" class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 5%">
+  </div>
+</div>
+
+<div id="customparams" class="tab-pane " >
+	<form id="form1" class="form-horizontal" role="form" action="#" type="post">
+ 	 <div class="form-group">
+    <div class="col-sm-10">
+      <button id="btn-update" type="button" class="btn btn-warning ">更改设置</button>
+      &nbsp;&nbsp;
+      <button id="btn-save" type="button" class="btn btn-success" style="display:none">保存设置</button>
+    </div>
+  </div>
+  <!--基本参数-->
+ <div class="panel panel-primary">
+  <div class="panel-heading">基本设置</div>
+  <div class="panel-body">
+	 <div class="form-group">
+    <label class="col-sm-3 control-label" for="UserDefaultPassword" >用户默认密码</label>
+    <div class="col-sm-6">
+    	<input id="UserDefaultPassword" type="text" class="form-control input-sm" name="UserDefaultPassword"  placeholder="UserDefaultPassword"  value="{{.UserDefaultPassword}}" disabled />
+      <p class="help-block">新建用户时,默认使用的密码</p>
+    </div>
+  </div>
+  </div>
+ </div>
+  <!--Gis设置-->
+ <div class="panel panel-primary">
+  <div class="panel-heading">GIS服务配置</div>
+  <div class="panel-body">
+	 <div class="form-group">
+    <label class="col-sm-3 control-label" for="UseGis" >是否使用GIS</label>
+    <div class="col-sm-6">
+    		<label class="radio-inline">
+        <input type="radio" name="UseGis"  value="true" {{if .UseGis}} checked {{end}} disabled> 使用
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="UseGis"  value="false" {{if not .UseGis}} checked {{end}} disabled> 不使用
+      </label>
+      <p class="help-block">是否有GIS服务提供.使用GIS还需要配置以下参数.(不使用,则默认使用地图模式,会有部分功能缺失)</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="GisServiceUrl" >GIS服务的基本地址</label>
+    <div class="col-sm-6">
+    	<input id="GisServiceUrl" type="text" class="form-control input-sm" name="GisServiceUrl"  placeholder="GisServiceUrl"  value="{{.GisServiceUrl}}" disabled />
+      <p class="help-block">提供GIS服务器的基本地址.(如:http://10.15.36.88:8080/geoserver/dqs/wms)</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="GisServiceParams" >GIS服务基本参数</label>
+    <div class="col-sm-6">
+    	<input id="GisServiceParams" type="text" class="form-control input-sm" name="GisServiceParams"  placeholder="GisServiceParams"  value="{{.GisServiceParams}}" disabled />
+      <p class="help-block">GIS服务基本地址之后的参数部分.(如:?service=WMS&version=1.1.0&request=GetMap)</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="GisLayerBasic" >GIS基础图层</label>
+    <div class="col-sm-6">
+    	<input id="GisLayerBasic" type="text" class="form-control input-sm" name="GisLayerBasic"  placeholder="GisLayerBasic"  value="{{.GisLayerBasic}}" disabled />
+      <p class="help-block">GIS服务的基本图层,即底图图层.该图层提供该地区的详细GIS数据.(如:dqs_layers)</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="GisLayerChina" >GIS全国概要图层</label>
+    <div class="col-sm-6">
+    	<input id="GisLayerChina" type="text" class="form-control input-sm" name="GisLayerChina"  placeholder="GisLayerChina"  value="{{.GisLayerChina}}" disabled />
+      <p class="help-block">提供一个概要的全国大范围内的粗略图层,供地震震中定位显示用.</p>
+    </div>
+  </div>
+  </div>
+ </div>
+ 
+</form>
+</div>
+
+
+</div> <!--end panel-body-->
+</div> <!--end panel-->
+</div>
+{{template "scripts"}}
+<script src="/static/js/validate.min.js"></script>
+<script src="/static/js/validate.additional-methods.min.js"></script>
+<script src="/static/js/validate.messages_zh.js"></script>
+<script src="/static/js/jquery.validate.bootstrap.popover.js"></script>
+<script>
+//初始化    
+$(document).ready(function(){
+	
+	//表单校验
+  $("#form1").validate({
+   rules: {
+     UserDefaultPassword: {
+      required: true,
+      alphanumeric:true,
+    },
+    UseGis: {
+      required: true
+    },
+    GisServiceUrl: {
+      required: true
+    },
+    GisServiceParams: {
+      required: true
+    },
+    GisLayerBasic: {
+      required: true
+    },
+    GisLayerChina: {
+      required: true
+    }  
+  }
+});	
+
+    //设置参数按钮
+  var setchange=false;
+    $("#btn-update").bind('click',function(){
+         $("#btn-save").toggle();
+         if(setchange==false){
+         	setchange=true;
+         	$("#btn-update").text("取消更改");
+         	$("#form1  :text").attr('disabled',false);
+         	$("#form1  :checkbox").attr('disabled',false);
+         	$("#form1  :radio").attr('disabled',false);
+         	
+        }else{
+        	setchange=false;
+         	$("#btn-update").text("更改设置");
+         	$("#form1 :text").attr('disabled',true);
+         	$("#form1 :checkbox").attr('disabled',true);
+         	$("#form1  :radio").attr('disabled',true);
+        }
+    });
+   //提交操作
+ 	$("#btn-save").bind('click', function() {
+ 		if($("#form1").valid()){
+      $.ajax({
+             type: "PUT",
+             url: "/systemconfig",
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             data: $("#form1").serialize() ,
+             success: function(json){
+               if(json.Ok==true){
+                    showSuccess("系统设置修改成功!");
+               	    $("#btn-update").trigger('click');
+                }else{
+                 showError(json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 showError("修改失败,报告管理员:"+textStatus);
+             }
+           });
+           
+           }else{
+  	      showWarning("请校正填写数据.");
+         }
+    });
+    
+});
+</script> 
+ {{end}}
+
+{{template "footer"}}

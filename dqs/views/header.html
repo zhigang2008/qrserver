@@ -49,7 +49,7 @@
             {{else}}
               <li><a href="/device">设备列表</a></li>
             {{end}}
-            <li><a href="/analyze">数据分析</a></li>
+            <li><a href="/analyze">震情分析</a></li>
             <li><a href="/report">速报管理</a></li>
             <li><a href="/alarm">设备报警</a></li>
             {{if hasrole .CurrentUser.Roles "role_admin" }}
@@ -57,11 +57,12 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">系统管理 <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="/user">用户管理</a></li>
-                <li><a href="/dbconfig">参数配置</a></li>
+                <li><a href="/runtimeconfig">运行参数</a></li>
                 <li class="divider"></li>
                 <!--<li class="dropdown-header">高级管理</li>-->
                 <li><a href="/audit">审计日志</a></li>
                 <li><a href="/loglist">运行日志</a></li>
+                <li><a href="/systemconfig">系统设置</a></li>
                 
               </ul>
             </li>

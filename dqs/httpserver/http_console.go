@@ -1,7 +1,9 @@
 package httpserver
 
 import (
+	"dqs/controllers"
 	"dqs/dao"
+	//"dqs/models"
 	"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 	"path"
@@ -36,7 +38,7 @@ func StartHttp(workdir string) {
 	deviceCollection := beego.AppConfig.String("database_devicecollection")
 	userCollection := beego.AppConfig.String("database_usercollection")
 	port, err := beego.AppConfig.Int("database_port")
-	log.Infof("host=%s\n", host)
+	//log.Infof("host=%s\n", host)
 	if err != nil {
 		log.Warnf("Http Server 的配置的数据库端口参数应是整型格式.")
 		return
@@ -48,6 +50,8 @@ func StartHttp(workdir string) {
 		log.Warnf("Http Server 数据库连接不能创建:%s", err.Error())
 		return
 	}
+	//初始化系统参数
+	controllers.InitSystemConfigs()
 
 	log.Info("启动 Http Server...")
 

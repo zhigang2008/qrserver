@@ -64,7 +64,7 @@ func ReadConfigFromFile() (ServerConfig, error) {
 		log.Error(err)
 		return ServerConfigs, err
 	}
-	log.Info(ServerConfigs)
+	log.Info("配置文件读取成功.")
 
 	err = CheckConfig(ServerConfigs)
 	return ServerConfigs, err

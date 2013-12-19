@@ -5,7 +5,7 @@ import (
 	"dqs/models"
 	"dqs/quickserver"
 	"dqs/util"
-	"github.com/astaxie/beego"
+	//"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 	"time"
 )
@@ -343,18 +343,16 @@ func (this *DeviceController) DeviceLocation() {
 	}
 	this.Data["device"] = device
 
-	usegis, err := beego.AppConfig.Bool("map_gis")
-	if err != nil {
-		usegis = false
-		log.Warnf("无法从配置文件中获取gis启用信息.将使用地图模式.")
-	}
+	usegis := SystemConfigs.UseGis
 	if usegis {
-		this.Data["gisServiceUrl"] = beego.AppConfig.String("gis_service_url")
-		this.Data["gisServiceParams"] = beego.AppConfig.String("gis_service_params")
-		this.Data["gisBasicLayer"] = beego.AppConfig.String("gis_layer_basic")
-		this.TplNames = "location-gis.html"
-	} else {
+		this.Data["gisServiceUrl"] = SystemConfigs.GisServiceUrl
+		this.Data["gisServiceParams"] = SystemConfigs.GisServiceParams
+		this.Data["gisBasicLayer"] = SystemConfigs.GisLayerBasic
+		this.Data["gisChinaLayer"] = SystemConfigs.GisLayerChina
+
 		this.TplNames = "location.html"
+	} else {
+		this.TplNames = "location-nogis.html"
 	}
 	this.Render()
 }

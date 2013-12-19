@@ -12,15 +12,15 @@ import (
 )
 
 const (
-	defaultDatabase              = "dqs"          //默认数据库名称
-	defaultDataCollection        = "data"         //默认数据Collection
-	defaultDeviceCollection      = "device"       //默认设备Collection
-	defaultWaveCollection        = "wavedata"     //默认波形记录Collection
-	defaultEventCollection       = "event"        //默认事件Collection
-	defaultEventSignalCollection = "eventsignal"  //默认事件信号Collection
-	defaultIntensityCollection   = "intensitymap" //默认事件信号Collection
-	defaultConfigCollection      = "configs"      //默认配置信息表
-	defaultReportCollection      = "reports"      //默认配置信息表
+	defaultDatabase              = "dqs"            //默认数据库名称
+	defaultDataCollection        = "data"           //默认数据Collection
+	defaultDeviceCollection      = "device"         //默认设备Collection
+	defaultWaveCollection        = "wavedata"       //默认波形记录Collection
+	defaultEventCollection       = "event"          //默认事件Collection
+	defaultEventSignalCollection = "eventsignal"    //默认事件信号Collection
+	defaultIntensityCollection   = "intensitymap"   //默认事件信号Collection
+	defaultConfigCollection      = "runtimeConfigs" //默认配置信息表
+	defaultReportCollection      = "reports"        //默认配置信息表
 )
 
 var (
@@ -77,7 +77,7 @@ func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
 		dataManager.deviceCollection = conf.DeviceCollection
 	}
 
-	log.Infof("DataManager %v \n", dataManager)
+	//log.Infof("DataManager初始化完成.")
 	return dataManager, nil
 }
 
@@ -504,9 +504,19 @@ func (dm *DataManager) CreateGlobalConfigs(cfg *DatabaseConfig) error {
 }
 
 //添加速报信息
-func (dm *DataManager) ReportSave(r *Report) error {
+func (dm *DataManager) ReportAdd(r *Report) error {
 	c := dm.session.DB(dm.databaseName).C(dm.reportCollection)
 	err := c.Insert(r)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//保存速报信息
+func (dm *DataManager) ReportSave(r *Report) error {
+	c := dm.session.DB(dm.databaseName).C(dm.reportCollection)
+	_, err := c.Upsert(&bson.M{"eventid": r.EventId}, r)
 	if err != nil {
 		return err
 	}

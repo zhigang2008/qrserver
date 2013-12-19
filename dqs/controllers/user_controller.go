@@ -5,7 +5,7 @@ import (
 	"dqs/models"
 	"dqs/util"
 	//	"fmt"
-	"github.com/astaxie/beego"
+	//"github.com/astaxie/beego"
 	log "github.com/cihub/seelog"
 	"time"
 )
@@ -85,7 +85,7 @@ func (this *UserController) Post() {
 	} else {
 		user.Roles = this.GetStrings("Roles")
 		user.ReportSet = reportset
-		user.SetPassword(beego.AppConfig.String("user_default_password"))
+		user.SetPassword(SystemConfigs.UserDefaultPassword)
 		user.CreateTime = time.Now()
 
 		err = dao.AddUser(&user)

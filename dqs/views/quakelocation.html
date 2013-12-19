@@ -1,0 +1,74 @@
+﻿ {{template "header" .}}
+
+<div style="background-color:#eee;padding:10px 0px;">
+ <div class="container">
+ 	 <div>
+ 	 	<ul class="list-inline">
+     {{with .signal}}
+      <li>{{dateformat .Time "2006-01-02 15:04:05" }}</li>
+      <li>[{{.Longitude}},{{.Latitude}}]</li>
+      <li>{{.Level}}级</li>
+      <!--<li>{{dateformat .ReceiveTime "2006-01-02 15:04:05" }}</li>-->
+      {{end}}
+    </ul>
+  </div>
+   <div id="map"  style="height:550px;border:#F6F6F6 solid 1px;"></div>
+ </div>
+</div>
+
+{{template "scripts"}}
+<script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
+<script language="javascript">
+var map, basicLayer, vectorLayer,selector;
+//最后的坐标
+var lastlng,lastlat;
+//放大倍数
+var zoomSize=10;
+ 
+var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+var projectTo;// = map.getProjectionObject(); //The map projection (Spherical Mercator)
+
+
+  //初始化加载
+$(document).ready(function() {
+	//OpenLayers.Lang.setCode("zh-CN");
+  map = new OpenLayers.Map('map');
+  basicLayer = new OpenLayers.Layer.WMS("全局地图",
+          "{{rawURL .gisServiceUrl}}{{rawURL .gisServiceParams}}&layers={{rawURL .gisChinaLayer}}",
+          {layers: 'basic'});
+  map.addLayer(basicLayer);
+  
+  projectTo = map.getProjectionObject();
+ 
+  //feature 图层          
+  vectorLayer = new OpenLayers.Layer.Vector("地震点");
+  
+	{{with .signal}}
+	  var feature = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point({{.Longitude}},{{.Latitude}}).transform(epsg4326, projectTo),
+            {} ,
+            {externalGraphic: '/static/image/star.gif', graphicHeight: 25, graphicWidth: 25, graphicXOffset:-12, graphicYOffset:-25  }
+        );
+   vectorLayer.addFeatures(feature);
+   lastlng={{.Longitude}};
+   lastlat={{.Latitude}}
+  {{end}}
+	map.addLayer(vectorLayer);
+	
+	//控制器
+  //selector=new OpenLayers.Control.SelectFeature(vectorLayer, { onSelect: createPopup, onUnselect: destroyPopup });	
+  //map.addControl(selector);
+  //selector.activate();
+  
+  //map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
+  //map.addControl(new OpenLayers.Control.PanZoom());
+  map.addControl(new OpenLayers.Control.ScaleLine());
+  map.addControl(new OpenLayers.Control.OverviewMap());
+  
+ // map.zoomToMaxExtent();
+ map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
+});
+
+</script>
+ 
+{{template "footer"}}

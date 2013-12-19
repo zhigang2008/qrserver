@@ -41,8 +41,10 @@ func routeConfig() {
 	beego.Router("/eventlinejson/:id", &controllers.EventController{}, "*:EventLineJson")
 	//传入地震事件
 	beego.Router("/earthquake", &controllers.EventController{}, "*:AddEventSignal")
+	beego.Router("/quakelocation/:id", &controllers.EventController{}, "*:QuakeLocation")
 	//速报管理
 	beego.Router("/report", &controllers.ReportController{}, "*:Get")
+	beego.Router("/reportinvalid/:id", &controllers.ReportController{}, "*:SetInvalid")
 
 	//用户管理
 	beego.RESTRouter("/user", &controllers.UserController{})
@@ -55,8 +57,10 @@ func routeConfig() {
 	beego.Router("/userinfo/update", &controllers.UserSelfController{}, "*:Update")
 	beego.Router("/userinfo/resetpwd", &controllers.UserSelfController{}, "*:ResetPassword")
 
-	//审计日志
-	beego.RESTRouter("/dbconfig", &controllers.DBConfigController{})
+	//运行参数
+	beego.RESTRouter("/runtimeconfig", &controllers.RuntimeConfigController{})
+	//系统配置
+	beego.RESTRouter("/systemconfig", &controllers.SysConfigController{})
 
 	//审计日志
 	beego.Router("/audit", &controllers.AuditController{}, "*:List")

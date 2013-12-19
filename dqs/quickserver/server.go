@@ -250,9 +250,9 @@ func initGlobalConfigs() {
 
 	configs, err := server.dataManager.GetGlobalConfigs()
 	if err != nil {
-		log.Warnf("从数据库中获取配置信息失败:%s", err.Error())
+		log.Warnf("从数据库中获取运行参数失败:%s", err.Error())
 		if err == ErrNotFound {
-			log.Warnf("系统将自动初始化配置参数")
+			log.Warnf("系统将自动初始化运行参数")
 			GlobalConfig = DatabaseConfig{}
 			GlobalConfig.CRC = false
 			GlobalConfig.ReadWaveAfterAlarm = true
@@ -271,7 +271,7 @@ func initGlobalConfigs() {
 
 			errc := server.dataManager.CreateGlobalConfigs(&GlobalConfig)
 			if errc != nil {
-				log.Warnf("初始化配置参数失败:%s", errc.Error())
+				log.Warnf("初始化运行参数失败:%s", errc.Error())
 				return
 			}
 		} else {

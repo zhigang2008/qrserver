@@ -4,7 +4,7 @@
  <div class="container">
  	
  	<div class="panel panel-default">
-  <div class="panel-heading">观测到的震情事件 <span class="pull-right"><a href="/eventlist" class="btn btn-info btn-sm" role="button">查看更多</a></span></div>
+  <div class="panel-heading">仪器观测事件 <span class="pull-right"><a href="/eventlist" class="btn btn-info btn-sm" role="button">查看更多</a></span></div>
   <div class="panel-body">
    <table id="event-list-table" class="table table-condensed">
        <thead>
@@ -14,7 +14,7 @@
 			    <th>报警数</th>
 			   <th>记录时间</th>
 		     <th>已确认</th>
-         <th>操作</th>
+         <th>等值线</th>
 		   </tr>
 	     </thead>
 	     <tbody>
@@ -40,10 +40,11 @@
    <table id="event-list-table" class="table  table-condensed">
        <thead>
 		   <tr>
-			   <th>时间</th>
+			   <th>发生时间</th>
 			    <th>震中</th>
 			   <th>震级</th>
 		     <th>接收时间</th>
+		     <th>定位</th>
 		   </tr>
 	     </thead>
 	     <tbody>
@@ -52,7 +53,8 @@
 	 		    <td>{{dateformat .Time "2006-01-02 15:04:05"}}</td>
 	 		     <td>[{{.Longitude}},{{.Latitude}}]</td>
 	 		     <td>{{.Level}}</td>
-	 		    <td>{{dateformat .ReceiveTime "2006-01-02 15:04:05"}}</td>
+	 		     <td>{{dateformat .ReceiveTime "2006-01-02 15:04:05"}}</td>
+	 		     <td><a href="/quakelocation/{{.Id}}" data-toggle="tooltip" data-placement="bottom" title="定位"><span class="glyphicon glyphicon-map-marker"></span></a></td>
 	     	</tr>
 	     	{{end}}
 	     </tbody>	

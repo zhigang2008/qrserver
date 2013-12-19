@@ -4,6 +4,7 @@ import (
 	"dqs/dao"
 	"dqs/models"
 	"github.com/astaxie/beego"
+	log "github.com/cihub/seelog"
 	"strings"
 	"time"
 )
@@ -13,6 +14,10 @@ const (
 	PAGE_INDEX       = "/"
 	PAGE_LOGIN       = "/login"
 	CommonTimeLayout = "2006-01-02 15:04:05"
+)
+
+var (
+	SystemConfigs models.SystemConfig
 )
 
 type BaseController struct {
@@ -119,4 +124,26 @@ func (this *BaseController) AuditLog(cont string, status bool) {
 		}
 	}
 
+}
+
+//初始化系统配置参数
+func InitSystemConfigs() {
+	//初始化系统参数
+	newCfg, err0 := dao.GetSystemConfig()
+	if err0 != nil {
+		SystemConfigs = models.SystemConfig{}
+		SystemConfigs.UserDefaultPassword = "12345678"
+		SystemConfigs.UseGis = false
+		SystemConfigs.GisServiceUrl = "http://localhost:8080/geoserver/dqs/wms"
+		SystemConfigs.GisServiceParams = "?service=WMS&version=1.1.0&request=GetMap"
+		SystemConfigs.GisLayerBasic = "dqs_layers"
+		SystemConfigs.GisLayerChina = "china_layer"
+
+		err2 := dao.AddSystemConfig(&SystemConfigs)
+		if err2 != nil {
+			log.Warnf("初始化系统参数失败.")
+		}
+	} else {
+		SystemConfigs = newCfg
+	}
 }

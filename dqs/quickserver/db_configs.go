@@ -7,7 +7,7 @@ import (
 //保存在数据库中的配置信息
 var GlobalConfig DatabaseConfig
 
-//数据库配置文件
+//运行参数配置
 type DatabaseConfig struct {
 	CRC                bool            //是否进行CRC校验
 	ReadWaveAfterAlarm bool            //是否在收到警报数据后立即发送波形记录读取命令
@@ -34,6 +34,7 @@ type FilesConfig struct {
 	ReportFileDir string
 }
 
+//报表处理参数
 type ReportParameter struct {
 	SleepTime          int  //延后时间,单位分钟
 	ReportLevel        int  //最低的报警级别

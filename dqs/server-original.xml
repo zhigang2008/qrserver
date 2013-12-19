@@ -12,12 +12,6 @@
 		<Host>[datahost]</Host>
 		<!--database serve port,default 27017 -->
 		<Port>[dataport]</Port>
-		<!--database name,default is 'dqs' -->
-		<DataBaseName>dqs</DataBaseName>
-		<!--data collection,leave it blank. default 'data' -->
-		<DataCollection></DataCollection>
-		<!--device collection,you can leave it blank -->
-		<DeviceCollection></DeviceCollection>
 	</DataServer>
 	<!--if use http server. it can be set to [true|false].default is false -->
 	<HttpServerEnable>[httpenable]</HttpServerEnable>

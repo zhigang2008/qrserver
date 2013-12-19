@@ -42,6 +42,22 @@ func ReportUpdate(report *models.Report) (err error) {
 	return nil
 }
 
+//设置速报无效
+func ReportInvalid(id string) error {
+	c := GetSession().DB(DatabaseName).C(ReportCollection)
+	report, err := GetReportById(id)
+	if err != nil {
+		return err
+	}
+	report.Valid = false
+
+	err = c.Update(bson.M{"reportid": report.ReportId}, report)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 //事件列表
 func ReportList(n int) (*[]models.Report, error) {
 	c := GetSession().DB(DatabaseName).C(ReportCollection)
@@ -55,7 +71,20 @@ func ReportList(n int) (*[]models.Report, error) {
 	return &reports, nil
 }
 
-//获取最近的一个事件
+//事件列表
+func GetValidReports(n int) (*[]models.Report, error) {
+	c := GetSession().DB(DatabaseName).C(ReportCollection)
+
+	reports := []models.Report{}
+
+	err := c.Find(&bson.M{"valid": true}).Sort("-generatetime").Limit(n).All(&reports)
+	if err != nil {
+		return nil, err
+	}
+	return &reports, nil
+}
+
+//获取最近的一个速报
 func GetLastReport() (report models.Report, err error) {
 	c := GetSession().DB(DatabaseName).C(ReportCollection)
 

@@ -1,0 +1,238 @@
+﻿ {{template "header" .}}
+
+<div style="background-color:#eee;padding:10px 0px;">
+ <div class="container">
+ 	<div class="row">
+   <div id="div-list" class="col-md-2">
+     <div id="devices-list">
+      <table id="devices-list-table" class="table table-hover table-bordered table-condensed">
+       <thead>
+		   <tr>
+			   <th><span class="glyphicon glyphicon-tags text-muted"></span></th>
+			   <th>设备编号</th>
+			   <th>观测点</th>
+		   </tr>
+	     </thead>
+	     <tbody>
+	     	{{range $i,$v:=.devices}}
+	     	{{if lt $i 10}}
+	     	<tr>
+	     		<td>{{if .Online}}<span class="glyphicon glyphicon-refresh text-info"></span>{{else}}<span class="glyphicon glyphicon-refresh text-muted"></span>{{end}}</td>
+	     		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.SensorId}}</td>
+	     		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.CustomParams.SiteAliasName}}</td>
+	     	</tr>
+	     	{{end}}
+	     	{{end}}
+	     </tbody>	
+      </table>
+	     <div id="device-pager" class="pagination"></div>
+    </div>
+    
+    <div id="events-list">
+    	<!--<button type="button" class="btn btn-default btn-sm" >移除等值线图层</button>-->
+      <table id="events-list-table" class="table table-hover table-bordered table-condensed">
+       <thead>
+		   <tr onclick="javascript:removeWMSLayer();">
+			   <th><a href="javascript:removeWMSLayer();" data-toggle="tooltip"  data-placement="top" title="点击此栏可以移除等值线图层"><span class="glyphicon glyphicon-bell text-muted"></span></a></th>
+			   <th>震情时间</th>
+			   <th>报警</th>
+		   </tr>
+	     </thead>
+	     <tbody>
+        {{range $i,$v:=.events}}
+	     	{{if lt $i 5}}
+	     	<tr onclick="javascript:showEvent('{{.EventId}}');">
+	     		<td>{{if .IsConfirm}}<span class="glyphicon glyphicon-flash text-info"></span>{{else}}<span class="glyphicon glyphicon-flash text-muted"></span>{{end}}</td>
+	     		<td>{{.EventTimeStr}}</td>
+	     		<td>{{.AlarmCount}}</td>
+	     	</tr>
+	     	{{end}}
+	     	{{end}}
+	     </tbody>	
+      </table>
+    </div>
+   </div>
+   <div id="map" class="col-md-10"  style="height:550px;border:#F6F6F6 solid 1px;"></div>
+  </div>
+  </div> 
+</div>
+
+{{template "scripts"}}
+<script language="javascript" src="http://webapi.amap.com/maps?v=1.2&key=c20526727f55a9fb7c6f8e27c7825a79"></script>
+<script language="javascript" src="/static/js/bootstrap-paginator.min.js"></script>
+<script language="javascript" src="/static/js/messenger/messenger.min.js"></script>
+<script language="javascript" src="/static/js/messenger/messenger-theme-future.js"></script>
+<script language="javascript">
+	Messenger.options = {
+    extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+    theme: 'future'
+}
+</script>
+<script language="javascript">
+var mapObj,tool,view,scale;
+var sites=[];
+
+//添加观测点
+function addMarker(sid,dname,lng,lat){
+	//构建点对象
+	var marker = new AMap.Marker({
+		id:sid,//唯一ID
+		position:new AMap.LngLat(lng,lat), //基点位置
+		icon:"/static/image/marker-blue.png", //marker图标，直接传递地址url
+		offset:{x:-8,y:-34} //相对于基点的位置
+	});
+	mapObj.addOverlays(marker);//将点添加到地图
+
+	var info = [];
+	info.push("<b>&nbsp;&nbsp;"+sid+"</b>");
+	info.push("&nbsp;&nbsp;"+dname);
+	info.push("&nbsp;&nbsp;["+lng+","+lat+"]");
+	info.push("{{if hasrole .CurrentUser.Roles "role_admin" "role_device"}}&nbsp;&nbsp;<a href='/device/"+sid+"' target='_blank'>[详细信息]</a>{{end}}&nbsp;&nbsp;<a href='/alarm?sensorid="+sid+"' target='_blank'>[报警信息]</a>");
+		
+	var inforWindow = new AMap.InfoWindow({
+		offset:new AMap.Pixel(8,-30),
+		content:info.join("<br />")
+	});
+	mapObj.bind(marker,"click",function(e){
+		inforWindow.open(mapObj,marker.getPosition());
+	});
+	//mapObj.setCenter(marker.getPosition());
+}
+
+//重置观测点
+function resetMarker(sid){
+	var marker = mapObj.getOverlays(sid);
+	marker.icon="/static/image/marker-blue.png";
+	mapObj.updateOverlay(marker);
+}
+//更新观测点
+function updateMarker(sid){
+	var marker = mapObj.getOverlays(sid);
+	marker.icon="/static/image/star.gif";
+	mapObj.updateOverlay(marker);
+		//提示信息
+  Messenger().post({
+  message: item.SensorId+' [PGA:'+item.PGA+' , SI:'+item.SI+']',
+  type: 'error',
+  showCloseButton: true
+});
+}
+
+//显示位置
+function showFeature(sid){
+	mapObj.clearInfoWindow();
+	//TODO 待完善
+} 
+
+//定时获取报警信息
+function timeQueryData(){
+	$.getJSON("/realtime_alarm?time=5", function(data){
+		//重置所有站点状态
+		$.each(sites,function(i,item){
+			resetMarker(item);
+		});
+		//更新报警信息
+   $.each(data, function(i,item){
+   	   updateMarker(item.SensorId);
+   });
+  });
+  
+  //查询事件
+  var eventtablestr="";
+  $.getJSON("/eventjsonlist?pagesize=5", function(data){
+   $.each(data, function(i,item){
+   	  eventtablestr+="<tr  onclick=\"javascript:showEvent('"+item.EventId+"');\"><td><span class=\"glyphicon glyphicon-flash ";
+   	 if(item.IsConfirm==true){
+   	 	 eventtablestr+=" text-info ";
+   	 	}else{
+   	 		eventtablestr+=" text-muted ";
+   	 	}
+   	 	eventtablestr+=" \"></span></td> <td>"+item.EventTimeStr+"</td><td>"+item.AlarmCount+"</td></tr>";
+   });
+   $("#events-list-table").find('tbody').html(eventtablestr);
+ 
+  });
+}
+
+//设备翻页
+function PageDevice(page){
+	var newtablestr="";
+	$.getJSON("/listdevice?pagesize=10&page="+page, function(data){
+		//更新设备信息
+   $.each(data.Data, function(i,item){
+   	 newtablestr+="<tr><td><span class=\"glyphicon glyphicon-refresh ";
+   	 if(item.Online==true){
+   	 	 newtablestr+=" text-info ";
+   	 	}else{
+   	 		newtablestr+=" text-muted ";
+   	 	}
+   	 	newtablestr+=" \"></span></td> <td onclick=\"javascript:showFeature('"+item.SensorId+"');\">"+item.SensorId+"</td>	<td onclick=\"javascript:showFeature('"+item.SensorId+"');\">"+item.CustomParams.SiteAliasName+"</td></tr>";
+   });
+   $("#devices-list-table").find('tbody').html(newtablestr);
+  });
+ 
+}
+
+//初始化加载
+$(document).ready(function() {
+	//设备列表分页
+	 var options = {
+            currentPage: 1,
+            totalPages: {{.devicePages}},
+            numberOfPages:5,
+            alignment:'center',
+            size:'mini',
+            shouldShowPage:function(type, page, current){
+                switch(type)
+                {
+                    case "first":
+                    case "last":
+                        return false;
+                    default:
+                        return true;
+                }
+            },
+            onPageClicked: function(e,originalEvent,type,page){
+                PageDevice(page);
+            }
+        }
+   $('#device-pager').bootstrapPaginator(options);
+  
+  //地图显示 
+	mapObj = new AMap.Map("map",{
+		//defaultLayer: new AMap.TileLayer.Satellite({ zIndex: 5 }),
+		//center:new AMap.LngLat(105.84628,32.43544)
+	});
+	mapObj.plugin(["AMap.ToolBar","AMap.OverView,AMap.Scale","AMap.MapType"],function(){
+		//加载工具条
+		tool = new AMap.ToolBar({
+			direction:true,
+			ruler:true,
+			autoPosition:false//禁止自动定位
+		});
+		mapObj.addControl(tool);
+		//加载鹰眼
+		view = new AMap.OverView({visible:true});
+		mapObj.addControl(view);
+		//加载比例尺
+		scale = new AMap.Scale();
+		mapObj.addControl(scale);
+		//地图类型切换
+		type= new AMap.MapType({defaultType:0});
+		mapObj.addControl(type);	
+	
+	});
+	//加载设备列表
+	{{range $i,$v:=.devices}} 
+	 addMarker("{{.SensorId}}","{{.SetParams.SiteName}}",{{.SetParams.Longitude}},{{.SetParams.Latitude}});
+	 sites.push("{{.SensorId}}");
+	{{end}}
+	
+	 mapObj.setFitView();
+});
+	
+	//执行定时查询
+	setInterval("timeQueryData()",60000); 
+</script>
+
+{{template "footer"}}

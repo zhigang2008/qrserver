@@ -1,59 +1,47 @@
-﻿ {{template "header" .}}
- 
- <div class="jumbotron">
- 	<!--<div class="row">
-  <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <img data-src="holder.js/300x200" alt="...">
-      <div class="caption">
-        <h3>Thumbnail label</h3>
-        <p>...</p>
-        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+﻿{{template "header" .}}
+
+{{$curUser := .CurrentUser}}
+<!--最新记录-->
+<div class="jumbotron" style="font-size: 14px;padding-bottom: 24px;padding-top: 24px;">
+ <div class="container">
+{{range .newReports}}	
+  <div class="col-sm-4 col-md-4">
+    <div class="thumbnail .small">
+       <div class="caption">
+        <h4><span class="glyphicon glyphicon-dashboard text-muted"></span>&nbsp;{{dateformat .GenerateTime "2006-01-02 15:04:05" }}</h3>
+        <ul>
+        	{{range $k,$v:=.Summary}}
+        	  <li>{{$k}}: {{$v}}</li>
+         {{end}}
+       </ul>
       </div>
+      <img src="/static/image/globe-b.png" data-src="/static/image/globe2.png" alt="...">
+      <!--管理功能-->
+  	{{if hasrole $curUser.Roles "role_admin" "role_report"}}
+  	<div style="margin-top:5px;">
+     <div class="btn-group">
+     	<a href="#" class="btn btn-default" role="button">审核</a> 
+     	<a href="#" class="btn btn-default" role="button">立即发送</a>
+     	<a href="#" class="btn btn-default" role="button">人员</a>
+     </div>
+     <div class="pull-right">
+      <a href="javascript:setInvalid('{{.ReportId}}');" class="btn btn-link" data-toggle="tooltip"  data-placement="bottom" title="无效速报"><span class="glyphicon glyphicon-remove "></span></a>
+     </div>
+   </div>
+    {{end}}
     </div>
   </div>
-</div>
--->
- 	{{with .latestReport}}
-      <div class="container">
-      	<h2><span class="glyphicon glyphicon-dashboard"></span>&nbsp;{{dateformat .GenerateTime "2006-01-02 15:04:05" }}</h2>
-        <p>速报发送情况....</p>
-        <div class="col-md-6">
-          {{range $k,$v:=.Summary}}
-        	  <p>{{$k}}:{{$v}}</p>
-        	{{end}}
-        </div>
-        <div class="col-md-6 pull-right">
-          
-        </div>
-        <!--
-        <p><a class="btn btn-primary btn-lg">刷新状态 &raquo;</a></p>
-        
-        <div class="col-md-4">
-        <h2><span class="glyphicon glyphicon-user"></span>&nbsp;速报接收人</h2>
-        <p>........</p>
-        <p><a class="btn btn-primary btn-lg">人员管理 &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-        <h2><span class="glyphicon glyphicon-envelope"></span>&nbsp;邮件模板</h2>
-        <p>........</p>
-        <p><a class="btn btn-primary btn-lg">编辑模板 &raquo;</a></p>
-       </div>
-       <div class="col-md-4">
-        <h2><span class="glyphicon glyphicon-phone"></span>&nbsp;短信模板</h2>
-        <p>........</p>
-        <p><a class="btn btn-primary btn-lg">编辑模板 &raquo;</a></p>
-       </div>
-       -->
-      </div>
-   {{end}} 
-</div>      
+ {{end}}  
+ </div>
+</div>  <!--end jumbotron-->
+
+<!--历史记录-->   
 <div class="container">
   <div class="panel panel-default">
   <div class="panel-heading">以往速报列表</div>
   <div class="panel-body">
    <ul class="list-group">
-   	{{range .reports}}
+   	{{range .oldReports}}
     <li class="list-group-item">
      <span class="badge">14</span>
         {{dateformat .GenerateTime "2006-01-02 15:04:05" }}
@@ -65,5 +53,30 @@
  </div> <!--end container-->
 
 {{template "scripts"}}
-
+<script language="javascript">
+function setInvalid(rid){
+	$.ajax({
+             type: "POST",
+             url: "/reportinvalid/"+rid,
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             success: function(json){
+               if(json.Ok==true){
+                   //bootbox.alert("操作成功!",function(){
+                   	 window.location.reload(true);
+                   //});
+                }else{
+                 bootbox.alert("无法置为无效速报:"+json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 bootbox.alert("操作失败,报告管理员:"+textStatus);
+             }
+           });
+}
+//初始化    
+$(document).ready(function(){
+});
+</script>
 {{template "footer"}}

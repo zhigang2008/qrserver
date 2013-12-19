@@ -85,8 +85,8 @@ func main() {
 }
 
 func startWork() {
-	dir, err00 := filepath.Split(currentPath)
-	fmt.Printf("dir=%s;file=%s\n", dir, err00)
+	dir, _ := filepath.Split(currentPath)
+	//fmt.Printf("dir=%s;file=%s\n", dir, err00)
 	os.Chdir(dir)
 	//配置日志
 	logger, e := log.LoggerFromConfigAsFile("seelog.xml")
