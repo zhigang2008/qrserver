@@ -1,0 +1,33 @@
+﻿ {{template "header" .}}
+ <div class="jumbotron">
+      <div class="container">
+        <h2><span class="glyphicon glyphicon-chevron-right"></span>欢迎使用地震烈度速报平台</h2>
+        <p>本页面主要提供几个交互接口的使用方法介绍</p>
+        <!--<p><a class="btn btn-primary btn-lg">了解更多 &raquo;</a></p>-->
+      </div>
+</div>
+
+<div class="container">
+ <div class="list-group">
+  <div class="list-group-item list-group-item-info">
+    <h4 class="list-group-item-heading">报警信息获取接口</h4>
+             <pre>url: http://[host:port]/data/alarms</br>
+             sid: 仪器设备号 </br>
+             btime: 开始时间[年月日时分,如201312020800]</br>
+             etime: 结束时间[年月日时分,如201312050000]
+</pre>
+  </div>
+ <div  class="list-group-item list-group-item-info">
+    <h4 class="list-group-item-heading">报警信息获取接口</h4>
+             <pre>url: http://[host:port]/data/alarms</br>
+             sid: 仪器设备号 </br>
+             btime: 开始时间[年月日时分,如201312020800]</br>
+             etime: 结束时间[年月日时分,如201312050000]
+</pre>
+  </div> 
+</div>
+
+</div>
+{{template "scripts"}}
+
+{{template "footer"}}
