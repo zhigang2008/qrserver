@@ -5,7 +5,7 @@
  	<div class="row">
    <div id="div-list" class="col-md-2">
      <div id="devices-list">
-      <table id="devices-list-table" class="table table-hover table-bordered table-condensed">
+      <table id="devices-list-table" class="table table-hover table-bordered table-condensed" >
        <thead>
 		   <tr>
 			   <th><span class="glyphicon glyphicon-tags text-muted"></span></th>
@@ -16,8 +16,8 @@
 	     <tbody>
 	     	{{range $i,$v:=.devices}}
 	     	{{if lt $i 10}}
-	     	<tr>
-	     		<td>{{if .Online}}<span class="glyphicon glyphicon-refresh text-info"></span>{{else}}<span class="glyphicon glyphicon-refresh text-muted"></span>{{end}}</td>
+	     	<tr style="cursor:pointer;">
+	     		<td >{{if .Online}}<span class="glyphicon glyphicon-refresh text-info"></span>{{else}}<span class="glyphicon glyphicon-refresh text-muted"></span>{{end}}</td>
 	     		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.SensorId}}</td>
 	     		<td onclick="javascript:showFeature('{{.SensorId}}');">{{.CustomParams.SiteAliasName}}</td>
 	     	</tr>
@@ -32,7 +32,7 @@
     	<!--<button type="button" class="btn btn-default btn-sm" >移除等值线图层</button>-->
       <table id="events-list-table" class="table table-hover table-bordered table-condensed">
        <thead>
-		   <tr onclick="javascript:removeWMSLayer();">
+		   <tr onclick="javascript:removeWMSLayer();" style="cursor:alias;">
 			   <th><a href="javascript:removeWMSLayer();" data-toggle="tooltip"  data-placement="top" title="点击此栏可以移除等值线图层"><span class="glyphicon glyphicon-bell text-muted"></span></a></th>
 			   <th>震情时间</th>
 			   <th>报警</th>
@@ -41,7 +41,7 @@
 	     <tbody>
         {{range $i,$v:=.events}}
 	     	{{if lt $i 5}}
-	     	<tr onclick="javascript:showEvent('{{.EventId}}');">
+	     	<tr onclick="javascript:showEvent('{{.EventId}}');" style="cursor:pointer;">
 	     		<td>{{if .IsConfirm}}<span class="glyphicon glyphicon-flash text-info"></span>{{else}}<span class="glyphicon glyphicon-flash text-muted"></span>{{end}}</td>
 	     		<td>{{.EventTimeStr}}</td>
 	     		<td>{{.AlarmCount}}</td>
@@ -252,7 +252,7 @@ function timeQueryData(){
   var eventtablestr="";
   $.getJSON("/eventjsonlist?pagesize=5", function(data){
    $.each(data, function(i,item){
-   	  eventtablestr+="<tr  onclick=\"javascript:showEvent('"+item.EventId+"');\"><td><span class=\"glyphicon glyphicon-flash ";
+   	  eventtablestr+="<tr  style=\"cursor:pointer;\" onclick=\"javascript:showEvent('"+item.EventId+"');\"><td><span class=\"glyphicon glyphicon-flash ";
    	 if(item.IsConfirm==true){
    	 	 eventtablestr+=" text-info ";
    	 	}else{
@@ -271,7 +271,7 @@ function PageDevice(page){
 	$.getJSON("/listdevice?pagesize=10&page="+page, function(data){
 		//更新设备信息
    $.each(data.Data, function(i,item){
-   	 newtablestr+="<tr><td><span class=\"glyphicon glyphicon-refresh ";
+   	 newtablestr+="<tr style=\"cursor:pointer;\"><td><span class=\"glyphicon glyphicon-refresh ";
    	 if(item.Online==true){
    	 	 newtablestr+=" text-info ";
    	 	}else{
