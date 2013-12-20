@@ -446,36 +446,29 @@ func (dm *DataManager) GetAlarmsByEvent(event *Event) (*[]AlarmInfo, error) {
 	return &alist, nil
 }
 
-//获取烈度映射数据的低位值
-func (dm *DataManager) GetLowData(st int, val float32) (DataMapping, error) {
+//获取数据库中的烈度对照表
+func (dm *DataManager) GetDataMapping() (DataMapping, error) {
 	c := dm.session.DB(dm.databaseName).C(dm.intensityMappingCollection)
-
-	ldata := DataMapping{}
-	m := bson.M{}
-	m["sitetype"] = st
-	m["pga"] = bson.M{"$lte": val}
-
-	err0 := c.Find(&m).Sort("-intensity").One(&ldata)
+	datamap := DataMapping{}
+	err0 := c.Find(&bson.M{}).One(&datamap)
 	if err0 != nil {
-		return ldata, err0
+		if err0 == mgo.ErrNotFound {
+			return datamap, ErrNotFound
+		}
+		return datamap, err0
 	}
-	return ldata, nil
+	return datamap, nil
 }
 
-//获取烈度映射数据的高位值
-func (dm *DataManager) GetHighData(st int, val float32) (DataMapping, error) {
+//添加烈度对照表
+func (dm *DataManager) CreateDataMapping(cfg *DataMapping) error {
 	c := dm.session.DB(dm.databaseName).C(dm.intensityMappingCollection)
 
-	hdata := DataMapping{}
-	m := bson.M{}
-	m["sitetype"] = st
-	m["pga"] = bson.M{"$gte": val}
-
-	err0 := c.Find(&m).Sort("intensity").One(&hdata)
+	_, err0 := c.Upsert(nil, cfg)
 	if err0 != nil {
-		return hdata, err0
+		return err0
 	}
-	return hdata, nil
+	return nil
 }
 
 //获取数据库中的配置信息

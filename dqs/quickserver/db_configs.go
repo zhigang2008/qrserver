@@ -2,18 +2,22 @@ package quickserver
 
 import (
 	"encoding/xml"
+	log "github.com/cihub/seelog"
 )
 
-//保存在数据库中的配置信息
-var GlobalConfig DatabaseConfig
+var (
+	GlobalConfig      DatabaseConfig //保存在数据库中的配置信息
+	GlobalDataMapping DataMapping    //烈度对照表
+)
 
 //运行参数配置
 type DatabaseConfig struct {
-	CRC                bool            //是否进行CRC校验
-	ReadWaveAfterAlarm bool            //是否在收到警报数据后立即发送波形记录读取命令
-	EventParams        EventParameters //时间控制参数设置
-	FileConfig         FilesConfig     //
-	ReportCfg          ReportParameter
+	CRC                 bool            //是否进行CRC校验
+	ReadWaveAfterAlarm  bool            //是否在收到警报数据后立即发送波形记录读取命令
+	IntensityMapingData string          //使用PGA/SI计算烈度. 默认PGA
+	EventParams         EventParameters //时间控制参数设置
+	FileConfig          FilesConfig     //
+	ReportCfg           ReportParameter
 }
 
 //震情事件判断的参数
@@ -41,4 +45,101 @@ type ReportParameter struct {
 	AuditBeforeSend    bool //发送前是否进行审核
 	MinDirectSendLevel int  //该级别以上自动发送,无需审核
 
+}
+
+//烈度对照数据
+type DataMapping struct {
+	PGAMap []PGAMapping
+	SIMap  []SIMapping
+}
+type PGAMapping struct {
+	PGA       float32
+	Intensity int //仪器烈度值
+}
+type SIMapping struct {
+	SI        float32
+	Intensity int //仪器烈度值
+}
+
+func initGlobalConfigs() {
+	initRuntimeConfigs()
+	initDataMapping()
+}
+
+//初始化运行参数
+func initRuntimeConfigs() {
+
+	configs, err := server.dataManager.GetGlobalConfigs()
+	if err != nil {
+		log.Warnf("从数据库中获取运行参数失败:%s", err.Error())
+		if err == ErrNotFound {
+			log.Warnf("系统将自动初始化运行参数")
+			GlobalConfig = DatabaseConfig{}
+			GlobalConfig.CRC = false
+			GlobalConfig.ReadWaveAfterAlarm = true
+			GlobalConfig.IntensityMapingData = "PGA"
+			GlobalConfig.EventParams.SignalTimeSpan = 5
+			GlobalConfig.EventParams.ValidEventAlarmCount = 3
+			GlobalConfig.EventParams.NewEventTimeGap = 15
+			GlobalConfig.EventParams.NewEventGapMultiple = 2.2
+			GlobalConfig.EventParams.MinEventRecordLevel = 3
+			GlobalConfig.FileConfig.WriteFile = true
+			GlobalConfig.FileConfig.FileDir = "./output/alarms"
+			GlobalConfig.FileConfig.ReportFileDir = "./output/reports"
+			GlobalConfig.ReportCfg.SleepTime = 3
+			GlobalConfig.ReportCfg.ReportLevel = 5
+			GlobalConfig.ReportCfg.AuditBeforeSend = true
+			GlobalConfig.ReportCfg.MinDirectSendLevel = 7
+
+			errc := server.dataManager.CreateGlobalConfigs(&GlobalConfig)
+			if errc != nil {
+				log.Warnf("初始化运行参数失败:%s", errc.Error())
+				return
+			}
+		} else {
+			return
+		}
+	} else {
+		GlobalConfig = configs
+	}
+}
+
+//初始化烈度对照表
+func initDataMapping() {
+
+	dataMap, err := server.dataManager.GetDataMapping()
+	if err != nil {
+		log.Warnf("从数据库中获取烈度对照表失败:%s", err.Error())
+		if err == ErrNotFound {
+			log.Warnf("系统将自动初始化烈度对照表")
+			GlobalDataMapping = DataMapping{}
+			pgamaps := []PGAMapping{}
+			pgamaps = append(pgamaps, PGAMapping{22.0, 5})
+			pgamaps = append(pgamaps, PGAMapping{45.0, 6})
+			pgamaps = append(pgamaps, PGAMapping{90.0, 7})
+			pgamaps = append(pgamaps, PGAMapping{178.0, 8})
+			pgamaps = append(pgamaps, PGAMapping{354.0, 9})
+			pgamaps = append(pgamaps, PGAMapping{708.0, 10})
+			pgamaps = append(pgamaps, PGAMapping{1414.0, 11})
+			GlobalDataMapping.PGAMap = pgamaps
+
+			simaps := []SIMapping{}
+			simaps = append(simaps, SIMapping{3.2, 5})
+			simaps = append(simaps, SIMapping{6.7, 6})
+			simaps = append(simaps, SIMapping{14.0, 7})
+			simaps = append(simaps, SIMapping{29.1, 8})
+			simaps = append(simaps, SIMapping{107.8, 9})
+			GlobalDataMapping.SIMap = simaps
+
+			errc := server.dataManager.CreateDataMapping(&GlobalDataMapping)
+			if errc != nil {
+				log.Warnf("初始化烈度对照表失败:%s", errc.Error())
+				return
+			}
+		} else {
+			return
+		}
+	} else {
+		GlobalDataMapping = dataMap
+	}
 }

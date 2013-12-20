@@ -332,14 +332,6 @@ type EventSignal struct {
 	ReceiveTime time.Time //信号接收时间
 }
 
-//PGA与烈度对照数据
-type DataMapping struct {
-	Id        bson.ObjectId "_id"
-	SiteType  int
-	PGA       float32
-	Intensity int //仪器烈度值
-}
-
 //报表数据
 type Report struct {
 	ReportId     string

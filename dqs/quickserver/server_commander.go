@@ -182,14 +182,26 @@ func CommandFlashRead(id, remote string) error {
 	return nil
 }
 
-//刷新数据参数
+//刷新运行参数
 func CommandRefreshConfig() error {
 	newConfig, err := server.dataManager.GetGlobalConfigs()
 	if err != nil {
-		log.Warnf("数据服务器刷新系统参数失败:%s", err.Error())
+		log.Warnf("数据服务器刷新运行参数失败:%s", err.Error())
 		return err
 	}
 	GlobalConfig = newConfig
-	log.Infof("数据服务器已经成功刷新系统参数")
+	log.Infof("数据服务器已经成功刷新运行参数")
+	return nil
+}
+
+//刷新烈度对照表
+func CommandRefreshDataMapping() error {
+	newmap, err := server.dataManager.GetDataMapping()
+	if err != nil {
+		log.Warnf("数据服务器刷新烈度对照表失败:%s", err.Error())
+		return err
+	}
+	GlobalDataMapping = newmap
+	log.Infof("数据服务器已经成功刷新烈度对照表")
 	return nil
 }

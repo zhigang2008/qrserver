@@ -3,7 +3,7 @@ package quickserver
 import (
 	"dqs/util"
 	"errors"
-	"fmt"
+	//"fmt"
 	log "github.com/cihub/seelog"
 	"net"
 	"time"
@@ -362,22 +362,4 @@ func (dp *DataProcessor) ProcessWaveData(content []byte) (err error) {
 	log.Infof("波形图信息保存成功")
 
 	return nil
-}
-
-//进行烈度值查表结算
-func (dp *DataProcessor) dataMapping(a *AlarmInfo) float32 {
-	var value float32
-	lowData, err0 := dp.dataManager.GetLowData(a.SiteType, a.PGA)
-	if err0 != nil {
-		log.Warnf("未能获取烈度的低位映射值:%s", err0.Error())
-		lowData = DataMapping{}
-	}
-	highData, err1 := dp.dataManager.GetHighData(a.SiteType, a.PGA)
-	if err1 != nil {
-		log.Warnf("未能获取烈度的低位映射值:%s", err0.Error())
-	}
-	//
-	fmt.Printf("%f-%f", lowData, highData)
-
-	return value
 }

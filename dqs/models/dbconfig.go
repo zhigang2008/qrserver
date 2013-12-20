@@ -2,11 +2,12 @@ package models
 
 //数据库配置文件
 type DatabaseConfig struct {
-	CRC                bool
-	ReadWaveAfterAlarm bool            // 是否报警后立即读取波形记录
-	EventParams        EventParameters //时间控制参数设置
-	FileConfig         FilesConfig     //
-	ReportCfg          ReportParameter
+	CRC                 bool
+	ReadWaveAfterAlarm  bool            // 是否报警后立即读取波形记录
+	IntensityMapingData string          //使用PGA/SI计算烈度. 默认PGA
+	EventParams         EventParameters //时间控制参数设置
+	FileConfig          FilesConfig     //
+	ReportCfg           ReportParameter
 }
 
 //震情事件判断的参数
@@ -32,4 +33,18 @@ type ReportParameter struct {
 	AuditBeforeSend    bool //发送前是否进行审核
 	MinDirectSendLevel int  //该级别以上自动发送,无需审核
 
+}
+
+//烈度对照数据
+type DataMapping struct {
+	PGAMap []PGAMapping
+	SIMap  []SIMapping
+}
+type PGAMapping struct {
+	PGA       float32
+	Intensity int //仪器烈度值
+}
+type SIMapping struct {
+	SI        float32
+	Intensity int //仪器烈度值
 }
