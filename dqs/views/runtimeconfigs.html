@@ -59,6 +59,18 @@
       <p class="help-block">是否接收报警后立即读取波形记录</p>
     </div>
   </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="IntensityMapingData" >仪器烈度计算模式</label>
+    <div class="col-sm-6">
+    		<label class="radio-inline">
+        <input type="radio" name="IntensityMapingData"  value="PGA" {{if eq .IntensityMapingData "PGA"}} checked {{end}} disabled> PGA
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="IntensityMapingData"  value="SI" {{if eq .IntensityMapingData "SI"}} checked {{end}} disabled> SI
+      </label>
+      <p class="help-block">计算仪器烈度时,根据PGA还是SI进行对照查表</p>
+    </div>
+  </div>
   </div>
  </div>
 
