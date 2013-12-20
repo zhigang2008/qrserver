@@ -27,9 +27,10 @@
    		<th>周期(s)</th>
    		<th>PGA</th>
    		<th>SI</th>
-   		<th>长度</th>
+   		<!--<th>长度</th>-->
+   		<th>烈度</th>
    		<th>记录时间</th>
-   		<th>波形</th>
+   		<th>操作</th>
    	</tr>
    	</thead>
 	 	<tbody>
@@ -46,9 +47,13 @@
 	 		<td>{{dateformat .InitRealTime "2006-01-02 15:04:05" }}</td>
 	 		<td>{{.Period}}</td>
 	 		<td>{{.PGA}}</td><td>{{.SI}}</td>
-	 		<td>{{.Length}}</td>
+	 		<!--<td>{{.Length}}</td>-->
+	 		<td>{{.Intensity}}</td>
 	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05" }}</td>
-	 		<td>{{if .HasWaveInfo}}<a href="/waveinfo/{{.SensorId}}/{{.SeqNo}}" data-toggle="tooltip" data-placement="bottom" title="查看波形图"><span class="glyphicon glyphicon-random"></span></a>{{else}}&nbsp;{{end}}  </td>
+	 		<td>
+	 			{{if .HasWaveInfo}}<a href="/waveinfo/{{.SensorId}}/{{.SeqNo}}" data-toggle="tooltip" data-placement="bottom" title="查看波形图"><span class="glyphicon glyphicon-random"></span></a>{{end}}  
+	 			{{if ne .EventId ""}}  / <a href="/eventline/{{.EventId}}" data-toggle="tooltip" data-placement="bottom" title="查看观测事件等值线"><span class="glyphicon glyphicon-certificate"></span></a>{{end}}
+	 		</td>
 	 	</tr>
    {{end}}
 </tbody>

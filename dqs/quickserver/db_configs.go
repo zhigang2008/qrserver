@@ -3,6 +3,7 @@ package quickserver
 import (
 	"encoding/xml"
 	log "github.com/cihub/seelog"
+	"sort"
 )
 
 var (
@@ -49,8 +50,8 @@ type ReportParameter struct {
 
 //烈度对照数据
 type DataMapping struct {
-	PGAMap []PGAMapping
-	SIMap  []SIMapping
+	PGAMap PGAMapArray
+	SIMap  SIMapArray
 }
 type PGAMapping struct {
 	PGA       float32
@@ -61,6 +62,21 @@ type SIMapping struct {
 	Intensity int //仪器烈度值
 }
 
+//排序参数
+type PGAMapArray []PGAMapping
+
+func (p PGAMapArray) Len() int           { return len(p) }
+func (p PGAMapArray) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p PGAMapArray) Less(i, j int) bool { return p[i].PGA < p[j].PGA }
+
+//排序参数
+type SIMapArray []SIMapping
+
+func (p SIMapArray) Len() int           { return len(p) }
+func (p SIMapArray) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p SIMapArray) Less(i, j int) bool { return p[i].SI < p[j].SI }
+
+//全部初始化
 func initGlobalConfigs() {
 	initRuntimeConfigs()
 	initDataMapping()
@@ -113,7 +129,7 @@ func initDataMapping() {
 		if err == ErrNotFound {
 			log.Warnf("系统将自动初始化烈度对照表")
 			GlobalDataMapping = DataMapping{}
-			pgamaps := []PGAMapping{}
+			pgamaps := PGAMapArray{}
 			pgamaps = append(pgamaps, PGAMapping{22.0, 5})
 			pgamaps = append(pgamaps, PGAMapping{45.0, 6})
 			pgamaps = append(pgamaps, PGAMapping{90.0, 7})
@@ -121,14 +137,16 @@ func initDataMapping() {
 			pgamaps = append(pgamaps, PGAMapping{354.0, 9})
 			pgamaps = append(pgamaps, PGAMapping{708.0, 10})
 			pgamaps = append(pgamaps, PGAMapping{1414.0, 11})
+			sort.Sort(pgamaps)
 			GlobalDataMapping.PGAMap = pgamaps
 
-			simaps := []SIMapping{}
+			simaps := SIMapArray{}
 			simaps = append(simaps, SIMapping{3.2, 5})
 			simaps = append(simaps, SIMapping{6.7, 6})
 			simaps = append(simaps, SIMapping{14.0, 7})
 			simaps = append(simaps, SIMapping{29.1, 8})
 			simaps = append(simaps, SIMapping{107.8, 9})
+			sort.Sort(simaps)
 			GlobalDataMapping.SIMap = simaps
 
 			errc := server.dataManager.CreateDataMapping(&GlobalDataMapping)
@@ -142,4 +160,53 @@ func initDataMapping() {
 	} else {
 		GlobalDataMapping = dataMap
 	}
+}
+
+//获取烈度值
+func getMappingIntensity(a *AlarmInfo) int {
+	if GlobalConfig.IntensityMapingData == "PGA" {
+		return getMappingIntensityByPGA(a.PGA)
+	} else if GlobalConfig.IntensityMapingData == "SI" {
+		return getMappingIntensityBySI(a.SI)
+	} else {
+		return 0
+	}
+}
+
+//根据PGA获取烈度值
+func getMappingIntensityByPGA(pga float32) int {
+
+	lowValue := 0
+	dataArray := GlobalDataMapping.PGAMap
+	size := len(dataArray)
+	if size > 0 {
+		lowValue = dataArray[0].Intensity
+
+		for _, v := range dataArray {
+			if pga < v.PGA {
+				return lowValue
+			}
+			lowValue = v.Intensity
+		}
+	}
+	return lowValue
+
+}
+
+//根据SI获取烈度值
+func getMappingIntensityBySI(si float32) int {
+	lowValue := 0
+	dataArray := GlobalDataMapping.SIMap
+	size := len(dataArray)
+	if size > 0 {
+		lowValue = dataArray[0].Intensity
+
+		for _, v := range dataArray {
+			if si < v.SI {
+				return lowValue
+			}
+			lowValue = v.Intensity
+		}
+	}
+	return lowValue
 }

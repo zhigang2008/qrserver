@@ -6,6 +6,7 @@ import (
 	log "github.com/cihub/seelog"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
+	"sort"
 	"strconv"
 	"sync"
 	"time"
@@ -109,12 +110,27 @@ func (dm *DataManager) AlarmUpsert(data *AlarmInfo) (err error) {
 	return nil
 }
 
+//保存或更改报警信息
+func (dm *DataManager) GetAlarmByIdAndSeqno(sid, seqno string) (a AlarmInfo, err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
+	colQuerier := bson.M{"sensorid": sid, "seqno": seqno}
+	alarm := AlarmInfo{}
+	err0 := c.Find(colQuerier).One(&alarm)
+	if err0 != nil {
+		if err0 == mgo.ErrNotFound {
+			return alarm, ErrNotFound
+		}
+		return alarm, err0
+	}
+	return alarm, nil
+}
+
 //更新报警信息的事件号
 func (dm *DataManager) updateAlarmEvent(data *AlarmInfo) (err error) {
 	c := dm.session.DB(dm.databaseName).C(dm.dataCollection)
 	colQuerier := bson.M{"sensorid": data.SensorId, "seqno": data.SeqNo}
 
-	err = c.Update(colQuerier, data)
+	err = c.Update(colQuerier, bson.M{"$set": bson.M{"eventid": data.EventId}})
 	if err != nil {
 		return err
 	}
@@ -457,6 +473,14 @@ func (dm *DataManager) GetDataMapping() (DataMapping, error) {
 		}
 		return datamap, err0
 	}
+	//排序
+	sortedPGAMap := datamap.PGAMap
+	sort.Sort(sortedPGAMap)
+	datamap.PGAMap = sortedPGAMap
+	sortedSIMap := datamap.SIMap
+	sort.Sort(sortedSIMap)
+	datamap.SIMap = sortedSIMap
+
 	return datamap, nil
 }
 

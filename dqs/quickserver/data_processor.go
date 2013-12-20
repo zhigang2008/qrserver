@@ -109,6 +109,7 @@ func (dp *DataProcessor) ProcessFlashData(content []byte) (err error) {
 	//数据转换
 	sData := FlashData2AlarmInfo(data)
 	//烈度值查表
+	sData.Intensity = getMappingIntensity(sData)
 
 	//err = dp.dataManager.FlashDataSave(sData)
 	err = dp.dataManager.AlarmUpsert(sData)
@@ -256,12 +257,17 @@ func (dp *DataProcessor) ProcessWaveFlashData(content []byte) (err error) {
 	}
 	//数据转换
 	sData := FlashData2AlarmInfo(data)
+	existObj, erre := dp.dataManager.GetAlarmByIdAndSeqno(sData.SensorId, sData.SeqNo)
+	if erre != nil && erre == ErrNotFound {
+		dp.dataManager.FlashDataSave(sData)
 
-	//更新报警信息
-	sData.HasWaveInfo = true
-	err = dp.dataManager.AlarmUpsert(sData)
-	if err != nil {
-		log.Warnf("[%s]波形记录报警信息更新失败:%s", id, err.Error())
+	} else {
+		//更新报警信息
+		existObj.HasWaveInfo = true
+		err = dp.dataManager.AlarmUpsert(&existObj)
+		if err != nil {
+			log.Warnf("[%s]波形记录报警信息更新失败:%s", id, err.Error())
+		}
 	}
 
 	//记录波形记录
