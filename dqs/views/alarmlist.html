@@ -52,7 +52,7 @@
 	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05" }}</td>
 	 		<td>
 	 			{{if .HasWaveInfo}}<a href="/waveinfo/{{.SensorId}}/{{.SeqNo}}" data-toggle="tooltip" data-placement="bottom" title="查看波形图"><span class="glyphicon glyphicon-random"></span></a>{{end}}  
-	 			{{if ne .EventId ""}}  / <a href="/eventline/{{.EventId}}" data-toggle="tooltip" data-placement="bottom" title="查看观测事件等值线"><span class="glyphicon glyphicon-certificate"></span></a>{{end}}
+	 			{{if ne .EventId ""}}&nbsp;<a href="/eventline/{{.EventId}}" data-toggle="tooltip" data-placement="bottom" title="查看观测事件等值线"><span class="glyphicon glyphicon-certificate"></span></a>{{end}}
 	 		</td>
 	 	</tr>
    {{end}}
