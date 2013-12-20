@@ -11,7 +11,8 @@
 		   <tr>
 			   <!--<th>事件ID</th>-->
 			   <th>震情时间</th>
-			    <th>报警数</th>
+			   <th>报警数</th>
+			   <th>仪器烈度</th>
 			   <th>记录时间</th>
 		     <th>已确认</th>
          <th>等值线</th>
@@ -23,6 +24,7 @@
 	 		    <!--<td>{{.EventId}}</td>-->
 	 		    <td>{{dateformat .EventTime "2006-01-02 15:04:05"}}</td>
 	 		     <td><span class="badge">{{.AlarmCount}}</span></td>
+	 		     <td>{{.MaxLevel}}</td>
 	 		    <td>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</td>
 	 		    <td>{{if .IsConfirm}}<span class="glyphicon glyphicon-ok text-info"></span>{{else}}<span class="glyphicon glyphicon-minus text-muted"></span>{{end}}</td>
 	 		  	<td><a href="/eventline/{{.EventId}}" data-toggle="tooltip" data-placement="bottom" title="查看等值线"><span class="glyphicon glyphicon-certificate"></span></a></td>
