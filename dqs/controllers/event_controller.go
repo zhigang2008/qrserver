@@ -310,7 +310,7 @@ func (this *EventController) EventLineJson() {
 func (this *EventController) QuakeLocation() {
 	this.Data["title"] = "地震定位"
 	this.Data["author"] = "wangzhigang"
-
+	this.CheckUser()
 	sid := this.GetString(":id")
 	signal, err := dao.GetEventSignalById(sid)
 	if err != nil {

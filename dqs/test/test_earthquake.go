@@ -23,7 +23,7 @@ func main() {
 	}
 	body := bytes.NewBuffer(content)
 	//fmt.Printf("%s", content)
-	r, err := http.Post("http://localhost:80/earthquake", "text/xml", body)
+	r, err := http.Post("http://115.29.37.85:8083/earthquake", "text/xml", body)
 	if err != nil {
 		fmt.Printf("调用远程接口出错:%s\n", err.Error())
 		return
