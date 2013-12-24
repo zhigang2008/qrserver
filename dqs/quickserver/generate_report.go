@@ -58,12 +58,12 @@ func GenerateReport(event *Event) {
 }
 
 //生成概要信息
-func generateReportSummary(event *Event) map[string]interface{} {
+func generateReportSummary(event *Event) ReportSummary {
 
-	sumary := make(map[string]interface{})
+	sumary := ReportSummary{}
 	//基本信息
-	sumary["时间"] = event.EventTimeStr
-	sumary["报警数"] = event.AlarmCount
+	sumary.EventTime = event.EventTimeStr
+	sumary.AlarmCount = event.AlarmCount
 
 	cs := make(map[int]int)
 	alarms, err := server.dataManager.GetAlarmsByEvent(event)
@@ -84,16 +84,16 @@ func generateReportSummary(event *Event) map[string]interface{} {
 
 	alarmSumary := ""
 	for k, v := range cs {
-		alarmSumary += fmt.Sprintf("%d级:%d; ", k, v)
+		alarmSumary += fmt.Sprintf("%d级-%d; ", k, v)
 
 	}
-	sumary["报警统计"] = alarmSumary
+	sumary.Brief = alarmSumary
 
 	//实际地震信息
 	if event.IsConfirm {
 		signal := event.Signal
 		stime := signal.Time.Format(CommonTimeLayout)
-		sumary["地震信息"] = fmt.Sprintf("%s 发生于[%f,%f] 震级%d级", stime, signal.Longitude, signal.Latitude, signal.Level)
+		sumary.QuakeInfo = fmt.Sprintf("%s 发生于[%f,%f] 震级%d级", stime, signal.Longitude, signal.Latitude, signal.Level)
 	}
 	return sumary
 }

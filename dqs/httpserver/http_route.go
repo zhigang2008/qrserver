@@ -45,6 +45,7 @@ func routeConfig() {
 	//速报管理
 	beego.Router("/report", &controllers.ReportController{}, "*:Get")
 	beego.Router("/reportinvalid/:id", &controllers.ReportController{}, "*:SetInvalid")
+	beego.Router("/reportverify/:id", &controllers.ReportController{}, "*:SetVerify")
 
 	//用户管理
 	beego.RESTRouter("/user", &controllers.UserController{})
@@ -83,5 +84,6 @@ func routeConfig() {
 	beego.SetStaticPath("/logs", "logs")
 	beego.SetStaticPath("/img", "static/img")
 	beego.SetStaticPath("/font", "static/font")
+	beego.SetStaticPath("/output", "output")
 
 }

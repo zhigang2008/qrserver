@@ -58,6 +58,22 @@ func ReportInvalid(id string) error {
 	return nil
 }
 
+//设置速报审核通过
+func ReportVerify(id string) error {
+	c := GetSession().DB(DatabaseName).C(ReportCollection)
+	report, err := GetReportById(id)
+	if err != nil {
+		return err
+	}
+	report.Verify = true
+
+	err = c.Update(bson.M{"reportid": report.ReportId}, report)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 //事件列表
 func ReportList(n int) (*[]models.Report, error) {
 	c := GetSession().DB(DatabaseName).C(ReportCollection)

@@ -8,23 +8,31 @@
   <div class="col-sm-4 col-md-4">
     <div class="thumbnail .small">
        <div class="caption">
-        <h4><span class="glyphicon glyphicon-dashboard text-muted"></span>&nbsp;{{dateformat .GenerateTime "2006-01-02 15:04:05" }}</h3>
+        <h4><span class="glyphicon glyphicon-dashboard text-muted"></span>&nbsp;{{.Summary.EventTime}}</h3>
         <ul>
-        	{{range $k,$v:=.Summary}}
-        	  <li>{{$k}}: {{$v}}</li>
-         {{end}}
+        	<li>报警数量: {{.Summary.AlarmCount}}</li>
+        	<li>报警统计: {{.Summary.Brief}}</li>
+        	<li>地震数据: {{if .Event.IsConfirm}}{{.Summary.QuakeInfo}}{{else}}-{{end}}</li>
        </ul>
       </div>
       <img src="/static/image/globe-b.png" data-src="/static/image/globe2.png" alt="...">
       <!--管理功能-->
   	{{if hasrole $curUser.Roles "role_admin" "role_report"}}
   	<div style="margin-top:5px;">
-     <div class="btn-group">
-     	<a href="#" class="btn btn-default" role="button">审核</a> 
+     <div class="btn-group btn-group-sm">
+     	{{if .Verify}}
+     	<a href="#" class="btn btn-default disabled " role="button">已审核</a> 
+     	{{else}}
+     	<a href="javascript:reportVerify('{{.ReportId}}');" class="btn btn-default" role="button">审核</a> 
+     	{{end}}
+     	{{if .Sended}}
+     	 <a href="#" class="btn btn-default disabled" role="button">已发送{{.SendNumber}}</a>
+     	{{else}}
      	<a href="#" class="btn btn-default" role="button">立即发送</a>
-     	<a href="#" class="btn btn-default" role="button">人员</a>
+     	{{end}}
+     	<a href="#" class="btn btn-default" role="button">添加人员</a>
      </div>
-     <div class="pull-right">
+     <div class="pull-right ">
       <a href="javascript:setInvalid('{{.ReportId}}');" class="btn btn-link" data-toggle="tooltip"  data-placement="bottom" title="无效速报"><span class="glyphicon glyphicon-remove "></span></a>
      </div>
    </div>
@@ -43,8 +51,8 @@
    <ul class="list-group">
    	{{range .oldReports}}
     <li class="list-group-item">
-     <span class="badge">14</span>
-        {{dateformat .GenerateTime "2006-01-02 15:04:05" }}
+     <span class="badge">{{.Summary.AlarmCount}}</span>
+        {{.Summary.EventTime }}
     </li>
    {{end}}
    </ul>
@@ -68,6 +76,28 @@ function setInvalid(rid){
                    //});
                 }else{
                  bootbox.alert("无法置为无效速报:"+json.Msg);
+                }
+              },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 bootbox.alert("操作失败,报告管理员:"+textStatus);
+             }
+           });
+}
+//审核
+function reportVerify(rid){
+	$.ajax({
+             type: "POST",
+             url: "/reportverify/"+rid,
+             dataType:"json",
+             async: true,
+             timeout: 60000,
+             success: function(json){
+               if(json.Ok==true){
+                   //bootbox.alert("操作成功!",function(){
+                   	 window.location.reload(true);
+                   //});
+                }else{
+                 bootbox.alert("无法设为审核通过:"+json.Msg);
                 }
               },
              error: function(XMLHttpRequest, textStatus, errorThrown) {

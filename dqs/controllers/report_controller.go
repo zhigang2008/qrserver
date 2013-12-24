@@ -48,6 +48,28 @@ func (this *ReportController) SetInvalid() {
 		answer.Ok = true
 		answer.Msg = "成功"
 		log.Infof("设置速报无效[%s]", sid)
+		this.AuditLog("设置速报无效[%s]", true)
+	}
+	this.Data["json"] = &answer
+	this.ServeJson()
+}
+
+//速报审批通过
+func (this *ReportController) SetVerify() {
+	sid := this.GetString(":id")
+
+	err := dao.ReportVerify(sid)
+	answer := JsonAnswer{}
+	if err != nil {
+		answer.Ok = false
+		answer.Msg = "置审核通过失败:" + err.Error()
+		log.Warnf("设置速报审核通过失败[%s]:%s", sid, err.Error())
+
+	} else {
+		answer.Ok = true
+		answer.Msg = "成功"
+		log.Infof("设置速报审核通过[%s]", sid)
+		this.AuditLog("审核速报[%s]通过", true)
 	}
 	this.Data["json"] = &answer
 	this.ServeJson()
