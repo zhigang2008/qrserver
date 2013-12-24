@@ -13,13 +13,16 @@ type HelpController struct {
 func (this *HelpController) About() {
 	this.Data["title"] = "关于本系统"
 	this.Data["author"] = "wangzhigang"
+	this.CheckUser()
 
 	this.TplNames = "about.html"
 	this.Render()
 }
+
 func (this *HelpController) Help() {
 	this.Data["title"] = "帮助"
 	this.Data["author"] = "wangzhigang"
+	this.CheckUser()
 
 	this.TplNames = "help.html"
 	this.Render()
