@@ -20,7 +20,6 @@
   	{{if hasrole $curUser.Roles "role_admin" "role_report"}}
   	<div style="margin-top:5px;">
      <div class="btn-group btn-group-sm">
-<<<<<<< HEAD
      	{{if .Verify}}
      	<a href="#" class="btn btn-default disabled " role="button">已审核</a> 
      	{{else}}
@@ -35,14 +34,12 @@
      </div>
      <div class="pull-right ">
       <a href="javascript:setInvalid('{{.ReportId}}');" class="btn btn-link" data-toggle="tooltip"  data-placement="bottom" title="无效速报"><span class="glyphicon glyphicon-remove "></span></a>
-=======
      	<a href="#" class="btn btn-default " role="button">审核</a> 
      	<a href="#" class="btn btn-default " role="button">立即发送</a>
      	<a href="#" class="btn btn-default " role="button">人员</a>
      </div>
      <div class="pull-right">
       <a href="javascript:setInvalid('{{.ReportId}}');" class="btn btn-link btn-sm" data-toggle="tooltip"  data-placement="bottom" title="无效速报"><span class="glyphicon glyphicon-remove "></span></a>
->>>>>>> 9115f2df0949cf23b1075e4f3ebf18ab3005ed21
      </div>
    </div>
     {{end}}
