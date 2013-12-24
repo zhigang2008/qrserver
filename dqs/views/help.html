@@ -8,25 +8,96 @@
 </div>
 
 <div class="container">
- <div class="list-group">
-  <div class="list-group-item list-group-item-info">
-    <h4 class="list-group-item-heading">报警信息获取接口</h4>
-    <pre>url: http://[host:port]/data/alarms</br>
-         sid: 仪器设备号 </br>
+<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          1. 报警信息获取接口
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body">
+<pre>url: http://[host:port]/data/alarm</br>
+参数:    sid: 仪器设备号 </br>
          btime: 开始时间[年月日时分,如201312020800]</br>
          etime: 结束时间[年月日时分,如201312050000]
     </pre>
-    <span>示例</span>
+    <div>
+    	<span class="glyphicon glyphicon-hand-right"></span> <code>http://[host:port]/data/alarm?btime=201312020800</code> 
+    	<a href="/data/alarm?btime=201312020800" class="btn btn-info btn-xs">示例</a>
+    	</div>
+      </div>
+    </div>
   </div>
- <div  class="list-group-item list-group-item-info">
- <h4 class="list-group-item-heading">报警信息获取接口</h4>
-             <pre>url: http://[host:port]/data/alarms</br>
-             sid: 仪器设备号 </br>
-             btime: 开始时间[年月日时分,如201312020800]</br>
-             etime: 结束时间[年月日时分,如201312050000]
-</pre>
-</div> 
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+          2. 报警数据文件(可通过ftp访问)
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+      <div class="panel-body">
+        <pre>默认存储: /output/alarms</pre>
+        <pre>格式:XML</pre>
+        <span class="glyphicon glyphicon-hand-right">示例:</span></br>
+        <code>
+ &lt;?xml version="1.0" encoding="UTF-8"?&gt;                                           </br>
+  &lt;AlarmInfo&gt;                                                                    </br>
+&nbsp;&nbsp;      &lt;SeqNo&gt;1309013415&lt;/SeqNo&gt;                                </br>
+&nbsp;&nbsp;      &lt;SensorId&gt;SI30002388&lt;/SensorId&gt;                          </br>
+&nbsp;&nbsp;      &lt;Longitude&gt;103.75824&lt;/Longitude&gt;                         </br>
+&nbsp;&nbsp;      &lt;Latitude&gt;30.91943&lt;/Latitude&gt;                            </br>
+&nbsp;&nbsp;      &lt;SiteType&gt;1&lt;/SiteType&gt;                                   </br>
+&nbsp;&nbsp;      &lt;ObserveObject&gt;1&lt;/ObserveObject&gt;                         </br>
+&nbsp;&nbsp;      &lt;Direction&gt;1&lt;/Direction&gt;                                 </br>
+&nbsp;&nbsp;      &lt;RegionCode&gt;132629&lt;/RegionCode&gt;                          </br>
+&nbsp;&nbsp;      &lt;InitTime&gt;131220091551&lt;/InitTime&gt;                        </br>
+&nbsp;&nbsp;      &lt;InitRealTime&gt;2013-12-20T09:15:51+08:00&lt;/InitRealTime&gt;   </br>
+&nbsp;&nbsp;      &lt;Period&gt;0.01999&lt;/Period&gt;                                 </br>
+&nbsp;&nbsp;      &lt;PGA&gt;45.28266&lt;/PGA&gt;                                      </br>
+&nbsp;&nbsp;      &lt;SI&gt;3.04963&lt;/SI&gt;                                         </br>
+&nbsp;&nbsp;      &lt;Intensity&gt;6&lt;/Intensity&gt;                                 </br>
+&nbsp;&nbsp;      &lt;Length&gt;0&lt;/Length&gt;                                       </br>
+&nbsp;&nbsp;      &lt;CreateTime&gt;2013-12-20T19:06:38.505125+08:00&lt;/CreateTime&gt;</br>
+&nbsp;&nbsp;      &lt;HasWaveInfo&gt;false&lt;/HasWaveInfo&gt;                         </br>
+&nbsp;&nbsp;      &lt;EventId&gt;&lt;/EventId&gt;                                      </br>
+  &lt;/AlarmInfo&gt;       	
+        </code>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+         3. 地震数据传入接口
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body">
+<pre>url: http://[host:port]/earthquake</pre>
+<pre>格式: XML</pre> 
+<div>
+<span class="glyphicon glyphicon-hand-right">示例:</span></br>
+<code>
+		&lt;EarthQuake&gt;                                 </br>
+&nbsp;&nbsp;      &lt;Time&gt;2013-11-03 12:12:34&lt;/Time&gt;     </br>
+&nbsp;&nbsp;      &lt;Longitude&gt;105.23654&lt;/Longitude&gt;     </br>
+&nbsp;&nbsp;      &lt;Latitude&gt;32.1543&lt;/Latitude&gt;         </br>
+&nbsp;&nbsp;      &lt;Level&gt;6&lt;/Level&gt;                     </br>
+   &lt;/EarthQuake&gt;
+	</code>
 </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 </div>
 {{template "scripts"}}

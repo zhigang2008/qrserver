@@ -22,6 +22,17 @@ func EventSignalAdd(signal *models.EventSignal) (err error) {
 	return nil
 }
 
+//保存信号
+func EventSignalSave(signal *models.EventSignal) (err error) {
+	c := GetSession().DB(DatabaseName).C(EventSignalCollection)
+
+	_, err = c.Upsert(&bson.M{"time": signal.Time}, signal)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 //事件列表
 func EventSignalList(n int) (*[]models.EventSignal, error) {
 	c := GetSession().DB(DatabaseName).C(EventSignalCollection)

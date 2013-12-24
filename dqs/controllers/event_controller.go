@@ -377,7 +377,7 @@ func (this *EventController) AddEventSignal() {
 	eventSignal.Time = tm
 	eventSignal.ReceiveTime = time.Now()
 
-	err = dao.EventSignalAdd(eventSignal)
+	err = dao.EventSignalSave(eventSignal)
 	if err != nil {
 		log.Errorf("保存接收的地震事件失败:%s", err.Error())
 		this.writeResponse(false, err.Error())

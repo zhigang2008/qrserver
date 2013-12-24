@@ -16,12 +16,13 @@ func main() {
 	e.Level = 6
 	e.Longitude = 105.23654
 	e.Latitude = 32.1543
-	content, err0 := xml.Marshal(e)
+	content, err0 := xml.MarshalIndent(e, "  ", "    ") //Marshal(e)
 	if err0 != nil {
 		fmt.Printf("marshal xml 出错:%s\n", err0.Error())
 		return
 	}
 	body := bytes.NewBuffer(content)
+	//fmt.Printf("%s", content)
 	r, err := http.Post("http://localhost:80/earthquake", "text/xml", body)
 	if err != nil {
 		fmt.Printf("调用远程接口出错:%s\n", err.Error())
