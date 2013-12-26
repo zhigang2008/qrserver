@@ -37,7 +37,7 @@ var projectTo;
 $(document).ready(function() {
 	//OpenLayers.Lang.setCode("zh-CN");
   map = new OpenLayers.Map('map');
-  basicLayer = new OpenLayers.Layer.WMS("基础地图",
+  /*basicLayer = new OpenLayers.Layer.WMS("基础地图",
          "{{rawURL .gisServiceUrl}}",
           {
           	layers: "{{.gisChinaLayer}}",
@@ -46,30 +46,15 @@ $(document).ready(function() {
           	request:"GetMap"
           }
           );
-  //map.addLayer(basicLayer);
-  
+  map.addLayer(basicLayer);
+  */
   projectTo = map.getProjectionObject();
 
-  //feature 图层          
- // vectorLayer = new OpenLayers.Layer.Vector("数据层");
-	//map.addLayer(vectorLayer);
  
- //测试数据
- /*var pointList = []; 
-
- for(var i=1;i<8;i++){ 
-    newPoint = new OpenLayers.Geometry.Point(lastlng+Math.random(),lastlat+Math.random()); 
-    pointList.push(newPoint); 
-   
- } 
- lineFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(pointList),null,null); 
- vectorLayer.addFeatures([lineFeature]);
-*/
-
  var wms = new OpenLayers.Layer.WMS("烈度等值线", 
     "{{rawURL .gisServiceUrl}}",
 		{
-			layers: "{{.gisBasicLayer}}",
+			layers: "{{.gisChinaLayer}}",
 			styles: '',
 			format: "image/png",
 			transparent: true,
@@ -92,7 +77,7 @@ $(document).ready(function() {
 	);
  map.addLayer(wms);
  
-  map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
+  //map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
   //map.addControl(new OpenLayers.Control.PanZoom());
   map.addControl(new OpenLayers.Control.ScaleLine());
   //map.addControl(new OpenLayers.Control.OverviewMap());
