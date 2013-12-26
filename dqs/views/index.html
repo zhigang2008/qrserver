@@ -203,26 +203,26 @@ function showEvent(sid){
  	 wmsLayer = new OpenLayers.Layer.WMS("烈度等值线", 
     "{{rawURL .gisServiceUrl}}",
 		{
-			//LAYERS: 'maptest',
+			//layers: '{{.gisBasicLayer}}',
 			TRANSPARENT: true,
 			STYLES: '',
-			//format: format,
+			format: "image/png",
 			//VALUE_COLUMN:"AREA",
 			SIMPLIFY_METHOD: 1,
 			SIMPLIFY_SIZE:data.dataSize,
 			DATA_ARRAY:data.dataArray,
 			'INTERVALS[]':"0,1,2,3,4,5,6,7,8,9,10,11,12",
-			'INTERVALS_COLORS[]':"0xffffffcc,0xff8633cc,0xffad33cc,0xffdd33cc,0xffe233cc,0xfff533cc,0xf3ff33cc,0x9fff33cc,0x72ff33cc,0x33f33dcc,0x33d35dcc,0x3340f0cc,0xff3333cc",
+			'INTERVALS_COLORS[]':"0xffffff10,0xff8633cc,0xffad33cc,0xffdd33cc,0xffe233cc,0xfff533cc,0xf3ff33cc,0x9fff33cc,0x72ff33cc,0x33f33dcc,0x33d35dcc,0x3340f0cc,0xff3333cc",
 			RENDERER_TYPE:2,
-			INTERPOLATION_STRATEGY:0,
+			INTERPOLATION_STRATEGY:2,
 			RADIUS:40,
 			SERVICE:"AMS"
 		},
 		{
 			singleTile: true,
-			transparent: true,
+			//transparent: true,
 			isBaseLayer:false, 
-			opacity: 0.5,
+			//opacity: 0.8,
 			ratio: 1} 
 	);
  map.addLayer(wmsLayer);
