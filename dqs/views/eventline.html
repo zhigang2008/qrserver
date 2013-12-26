@@ -54,7 +54,7 @@ $(document).ready(function() {
  var wms = new OpenLayers.Layer.WMS("烈度等值线", 
     "{{rawURL .gisServiceUrl}}",
 		{
-			layers: "{{.gisChinaLayer}}",
+			layers: "{{.gisBasicLayer}}",
 			styles: '',
 			format: "image/png",
 			transparent: true,
