@@ -34,8 +34,14 @@ $(document).ready(function() {
 	//OpenLayers.Lang.setCode("zh-CN");
   map = new OpenLayers.Map('map');
   basicLayer = new OpenLayers.Layer.WMS("全局地图",
-          "{{rawURL .gisServiceUrl}}{{rawURL .gisServiceParams}}&layers={{rawURL .gisChinaLayer}}",
-          {layers: 'basic'});
+          "{{rawURL .gisServiceUrl}}",
+          {
+          	layers: "{{.gisChinaLayer}}",
+          	service:"WMS",
+          	version:"1.1.0",
+          	request:"GetMap"
+          }
+          );
   map.addLayer(basicLayer);
   
   projectTo = map.getProjectionObject();
