@@ -67,7 +67,7 @@ func (this *RuntimeConfigController) Put() {
 			this.AuditLog("更新运行参数", true)
 
 			//更新服务端配置内容
-			reerr := quickserver.CommandRefreshConfig()
+			reerr := quickserver.CommandRefreshRunTimeConfig()
 			if reerr != nil {
 				answer.Ok = false
 				answer.Msg = "运行参数更改成功,但服务端刷新失败,请重新刷新运行参数,或重启服务."

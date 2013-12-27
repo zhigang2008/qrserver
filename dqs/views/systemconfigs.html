@@ -67,13 +67,14 @@
       <p class="help-block">提供GIS服务器的基本地址.(如:http://10.15.36.88:8080/geoserver/dqs/wms)</p>
     </div>
   </div>
-  <div class="form-group">
+  <!--<div class="form-group">
     <label class="col-sm-3 control-label" for="GisServiceParams" >GIS服务基本参数</label>
     <div class="col-sm-6">
     	<input id="GisServiceParams" type="text" class="form-control input-sm" name="GisServiceParams"  placeholder="GisServiceParams"  value="{{.GisServiceParams}}" disabled />
       <p class="help-block">GIS服务基本地址之后的参数部分.(如:?service=WMS&version=1.1.0&request=GetMap)</p>
     </div>
   </div>
+  -->
   <div class="form-group">
     <label class="col-sm-3 control-label" for="GisLayerBasic" >GIS基础图层</label>
     <div class="col-sm-6">
@@ -90,7 +91,54 @@
   </div>
   </div>
  </div>
- 
+ {{with .GisImageCfg}}
+ <!--Gis图片设置-->
+ <div class="panel panel-primary">
+  <div class="panel-heading">速报等值线图片生成配置</div>
+  <div class="panel-body">
+	 <div class="form-group">
+    <label class="col-sm-3 control-label" for="Format" >图片格式</label>
+    <div class="col-sm-6">
+    		<label class="radio-inline">
+        <input type="radio" name="Format"  value="image/png" {{if eq .Format "image/png"}} checked {{end}} disabled> PNG格式
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="Format"  value="image/jpeg" {{if eq .Format "image/jpeg"}} checked {{end}} disabled> JPG格式
+      </label>
+      <p class="help-block">生成的等值线图片格式.(用来在速报中使用)</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="SRS" >GIS坐标体系</label>
+    <div class="col-sm-6">
+    	<input id="SRS" type="text" class="form-control input-sm" name="SRS"  placeholder="SRS"  value="{{.SRS}}" disabled />
+      <p class="help-block">通常采用:EPSG:4326,与仪器设备提供的坐标系一致</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="Height" >图片高度</label>
+    <div class="col-sm-6">
+    	<input id="Height" type="text" class="form-control input-sm" name="Height"  placeholder="Height"  value="{{.Height}}" disabled />
+      <p class="help-block">图片高度大小.</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="Width" >图片宽度</label>
+    <div class="col-sm-6">
+    	<input id="Width" type="text" class="form-control input-sm" name="Width"  placeholder="Width"  value="{{.Width}}" disabled />
+      <p class="help-block">图片宽度大小</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="BBOX" >图片范围</label>
+    <div class="col-sm-6">
+    	<input id="BBOX" type="text" class="form-control input-sm" name="BBOX"  placeholder="BBOX"  value="{{.BBOX}}" disabled />
+      <p class="help-block">图片生成时涵盖的地理范围.视具体地市区域根据坐标系坐标调整.(格式为MinX,MinY,MaxX,MaxY)</p>
+    </div>
+  </div>
+  </div>
+ </div>
+ {{end}}
 </form>
 </div>
 
@@ -128,7 +176,24 @@ $(document).ready(function(){
     },
     GisLayerChina: {
       required: true
-    }  
+    },
+    Format: {
+      required: true
+    },
+    Weight: {
+      required: true,
+      number:true
+    },
+    Height: {
+      required: true,
+      number:true
+    },
+    SRS: {
+      required: true
+    },
+    BBOX: {
+      required: true
+    }   
   }
 });	
 

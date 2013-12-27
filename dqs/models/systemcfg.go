@@ -8,4 +8,14 @@ type SystemConfig struct {
 	GisServiceParams    string
 	GisLayerBasic       string
 	GisLayerChina       string
+	GisImageCfg         GisImageConfig
+}
+
+//gis图片设置
+type GisImageConfig struct {
+	SRS    string
+	BBOX   string
+	Height string
+	Width  string
+	Format string
 }

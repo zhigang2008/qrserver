@@ -50,13 +50,10 @@ func StartHttp(workdir string) {
 		log.Warnf("Http Server 数据库连接不能创建:%s", err.Error())
 		return
 	}
-	//初始化系统参数
-	controllers.InitSystemConfigs()
 
 	log.Info("启动 Http Server...")
 
 	//初始化配置
-
 	configInit()
 	//添加过滤器
 	//addFilter()
@@ -64,6 +61,9 @@ func StartHttp(workdir string) {
 	addTemplateFuncs()
 	//配置路由信息
 	routeConfig()
+
+	//初始化系统参数
+	controllers.InitSystemConfigs()
 
 	//启动Beego服务
 	beego.Run()

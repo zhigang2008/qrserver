@@ -3,6 +3,7 @@ package controllers
 import (
 	"dqs/dao"
 	"dqs/models"
+	"dqs/quickserver"
 	log "github.com/cihub/seelog"
 )
 
@@ -35,26 +36,37 @@ func (this *SysConfigController) Put() {
 
 	answer := JsonAnswer{}
 	sysConfigs := models.SystemConfig{}
+	gisImagecfg := models.GisImageConfig{}
 
 	err0 := this.ParseForm(&sysConfigs)
+	err1 := this.ParseForm(&gisImagecfg)
 
-	if err0 != nil {
+	if err0 != nil || err1 != nil {
 		answer.Ok = false
 		answer.Msg = "数据传递失败"
 		log.Warnf("更新系统配置-解析参数失败")
 	} else {
+		sysConfigs.GisImageCfg = gisImagecfg
 		err := dao.UpdateSystemConfig(&sysConfigs)
 		if err != nil {
 			answer.Ok = false
 			answer.Msg = "更新系统配置失败:" + err.Error()
 			log.Warnf("更新系统配置失败:%s", err.Error())
 		} else {
-			answer.Ok = true
-			answer.Msg = "更新系统配置成功"
-			log.Infof("更新系统配置成功")
-			this.AuditLog("更新系统配置", true)
 			//刷新缓存
 			SystemConfigs = sysConfigs
+			//更新服务端配置内容
+			reerr := quickserver.CommandRefreshSystemConfig()
+			if reerr != nil {
+				answer.Ok = false
+				answer.Msg = "系统配置更改成功,但服务端刷新失败,请重新刷新系统配置,或重启服务."
+				log.Errorf("系统配置已更改,但服务端更新失败,请重新刷新系统配置,或重启服务")
+			} else {
+				answer.Ok = true
+				answer.Msg = "更新系统配置成功"
+				log.Infof("更新系统配置成功")
+				this.AuditLog("更新系统配置", true)
+			}
 		}
 	}
 

@@ -128,22 +128,47 @@ func (this *BaseController) AuditLog(cont string, status bool) {
 
 //初始化系统配置参数
 func InitSystemConfigs() {
+
 	//初始化系统参数
 	newCfg, err0 := dao.GetSystemConfig()
 	if err0 != nil {
-		SystemConfigs = models.SystemConfig{}
-		SystemConfigs.UserDefaultPassword = "12345678"
-		SystemConfigs.UseGis = false
-		SystemConfigs.GisServiceUrl = "http://localhost:8080/geoserver/dqs/wms"
-		SystemConfigs.GisServiceParams = "?service=WMS&version=1.1.0&request=GetMap"
-		SystemConfigs.GisLayerBasic = "dqs_layers"
-		SystemConfigs.GisLayerChina = "china_layer"
+		//滞后再去读取
+		go reInitSysteConfigs()
+		return
+		/*
+			SystemConfigs = models.SystemConfig{}
+			SystemConfigs.UserDefaultPassword = "12345678"
+			SystemConfigs.UseGis = false
+			SystemConfigs.GisServiceUrl = "http://localhost:8080/geoserver/dqs/wms"
+			SystemConfigs.GisServiceParams = "?service=WMS&version=1.1.0&request=GetMap"
+			SystemConfigs.GisLayerBasic = "dqs_layers"
+			SystemConfigs.GisLayerChina = "china_layer"
 
-		err2 := dao.AddSystemConfig(&SystemConfigs)
-		if err2 != nil {
-			log.Warnf("初始化系统参数失败.")
-		}
+			giscfg := models.GisImageConfig{}
+			giscfg.Format = "image/png"
+			giscfg.SRS = "EPSG:4326"
+			giscfg.Height = "200"
+			giscfg.Weight = "200"
+			giscfg.BBOX = "80.0,20.0,120.0,45.0"
+			SystemConfigs.GisImageCfg = giscfg
+			err2 := dao.AddSystemConfig(&SystemConfigs)
+			if err2 != nil {
+				log.Warnf("初始化系统参数失败.")
+			}
+		*/
 	} else {
 		SystemConfigs = newCfg
+	}
+}
+
+//*滞后时间进行读取
+func reInitSysteConfigs() {
+	time.Sleep(2 * time.Second)
+	newCfg2, err2 := dao.GetSystemConfig()
+	if err2 != nil {
+		log.Criticalf("HttpServer未能读取到系统基本配置.请检查数据库数据")
+	} else {
+		log.Info("HttpServer读取系统基本配置成功.")
+		SystemConfigs = newCfg2
 	}
 }

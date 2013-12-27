@@ -9,6 +9,7 @@ import (
 var (
 	GlobalConfig      DatabaseConfig //保存在数据库中的配置信息
 	GlobalDataMapping DataMapping    //烈度对照表
+	SystemConfigs     SystemConfig   //基本配置
 )
 
 //运行参数配置
@@ -48,6 +49,26 @@ type ReportParameter struct {
 
 }
 
+//系统配置数据
+type SystemConfig struct {
+	UserDefaultPassword string
+	UseGis              bool
+	GisServiceUrl       string
+	GisServiceParams    string
+	GisLayerBasic       string
+	GisLayerChina       string
+	GisImageCfg         GisImageConfig
+}
+
+//gis图片设置
+type GisImageConfig struct {
+	SRS    string
+	BBOX   string
+	Height string
+	Width  string
+	Format string
+}
+
 //烈度对照数据
 type DataMapping struct {
 	PGAMap PGAMapArray
@@ -80,6 +101,7 @@ func (p SIMapArray) Less(i, j int) bool { return p[i].SI < p[j].SI }
 func initGlobalConfigs() {
 	initRuntimeConfigs()
 	initDataMapping()
+	InitSystemConfigs()
 }
 
 //初始化运行参数
@@ -159,6 +181,42 @@ func initDataMapping() {
 		}
 	} else {
 		GlobalDataMapping = dataMap
+	}
+}
+
+//初始化系统配置参数
+func InitSystemConfigs() {
+	//初始化系统参数
+	newCfg, err0 := server.dataManager.GetSystemConfig()
+	if err0 != nil {
+		log.Warnf("从数据库中获取系统配置参数失败:%s", err0.Error())
+		if err0 == ErrNotFound {
+			log.Warnf("系统将自动初始化系统基础配置")
+			SystemConfigs = SystemConfig{}
+			SystemConfigs.UserDefaultPassword = "12345678"
+			SystemConfigs.UseGis = false
+			SystemConfigs.GisServiceUrl = "http://localhost:8080/geoserver/dqs/wms"
+			SystemConfigs.GisServiceParams = ""
+			SystemConfigs.GisLayerBasic = "dqs_layers"
+			SystemConfigs.GisLayerChina = "china_layer"
+
+			giscfg := GisImageConfig{}
+			giscfg.Format = "image/png"
+			giscfg.SRS = "EPSG:4326"
+			giscfg.Height = "200"
+			giscfg.Width = "200"
+			giscfg.BBOX = "80.0,20.0,120.0,45.0"
+			SystemConfigs.GisImageCfg = giscfg
+
+			err2 := server.dataManager.AddSystemConfig(&SystemConfigs)
+			if err2 != nil {
+				log.Warnf("初始化系统参数失败.")
+			}
+		} else {
+			return
+		}
+	} else {
+		SystemConfigs = newCfg
 	}
 }
 

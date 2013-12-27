@@ -22,6 +22,7 @@ const (
 	defaultIntensityCollection   = "intensitymap"   //默认事件信号Collection
 	defaultConfigCollection      = "runtimeConfigs" //默认配置信息表
 	defaultReportCollection      = "reports"        //默认配置信息表
+	defaultSystemCollection      = "systemConfigs"  //默认配置信息表
 )
 
 var (
@@ -41,6 +42,7 @@ type DataManager struct {
 	intensityMappingCollection string
 	configCollection           string
 	reportCollection           string
+	systemConfigCollection     string
 }
 
 //初始化数据库连接
@@ -66,6 +68,7 @@ func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
 		intensityMappingCollection: defaultIntensityCollection,
 		configCollection:           defaultConfigCollection,
 		reportCollection:           defaultReportCollection,
+		systemConfigCollection:     defaultSystemCollection,
 	}
 	//设置配置文件指定值
 	if conf.DataBaseName != "" {
@@ -549,4 +552,29 @@ func (dm *DataManager) GetReportById(id string) (rep Report, err error) {
 		return Report{}, err
 	}
 	return rep, nil
+}
+
+//获取系统参数
+func (dm *DataManager) GetSystemConfig() (SystemConfig, error) {
+	c := dm.session.DB(dm.databaseName).C(dm.systemConfigCollection)
+	configs := SystemConfig{}
+
+	err0 := c.Find(nil).One(&configs)
+	if err0 != nil {
+		if err0 == mgo.ErrNotFound {
+			return configs, ErrNotFound
+		}
+		return configs, err0
+	}
+	return configs, nil
+}
+
+//添加系统参数信息
+func (dm *DataManager) AddSystemConfig(configs *SystemConfig) error {
+	c := dm.session.DB(dm.databaseName).C(dm.systemConfigCollection)
+	err := c.Insert(configs)
+	if err != nil {
+		return err
+	}
+	return nil
 }

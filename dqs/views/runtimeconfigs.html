@@ -141,13 +141,17 @@
       <p class="help-block">报警数据文件在服务器上的目录位置(供外部系统调取)</p>
     </div>
   </div>
-  <div class="form-group">
+  
+ <input id="ReportFileDir" type="hidden" name="ReportFileDir" value="{{.ReportFileDir}}"  />
+ <!-- 
+ <div class="form-group">
     <label class="col-sm-3 control-label" for="ReportFileDir" >速报文件目录</label>
     <div class="col-sm-6">
     	<input id="ReportFileDir" type="text" class="form-control input-sm" name="ReportFileDir"  placeholder="ReportFileDir"  value="{{.ReportFileDir}}" disabled />
       <p class="help-block">速报文件在服务器上的存放目录</p>
     </div>
   </div>
+  -->
   </div>
  </div>
  {{end}}

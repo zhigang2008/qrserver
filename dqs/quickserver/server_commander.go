@@ -183,7 +183,7 @@ func CommandFlashRead(id, remote string) error {
 }
 
 //刷新运行参数
-func CommandRefreshConfig() error {
+func CommandRefreshRunTimeConfig() error {
 	newConfig, err := server.dataManager.GetGlobalConfigs()
 	if err != nil {
 		log.Warnf("数据服务器刷新运行参数失败:%s", err.Error())
@@ -191,6 +191,18 @@ func CommandRefreshConfig() error {
 	}
 	GlobalConfig = newConfig
 	log.Infof("数据服务器已经成功刷新运行参数")
+	return nil
+}
+
+//刷新运行参数
+func CommandRefreshSystemConfig() error {
+	sysConfig, err := server.dataManager.GetSystemConfig()
+	if err != nil {
+		log.Warnf("数据服务器刷新系统配置失败:%s", err.Error())
+		return err
+	}
+	SystemConfigs = sysConfig
+	log.Infof("数据服务器已经成功刷新系统配置")
 	return nil
 }
 

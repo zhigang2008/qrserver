@@ -15,7 +15,7 @@
         	<li>地震数据: {{if .Event.IsConfirm}}{{.Summary.QuakeInfo}}{{else}}-{{end}}</li>
        </ul>
       </div>
-      <img src="/static/image/globe-b.png" data-src="/static/image/globe2.png" alt="...">
+      <img src="/output/reports/{{.ImageFile}}" data-src="/output/reports/{{.ImageFile}}" alt="..." align="center" width="98%" >
       <!--管理功能-->
   	{{if hasrole $curUser.Roles "role_admin" "role_report"}}
   	<div style="margin-top:5px;">

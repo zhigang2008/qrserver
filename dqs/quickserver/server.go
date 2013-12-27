@@ -39,6 +39,7 @@ type Server struct {
 //服务器初始化并启动监听
 func InitAndStart(conf ServerConfig) {
 	var err error
+
 	server = &Server{
 		serverHost: conf.Host,
 		serverPost: strconv.Itoa(conf.Port),

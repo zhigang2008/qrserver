@@ -341,7 +341,7 @@ func NetGridCompute(alarms *[]models.AlarmInfo, eventSignal models.EventSignal) 
 	}
 	//计算虚拟的网格值
 	if eventSignal.Id != "" {
-		//待添加算法
+		//TODO待添加算法,转移到GIS服务中进行
 	}
 	return dataArray
 }
