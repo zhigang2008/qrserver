@@ -1,15 +1,19 @@
 package main
 
 import (
-	"bytes"
-	"dqs/models"
-	"encoding/xml"
+	//"bytes"
+	//"dqs/models"
+	"dqs/util"
+	"encoding/base64"
+	//"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
+/*
 func testQuake() {
 	fmt.Println("test...")
 	e := models.EarthQuake{}
@@ -72,4 +76,108 @@ func main() {
 	}
 	ioutil.WriteFile("test.jpg", response, 0777)
 	//fmt.Println(string(response))
+}
+
+
+func main() {
+	ct := MakeMms("hello test", "18610210168", "", "")
+	SendMms(ct)
+}
+
+func MakeMms(title, mobile, content, schTime string) string {
+
+	sn := "SDK-BBX-010-19389"
+	password := "9-a[02-["
+
+	ct := ""
+	ct += "1_1.txt," + base64.StdEncoding.EncodeToString([]byte("地震统计数据")) + ";"
+	ct += "1_2.jpg,"
+	fc, err := ioutil.ReadFile("dqs_layers.jpg")
+	if err != nil {
+		fmt.Errorf("jpg read error ")
+
+	}
+	ct += base64.StdEncoding.EncodeToString(fc)
+
+	pwd := util.GetMd5Hex(sn + password)
+
+	fmt.Println("pwd=" + pwd)
+	xml := "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+	xml += "<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">"
+	xml += "<soap12:Body>"
+	xml += "<mdMmsSend xmlns=\"http://tempuri.org/\">"
+	xml += "<sn>" + sn + "</sn>"
+	xml += "<pwd>" + pwd + "</pwd>"
+	xml += "<title>" + title + "</title>"
+	xml += "<mobile>" + mobile + "</mobile>"
+	xml += "<content>" + ct + "</content>"
+	xml += "<stime>" + schTime + "</stime>"
+	xml += "</mdMmsSend>"
+	xml += "</soap12:Body>"
+	xml += "</soap12:Envelope>"
+
+	return xml
+
+}
+
+func SendMms(mmsContent string) {
+
+	httpClient := new(http.Client)
+	resp, err := httpClient.Post("http://sdk3.entinfo.cn:8060/webservice.asmx", "text/xml; charset=gb2312", bytes.NewBufferString(mmsContent))
+	if err != nil {
+		// handle error
+	}
+	b, e := ioutil.ReadAll(resp.Body)
+	if e != nil {
+		// handle error
+	}
+	in := string(b)
+
+	fmt.Println(in)
+	resp.Body.Close()
+	return
+}
+
+*/
+
+func main() {
+
+	sn := "SDK-BBX-010-19389"
+	password := "9-a[02-["
+	ct := ""
+	ct += "1_1.txt," + base64.StdEncoding.EncodeToString([]byte("test")) + ";"
+	ct += "1_2.jpg,"
+	fc, err := ioutil.ReadFile("dqs_layers.jpg")
+	if err != nil {
+		fmt.Errorf("jpg read error ")
+
+	}
+	ct += base64.StdEncoding.EncodeToString(fc)
+
+	pwd := util.GetMd5Hex(sn + password)
+
+	fmt.Println(pwd)
+	fmt.Println(strings.ToUpper(pwd))
+	fmt.Println("ct=" + ct)
+	fmt.Println("test...")
+	v := url.Values{}
+	v.Add("sn", sn)
+	v.Add("pwd", strings.ToUpper(pwd))
+	v.Add("title", "hello test")
+	v.Add("mobile", "13810358699")
+	v.Add("content", ct)
+	v.Add("stime", "")
+
+	r, err := http.PostForm("http://sdk3.entinfo.cn:8060/webservice.asmx/mdMmsSend", v)
+	if err != nil {
+		fmt.Printf("调用远程接口出错:%s\n", err.Error())
+		return
+	}
+	response, err2 := ioutil.ReadAll(r.Body)
+	if err2 != nil {
+		fmt.Printf("解析response内容出错:%s\n", err2.Error())
+		return
+	}
+	//ioutil.WriteFile("test.jpg", response, 0777)
+	fmt.Println(string(response))
 }

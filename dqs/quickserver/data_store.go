@@ -23,6 +23,7 @@ const (
 	defaultConfigCollection      = "runtimeConfigs" //默认配置信息表
 	defaultReportCollection      = "reports"        //默认配置信息表
 	defaultSystemCollection      = "systemConfigs"  //默认配置信息表
+	defaultUserCollection        = "user"           //默认用户Collection
 )
 
 var (
@@ -37,6 +38,7 @@ type DataManager struct {
 	dataCollection             string
 	deviceCollection           string
 	waveCollection             string
+	userCollection             string
 	eventCollection            string
 	eventSignalCollection      string
 	intensityMappingCollection string
@@ -63,6 +65,7 @@ func InitDatabase(conf DataServerConfig) (dm *DataManager, err error) {
 		dataCollection:             defaultDataCollection,
 		deviceCollection:           defaultDeviceCollection,
 		waveCollection:             defaultWaveCollection,
+		userCollection:             defaultUserCollection,
 		eventCollection:            defaultEventCollection,
 		eventSignalCollection:      defaultEventSignalCollection,
 		intensityMappingCollection: defaultIntensityCollection,
@@ -577,4 +580,16 @@ func (dm *DataManager) AddSystemConfig(configs *SystemConfig) error {
 		return err
 	}
 	return nil
+}
+
+//获取所有有效用户
+func (dm *DataManager) GetValidUsers() ([]User, error) {
+	c := dm.session.DB(dm.databaseName).C(dm.userCollection)
+	users := []User{}
+	m := bson.M{"blocked": false}
+	err0 := c.Find(&m).All(&users)
+	if err0 != nil {
+		return users, err0
+	}
+	return users, nil
 }

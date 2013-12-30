@@ -58,6 +58,7 @@ type SystemConfig struct {
 	GisLayerBasic       string
 	GisLayerChina       string
 	GisImageCfg         GisImageConfig
+	MmsCfg              MMSConfig
 }
 
 //gis图片设置
@@ -67,6 +68,14 @@ type GisImageConfig struct {
 	Height string
 	Width  string
 	Format string
+}
+
+//彩信服务
+type MMSConfig struct {
+	MmsEnable  bool
+	ServiceUrl string
+	UserNo     string
+	Password   string
 }
 
 //烈度对照数据
@@ -207,6 +216,14 @@ func InitSystemConfigs() {
 			giscfg.Width = "200"
 			giscfg.BBOX = "80.0,20.0,120.0,45.0"
 			SystemConfigs.GisImageCfg = giscfg
+
+			//彩信服务
+			mms := MMSConfig{}
+			mms.MmsEnable = true
+			mms.ServiceUrl = "http://sdk3.entinfo.cn:8060/webservice.asmx/mdMmsSend"
+			mms.UserNo = ""
+			mms.Password = ""
+			SystemConfigs.MmsCfg = mms
 
 			err2 := server.dataManager.AddSystemConfig(&SystemConfigs)
 			if err2 != nil {

@@ -9,6 +9,7 @@ type SystemConfig struct {
 	GisLayerBasic       string
 	GisLayerChina       string
 	GisImageCfg         GisImageConfig
+	MmsCfg              MMSConfig
 }
 
 //gis图片设置
@@ -18,4 +19,12 @@ type GisImageConfig struct {
 	Height string
 	Width  string
 	Format string
+}
+
+//彩信服务
+type MMSConfig struct {
+	MmsEnable  bool
+	ServiceUrl string
+	UserNo     string
+	Password   string
 }

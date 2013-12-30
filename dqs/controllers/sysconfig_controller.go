@@ -37,16 +37,20 @@ func (this *SysConfigController) Put() {
 	answer := JsonAnswer{}
 	sysConfigs := models.SystemConfig{}
 	gisImagecfg := models.GisImageConfig{}
+	mms := models.MMSConfig{}
 
 	err0 := this.ParseForm(&sysConfigs)
 	err1 := this.ParseForm(&gisImagecfg)
+	err2 := this.ParseForm(&mms)
 
-	if err0 != nil || err1 != nil {
+	if err0 != nil || err1 != nil || err2 != nil {
 		answer.Ok = false
 		answer.Msg = "数据传递失败"
 		log.Warnf("更新系统配置-解析参数失败")
 	} else {
 		sysConfigs.GisImageCfg = gisImagecfg
+		sysConfigs.MmsCfg = mms
+
 		err := dao.UpdateSystemConfig(&sysConfigs)
 		if err != nil {
 			answer.Ok = false

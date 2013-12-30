@@ -353,3 +353,29 @@ type ReportSummary struct {
 	Brief      string
 	QuakeInfo  string
 }
+
+//系统用户信息
+type User struct {
+	//	ObjectId   bson.ObjectId "_id"
+	UserId   string
+	UserName string
+	//	Password   string
+	NickName   string
+	Email      string
+	Gender     string
+	Phone      string
+	Mobile     string
+	Addr       string
+	UserTitle  string
+	Blocked    bool
+	CreateTime time.Time
+	UpdateTime time.Time
+	Roles      []string
+	ReportSet  ReportConfig
+}
+
+//速报接收设置
+type ReportConfig struct {
+	ReportMail  bool //接收邮件速报
+	ReportPhone bool //接收短信速报
+}

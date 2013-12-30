@@ -105,7 +105,7 @@
       <label class="radio-inline">
         <input type="radio" name="Format"  value="image/jpeg" {{if eq .Format "image/jpeg"}} checked {{end}} disabled> JPG格式
       </label>
-      <p class="help-block">生成的等值线图片格式.(用来在速报中使用)</p>
+      <p class="help-block">生成的等值线图片格式.(默认是PNG格式)</p>
     </div>
   </div>
   <div class="form-group">
@@ -139,6 +139,47 @@
   </div>
  </div>
  {{end}}
+{{with .MmsCfg}}
+ <!--彩信服务-->
+ <div class="panel panel-primary">
+  <div class="panel-heading">彩信服务</div>
+  <div class="panel-body">
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="MmsEnable" >彩信通知</label>
+    <div class="col-sm-6">
+    		<label class="radio-inline">
+        <input type="radio" name="MmsEnable"  value="image/png" {{if  .MmsEnable }} checked {{end}} disabled> 启用
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="MmsEnable"  value="image/jpeg" {{if nt .MmsEnable }} checked {{end}} disabled> 停用
+      </label>
+      <p class="help-block">速报生成后,是否向系统用户发送彩信通知.</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="ServiceUrl" >服务地址</label>
+    <div class="col-sm-6">
+    	<input id="ServiceUrl" type="text" class="form-control input-sm" name="ServiceUrl"  placeholder="ServiceUrl"  value="{{.ServiceUrl}}" disabled />
+      <p class="help-block">彩信网关接口地址.(默认采用漫道科技的彩信网关.http://sdk3.entinfo.cn:8060/webservice.asmx/mdMmsSend)</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="UserNo" >彩信服务账号</label>
+    <div class="col-sm-6">
+    	<input id="UserNo" type="text" class="form-control input-sm" name="UserNo"  placeholder="UserNo"  value="{{.UserNo}}" disabled />
+      <p class="help-block">彩信服务的账号.(需要向服务商申请,并付费)</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="Password" >彩信服务密码</label>
+    <div class="col-sm-6">
+    	<input id="Password" type="text" class="form-control input-sm" name="Password"  placeholder="Password"  value="{{.Password}}" disabled />
+      <p class="help-block">彩信服务密码.(彩信服务商提供,并可通过彩信服务商修改)</p>
+    </div>
+  </div>
+  </div>
+ </div>
+ {{end}} 
 </form>
 </div>
 

@@ -64,6 +64,9 @@ func GenerateReport(event *Event) {
 	} else {
 		log.Info("速报已生成.")
 	}
+
+	//发送彩信
+	CheckAndSendMms(*report)
 }
 
 //生成概要信息
@@ -153,11 +156,11 @@ func generateReportMap(reportid string, valstr string, simplesize int) string {
 		log.Errorf("解析GIS图片出错:%s\n", err2.Error())
 		return ErrorImage
 	}
-	imagename := reportid + ".png"
-	if SystemConfigs.GisImageCfg.Format == "image/jpeg" {
+	imagename := reportid + ".jpg"
+	/*if SystemConfigs.GisImageCfg.Format == "image/jpeg" {
 		imagename = reportid + ".jpg"
 	}
-
+	*/
 	dir := GlobalConfig.FileConfig.ReportFileDir
 	//先判断目录是否存在,不存在则创建
 	if util.IsDirExist(dir) == false {
