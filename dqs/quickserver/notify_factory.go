@@ -2,6 +2,7 @@ package quickserver
 
 import (
 	//	"bytes"
+
 	"dqs/util"
 	"encoding/base64"
 	"encoding/xml"
@@ -81,7 +82,7 @@ func sendMms(report Report, users string) {
 	//彩信图片地址
 	dir := GlobalConfig.FileConfig.ReportFileDir
 
-	title := fmt.Sprintf("地震速报报警%s", report.Summary.EventTime)
+	title := fmt.Sprintf("Quake %s", report.Summary.EventTime)
 	mmsText := fmt.Sprintf("事件时间:%s", report.Summary.EventTime)
 	mmsText += fmt.Sprintf("\n报警数量:%d", report.Summary.AlarmCount)
 	mmsText += fmt.Sprintf("\n报警统计:%s", report.Summary.Brief)
@@ -89,9 +90,21 @@ func sendMms(report Report, users string) {
 		mmsText += fmt.Sprintf("\n地震数据:%s", report.Summary.QuakeInfo)
 	}
 
+	//编码转换
+	gbtxt, errt := util.UTF8ToGBK(mmsText)
+	if errt != nil {
+		mmsText := fmt.Sprintf("Time:%s", report.Summary.EventTime)
+		mmsText += fmt.Sprintf("\nAlarmS:%d", report.Summary.AlarmCount)
+		mmsText += fmt.Sprintf("\nBrief:%s", report.Summary.Brief)
+		if report.Event.IsConfirm {
+			mmsText += fmt.Sprintf("\nEarthQuake:%s", report.Summary.QuakeInfo)
+		}
+		gbtxt = []byte(mmsText)
+	}
+
 	//发送内容
 	ct := ""
-	ct += "1_1.txt," + base64.StdEncoding.EncodeToString([]byte(mmsText)) + ";"
+	ct += "1_1.txt," + base64.StdEncoding.EncodeToString(gbtxt) + ";"
 	ct += "1_2.jpg,"
 	fc, err := ioutil.ReadFile(filepath.Join(dir, report.ImageFile))
 	if err == nil {
@@ -108,6 +121,7 @@ func sendMms(report Report, users string) {
 
 	//发送
 	r, err := http.PostForm("http://sdk3.entinfo.cn:8060/webservice.asmx/mdMmsSend", v)
+
 	defer r.Body.Close()
 
 	if err != nil {

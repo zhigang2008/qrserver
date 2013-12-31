@@ -144,8 +144,15 @@ func main() {
 
 	sn := "SDK-BBX-010-19389"
 	password := "9-a[02-["
+
+	//	fmt.Println(pwd)
+	txt, errt := util.UTF8ToGBK("test测试20")
+	if errt != nil {
+		panic("tt")
+	}
+
 	ct := ""
-	ct += "1_1.txt," + base64.StdEncoding.EncodeToString([]byte("test")) + ";"
+	ct += "1_1.txt," + base64.StdEncoding.EncodeToString(txt) + ";"
 	ct += "1_2.jpg,"
 	fc, err := ioutil.ReadFile("dqs_layers.jpg")
 	if err != nil {
@@ -156,15 +163,12 @@ func main() {
 
 	pwd := util.GetMd5Hex(sn + password)
 
-	fmt.Println(pwd)
-	fmt.Println(strings.ToUpper(pwd))
-	fmt.Println("ct=" + ct)
 	fmt.Println("test...")
 	v := url.Values{}
 	v.Add("sn", sn)
 	v.Add("pwd", strings.ToUpper(pwd))
-	v.Add("title", "hello test")
-	v.Add("mobile", "13810358699")
+	v.Add("title", "test2")
+	v.Add("mobile", "18610210168")
 	v.Add("content", ct)
 	v.Add("stime", "")
 
@@ -178,6 +182,5 @@ func main() {
 		fmt.Printf("解析response内容出错:%s\n", err2.Error())
 		return
 	}
-	//ioutil.WriteFile("test.jpg", response, 0777)
 	fmt.Println(string(response))
 }
