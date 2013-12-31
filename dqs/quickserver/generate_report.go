@@ -66,7 +66,7 @@ func GenerateReport(event *Event) {
 	}
 
 	//发送彩信
-	CheckAndSendMms(*report)
+	CheckAndSendNotify(*report)
 }
 
 //生成概要信息

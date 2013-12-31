@@ -148,10 +148,10 @@
     <label class="col-sm-3 control-label" for="MmsEnable" >彩信通知</label>
     <div class="col-sm-6">
     		<label class="radio-inline">
-        <input type="radio" name="MmsEnable"  value="image/png" {{if  .MmsEnable }} checked {{end}} disabled> 启用
+        <input type="radio" name="MmsEnable"  value="true" {{if  .MmsEnable }} checked {{end}} disabled> 启用
       </label>
       <label class="radio-inline">
-        <input type="radio" name="MmsEnable"  value="image/jpeg" {{if nt .MmsEnable }} checked {{end}} disabled> 停用
+        <input type="radio" name="MmsEnable"  value="false" {{if not .MmsEnable }} checked {{end}} disabled> 停用
       </label>
       <p class="help-block">速报生成后,是否向系统用户发送彩信通知.</p>
     </div>
@@ -233,6 +233,9 @@ $(document).ready(function(){
       required: true
     },
     BBOX: {
+      required: true
+    },
+    MmsEnable: {
       required: true
     }   
   }
