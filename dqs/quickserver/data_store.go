@@ -593,3 +593,15 @@ func (dm *DataManager) GetValidUsers() ([]User, error) {
 	}
 	return users, nil
 }
+
+//更新速报发送状态
+func (dm *DataManager) UpdateReportSendStatus(report *Report) (err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.reportCollection)
+	colQuerier := bson.M{"reportid": report.ReportId}
+
+	err = c.Update(colQuerier, bson.M{"$set": bson.M{"sended": true}})
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -59,6 +59,7 @@ type SystemConfig struct {
 	GisLayerChina       string
 	GisImageCfg         GisImageConfig
 	MmsCfg              MMSConfig
+	MailCfg             MailConfig
 }
 
 //gis图片设置
@@ -76,6 +77,16 @@ type MMSConfig struct {
 	ServiceUrl string
 	UserNo     string
 	Password   string
+}
+
+//邮件服务
+type MailConfig struct {
+	MailHost     string
+	MailPort     string
+	MailAddr     string
+	NeedAuth     bool
+	MailUser     string
+	MailPassword string
 }
 
 //烈度对照数据

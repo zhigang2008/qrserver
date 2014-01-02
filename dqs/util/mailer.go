@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	log "github.com/cihub/seelog"
+	"github.com/jpoehls/gophermail"
 	"net/smtp"
 )
 
@@ -79,4 +80,24 @@ func (m *Mailer) SendMail(to []string, subject, body string) error {
 
 	}
 	return nil
+}
+
+//发送邮件
+func SendMulityMail(host, port string, auth bool, user, password string, msg *gophermail.Message) error {
+	addr := fmt.Sprintf("%s:%s", host, port)
+	var mailAuth smtp.Auth
+	if auth {
+		mailAuth = smtp.PlainAuth(
+			"",
+			user,
+			password,
+			host)
+	} else {
+		mailAuth = smtp.PlainAuth(
+			"",
+			"",
+			"",
+			host)
+	}
+	return gophermail.SendMail(addr, mailAuth, msg)
 }

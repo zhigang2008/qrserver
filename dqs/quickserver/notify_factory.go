@@ -3,16 +3,21 @@ package quickserver
 import (
 	//	"bytes"
 
+	"bufio"
 	"dqs/util"
 	"encoding/base64"
 	"encoding/xml"
 	"fmt"
 	log "github.com/cihub/seelog"
+	"github.com/jpoehls/gophermail"
 	"io/ioutil"
 	"net/http"
+	"net/mail"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 type MmsServiceCode struct {
@@ -70,7 +75,7 @@ func PrepareMms(report Report) {
 	sendMail(report, mailerList)
 
 	//更新速报发送状态
-	updateReportSendStatus(report)
+	updateReportSendStatus(&report)
 }
 
 //发送彩信
@@ -181,10 +186,57 @@ func getValidReceivers() (mmscount int, mmsusers string, mailusers []string) {
 
 //发送邮件
 func sendMail(report Report, toUsers []string) {
+	mailcfg := SystemConfigs.MailCfg
+	host := mailcfg.MailHost
+	port := mailcfg.MailPort
+	addr := mailcfg.MailAddr
+	auth := mailcfg.NeedAuth
+	user := mailcfg.MailUser
+	pwd := mailcfg.MailPassword
+
+	dir := GlobalConfig.FileConfig.ReportFileDir
+
+	if host != "" && port != "" && user != "" && pwd != "" {
+
+		subject := fmt.Sprintf("Quake %s", report.Summary.EventTime)
+		mmsText := fmt.Sprintf("<p>事件时间:%s</p>", report.Summary.EventTime)
+		mmsText += fmt.Sprintf("<p>报警数量:%d</p>", report.Summary.AlarmCount)
+		mmsText += fmt.Sprintf("<p>报警统计:%s</p>", report.Summary.Brief)
+		if report.Event.IsConfirm {
+			mmsText += fmt.Sprintf("<p>地震数据:%s</p>", report.Summary.QuakeInfo)
+		}
+		//构造邮件信息
+		m := &gophermail.Message{}
+		m.From = addr
+		m.To = toUsers
+		m.Subject = subject
+		m.HTMLBody = mmsText
+		m.Headers = mail.Header{}
+		m.Headers["Date"] = []string{time.Now().UTC().Format(time.RFC822)}
+
+		atta := gophermail.Attachment{}
+		atta.Name = report.ImageFile
+		fi, err := os.Open(filepath.Join(dir, report.ImageFile))
+		if err != nil {
+			log.Warnf("邮件图片读取失败:%s", err.Error())
+		}
+		atta.Data = bufio.NewReader(fi)
+		defer fi.Close()
+		m.Attachments = append(m.Attachments, atta)
+
+		err = util.SendMulityMail(host, port, auth, user, pwd, m)
+		if err != nil {
+			log.Warnf("邮件速报发送失败:%s", err.Error())
+		}
+		log.Info("邮件速报发送成功")
+	}
 
 }
 
 //更新发送状态
-func updateReportSendStatus(report Report) {
-
+func updateReportSendStatus(report *Report) {
+	err := server.dataManager.UpdateReportSendStatus(report)
+	if err != nil {
+		log.Warnf("更新速报发送状态失败:%s", report.ReportId)
+	}
 }
