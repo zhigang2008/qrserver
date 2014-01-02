@@ -1,9 +1,10 @@
-package quickserver
+package controllers
 
 import (
-	//	"bytes"
-
 	"bufio"
+	"dqs/dao"
+	"dqs/models"
+	"dqs/quickserver"
 	"dqs/util"
 	"encoding/base64"
 	"encoding/xml"
@@ -25,50 +26,19 @@ type MmsServiceCode struct {
 	Code    int64    `xml:"string"`
 }
 
-func CheckAndSendNotify(report Report) {
-	//发送条件判断
-	needAudit := GlobalConfig.ReportCfg.AuditBeforeSend
-	directSendLevel := GlobalConfig.ReportCfg.MinDirectSendLevel
-
-	//不需要审核,则直接发送
-	if needAudit == false {
-		log.Info("无需审核,直接发送速报.")
-		PrepareMms(report)
-	} else {
-		//如果级别大于审核级别,则直接发送
-		if report.Event.MaxLevel >= directSendLevel {
-			log.Infof("事件最高烈度%d 高于 设定级别%d, 无需审核,直接发送.", report.Event.MaxLevel, directSendLevel)
-			PrepareMms(report)
-		} else {
-			//如果已经通过审核.则发送.
-			if report.Verify {
-				log.Info("速报已通过审核,准备发送.")
-				PrepareMms(report)
-			} else {
-				log.Info("速报发送需要审核,该速报还未通过审核,不会直接发送.")
-			}
-		}
-	}
-
-}
-
 //准备发送彩信
-func PrepareMms(report Report) {
-
-	sended := false
+func prepareMms(report models.Report) {
 
 	num, mmsUsers, mailerList := getValidReceivers()
-
 	//存在彩信服务才发送
 	mmscfg := SystemConfigs.MmsCfg
 	if mmscfg.MmsEnable == true {
 		if mmscfg.ServiceUrl != "" && mmscfg.UserNo != "" && mmscfg.Password != "" {
-
 			//有多于1个的接收人才发送
 			if num > 0 {
 				log.Infof("该速报将会向%d个用户发送彩信通知.", num)
 				sendMms(report, mmsUsers)
-				sended = true
+
 			} else {
 				log.Info("无接收人,停止发送彩信.")
 			}
@@ -82,27 +52,22 @@ func PrepareMms(report Report) {
 
 	if len(mailerList) > 0 {
 		sendMail(report, mailerList)
-		sended = true
+
 	} else {
 		log.Info("无邮件接收者,不会发送邮件速报.")
 	}
 
-	//更新速报发送状态
-	if sended {
-		updateReportSendStatus(&report)
-	}
 }
 
 //发送彩信
-func sendMms(report Report, users string) {
+func sendMms(report models.Report, users string) {
 	//彩信服务账户信息
 	sn := SystemConfigs.MmsCfg.UserNo
 	password := SystemConfigs.MmsCfg.Password
 	pwd := util.GetMd5Hex(sn + password)
-
 	mmsServiceUrl := SystemConfigs.MmsCfg.ServiceUrl
 	//彩信图片地址
-	dir := GlobalConfig.FileConfig.ReportFileDir
+	dir := quickserver.GlobalConfig.FileConfig.ReportFileDir
 
 	title := fmt.Sprintf("Quake %s", report.Summary.EventTime)
 	mmsText := fmt.Sprintf("事件时间:%s", report.Summary.EventTime)
@@ -176,7 +141,7 @@ func getValidReceivers() (mmscount int, mmsusers string, mailusers []string) {
 	mmslist := []string{}
 	mailerList := []string{}
 
-	users, err := server.dataManager.GetValidUsers()
+	users, err := dao.GetValidUsers()
 	if err != nil {
 		log.Errorf("获取获取系统有效用户信息失败.%s", err.Error())
 	}
@@ -202,7 +167,7 @@ func getValidReceivers() (mmscount int, mmsusers string, mailusers []string) {
 }
 
 //发送邮件
-func sendMail(report Report, toUsers []string) {
+func sendMail(report models.Report, toUsers []string) {
 	mailcfg := SystemConfigs.MailCfg
 	host := mailcfg.MailHost
 	port := mailcfg.MailPort
@@ -211,7 +176,7 @@ func sendMail(report Report, toUsers []string) {
 	user := mailcfg.MailUser
 	pwd := mailcfg.MailPassword
 
-	dir := GlobalConfig.FileConfig.ReportFileDir
+	dir := quickserver.GlobalConfig.FileConfig.ReportFileDir
 
 	if host != "" && port != "" && user != "" && pwd != "" {
 
@@ -252,8 +217,8 @@ func sendMail(report Report, toUsers []string) {
 }
 
 //更新发送状态
-func updateReportSendStatus(report *Report) {
-	err := server.dataManager.UpdateReportSendStatus(report)
+func updateReportSendStatus(report *models.Report) {
+	err := dao.UpdateReportSendStatus(report)
 	if err != nil {
 		log.Warnf("更新速报发送状态失败:%s", report.ReportId)
 	}

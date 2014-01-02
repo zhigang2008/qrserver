@@ -165,3 +165,15 @@ func ReportPageList(p *util.Pagination) error {
 	p.Data = reports
 	return nil
 }
+
+//更新速报发送状态
+func UpdateReportSendStatus(report *models.Report) (err error) {
+	c := GetSession().DB(DatabaseName).C(ReportCollection)
+	colQuerier := bson.M{"reportid": report.ReportId}
+
+	err = c.Update(colQuerier, bson.M{"$set": bson.M{"sended": true}})
+	if err != nil {
+		return err
+	}
+	return nil
+}

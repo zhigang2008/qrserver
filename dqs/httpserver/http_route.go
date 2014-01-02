@@ -43,9 +43,13 @@ func routeConfig() {
 	beego.Router("/earthquake", &controllers.EventController{}, "*:AddEventSignal")
 	beego.Router("/quakelocation/:id", &controllers.EventController{}, "*:QuakeLocation")
 	//速报管理
-	beego.Router("/report", &controllers.ReportController{}, "*:Get")
+	beego.Router("/reportlist", &controllers.ReportController{}, "*:Get")
+	beego.Router("/report/:id", &controllers.ReportController{}, "*:GetReport")
 	beego.Router("/reportinvalid/:id", &controllers.ReportController{}, "*:SetInvalid")
 	beego.Router("/reportverify/:id", &controllers.ReportController{}, "*:SetVerify")
+	beego.Router("/reportverifyandsend/:id", &controllers.ReportController{}, "*:SetVerifyAndSend")
+	beego.Router("/reportdirectsend/:id", &controllers.ReportController{}, "*:DirectSend")
+	beego.Router("/reportresend/:id", &controllers.ReportController{}, "*:ReSend")
 
 	//用户管理
 	beego.RESTRouter("/user", &controllers.UserController{})

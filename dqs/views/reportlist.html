@@ -3,10 +3,11 @@
 {{$curUser := .CurrentUser}}
 <!--最新记录-->
 <div class="jumbotron" style="font-size: 14px;padding-bottom: 24px;padding-top: 24px;">
- <div class="container center-block">
-{{with .report}}	
-  <div class="col-sm-10 col-md-10 well ">
-     <div class="col-sm-6 col-md-6">
+ <div class="container">
+{{range .newReports}}	
+  <div class="col-sm-4 col-md-4 ">
+    <div class="thumbnail .small">
+       <div class="caption">
         <h4><span class="glyphicon glyphicon-dashboard text-muted"></span>&nbsp;{{.Summary.EventTime}}</h3>
         <ul>
         	<li>报警数量: {{.Summary.AlarmCount}}</li>
@@ -14,11 +15,10 @@
         	<li>地震数据: {{if .Event.IsConfirm}}{{.Summary.QuakeInfo}}{{else}}-{{end}}</li>
        </ul>
       </div>
-     <div class="col-sm-6 col-md-6 pull-right">
-       	<img  src="/output/reports/{{.ImageFile}}" data-src="/output/reports/{{.ImageFile}}" alt="..." align="center" width="98%" >
-     <!--管理功能-->
+      <img src="/output/reports/{{.ImageFile}}" data-src="/output/reports/{{.ImageFile}}" alt="..." align="center" width="98%" >
+      <!--管理功能-->
   	{{if hasrole $curUser.Roles "role_admin" "role_report"}}
-  	 <div class="container" style="margin-top:5px;">
+  	<div style="margin-top:5px;">
      <div class="btn-group btn-group-sm">
      	{{if .Sended}}
      	  	<a href="javascript:reSend('{{.ReportId}}');" class="btn btn-default" role="button">再次发送</a> 
@@ -36,15 +36,30 @@
       <div class="pull-right ">
       <a href="javascript:setInvalid('{{.ReportId}}');" class="btn btn-link btn-sm" data-toggle="tooltip"  data-placement="bottom" title="作废无效速报"><span class="glyphicon glyphicon-remove "></span></a>
      </div>
-     </div>
+   </div>
     {{end}}
-     </div>
-
- </div>
+    </div>
+  </div>
  {{end}}  
- 
  </div>
 </div>  <!--end jumbotron-->
+
+<!--历史记录-->   
+<div class="container">
+  <div class="panel panel-default">
+  <div class="panel-heading">以往速报列表</div>
+  <div class="panel-body">
+   <ul class="list-group">
+   	{{range .oldReports}}
+    <li class="list-group-item">
+     <span class="badge">{{.Summary.AlarmCount}}</span>
+        <a  class="btn-default btn-link" href="/report/{{.ReportId}}">{{.Summary.EventTime }}</a>
+    </li>
+   {{end}}
+   </ul>
+  </div>
+</div>
+ </div> <!--end container-->
 
 {{template "scripts"}}
 <script src="/static/js/bootbox.min.js"></script>
@@ -157,6 +172,8 @@ function reSend(rid){
              }
            });
 }
-
+//初始化    
+$(document).ready(function(){
+});
 </script>
 {{template "footer"}}

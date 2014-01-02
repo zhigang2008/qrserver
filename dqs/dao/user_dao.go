@@ -175,3 +175,15 @@ func UpdateUserBySelf(user *models.User) error {
 	}
 	return nil
 }
+
+//获取所有有效用户
+func GetValidUsers() ([]models.User, error) {
+	c := GetSession().DB(DatabaseName).C(UserCollection)
+	users := []models.User{}
+	m := bson.M{"blocked": false}
+	err0 := c.Find(&m).All(&users)
+	if err0 != nil {
+		return users, err0
+	}
+	return users, nil
+}
