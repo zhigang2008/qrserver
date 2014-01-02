@@ -32,7 +32,7 @@ func CheckAndSendNotify(report Report) {
 
 	//不需要审核,则直接发送
 	if needAudit == false {
-		log.Info("无需审核,直接发送彩信.")
+		log.Info("无需审核,直接发送速报.")
 		PrepareMms(report)
 	} else {
 		//如果级别大于审核级别,则直接发送
@@ -42,10 +42,10 @@ func CheckAndSendNotify(report Report) {
 		} else {
 			//如果已经通过审核.则发送.
 			if report.Verify {
-				log.Info("速报已通过审核,发送彩信.")
+				log.Info("速报已通过审核,准备发送.")
 				PrepareMms(report)
 			} else {
-				log.Info("速报发送需要审核,该速报还未通过审核,不会直接发送彩信.")
+				log.Info("速报发送需要审核,该速报还未通过审核,不会直接发送.")
 			}
 		}
 	}
@@ -55,27 +55,42 @@ func CheckAndSendNotify(report Report) {
 //准备发送彩信
 func PrepareMms(report Report) {
 
+	sended := false
+
 	num, mmsUsers, mailerList := getValidReceivers()
+
 	//存在彩信服务才发送
 	mmscfg := SystemConfigs.MmsCfg
-	if mmscfg.MmsEnable == true && mmscfg.ServiceUrl != "" && mmscfg.UserNo != "" && mmscfg.Password != "" {
+	if mmscfg.MmsEnable == true {
+		if mmscfg.ServiceUrl != "" && mmscfg.UserNo != "" && mmscfg.Password != "" {
 
-		//有多于1个的接收人才发送
-		if num > 0 {
-			log.Infof("该速报将会向%d个用户发送彩信通知.", num)
-			sendMms(report, mmsUsers)
+			//有多于1个的接收人才发送
+			if num > 0 {
+				log.Infof("该速报将会向%d个用户发送彩信通知.", num)
+				sendMms(report, mmsUsers)
+				sended = true
+			} else {
+				log.Info("无接收人,停止发送彩信.")
+			}
 		} else {
-			log.Info("无接收人,停止发送彩信.")
+			log.Warnf("彩信服务配置信息不完整,停止发送彩信.")
 		}
 	} else {
-		log.Warnf("彩信服务配置信息不完整,停止发送彩信.")
+		log.Infof("系统设置-彩信发送停用.")
 	}
 	//检查邮件服务,发送邮件通知
-	//TODO
-	sendMail(report, mailerList)
+
+	if len(mailerList) > 0 {
+		sendMail(report, mailerList)
+		sended = true
+	} else {
+		log.Info("无邮件接收者,不会发送邮件速报.")
+	}
 
 	//更新速报发送状态
-	updateReportSendStatus(&report)
+	if sended {
+		updateReportSendStatus(&report)
+	}
 }
 
 //发送彩信
@@ -161,7 +176,7 @@ func getValidReceivers() (mmscount int, mmsusers string, mailusers []string) {
 
 	users, err := server.dataManager.GetValidUsers()
 	if err != nil {
-		log.Errorf("获取彩信接收用户列表失败,停止发送彩信.%s", err.Error())
+		log.Errorf("获取获取系统有效用户信息失败.%s", err.Error())
 	}
 
 	for _, v := range users {
@@ -169,7 +184,7 @@ func getValidReceivers() (mmscount int, mmsusers string, mailusers []string) {
 			mmslist = append(mmslist, v.Mobile)
 		}
 		if v.ReportSet.ReportMail && strings.TrimSpace(v.Email) != "" {
-
+			mailerList = append(mailerList, v.Email)
 		}
 	}
 
@@ -227,8 +242,9 @@ func sendMail(report Report, toUsers []string) {
 		err = util.SendMulityMail(host, port, auth, user, pwd, m)
 		if err != nil {
 			log.Warnf("邮件速报发送失败:%s", err.Error())
+		} else {
+			log.Info("邮件速报发送成功")
 		}
-		log.Info("邮件速报发送成功")
 	}
 
 }

@@ -236,6 +236,10 @@ func InitSystemConfigs() {
 			mms.Password = ""
 			SystemConfigs.MmsCfg = mms
 
+			mailcfg := MailConfig{}
+			mailcfg.MailPort = "25"
+			SystemConfigs.MailCfg = mailcfg
+
 			err2 := server.dataManager.AddSystemConfig(&SystemConfigs)
 			if err2 != nil {
 				log.Warnf("初始化系统参数失败.")
