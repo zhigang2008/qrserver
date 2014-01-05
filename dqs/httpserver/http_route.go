@@ -78,7 +78,7 @@ func routeConfig() {
 	//数据交换
 	beego.Router("/data/alarm", &controllers.ExchangeController{}, "*:ExportAlarms")
 
-	//关于与帮助
+	//关于与帮助页面
 	beego.Router("/about", &controllers.HelpController{}, "*:About")
 	beego.Router("/help", &controllers.HelpController{}, "*:Help")
 	//测试页面
