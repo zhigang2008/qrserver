@@ -18,8 +18,8 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	var name = "DQS_Server"
-	var displayName = "地震烈度速报系统"
-	var desc = "地震烈度速报系统(DQS)"
+	var displayName = "地震烈度检测速报系统"
+	var desc = "地震烈度检测速报系统(DQS)"
 
 	var s, err = service.NewService(name, displayName, desc)
 	serviceLog = s

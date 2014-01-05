@@ -214,7 +214,7 @@ func InitSystemConfigs() {
 			log.Warnf("系统将自动初始化系统基础配置")
 			SystemConfigs = SystemConfig{}
 			SystemConfigs.UserDefaultPassword = "12345678"
-			SystemConfigs.UseGis = false
+			SystemConfigs.UseGis = true
 			SystemConfigs.GisServiceUrl = "http://localhost:8080/geoserver/dqs/wms"
 			SystemConfigs.GisServiceParams = ""
 			SystemConfigs.GisLayerBasic = "dqs_layers"
