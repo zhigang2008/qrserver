@@ -1,8 +1,7 @@
 ﻿ {{template "header" .}}
-<div style="background-color:#eee;padding:10px 0px;">
- <div class="container">
- 	
- 	<div class="row">
+<div style="padding:0px">
+ <div class="container" >
+ 	<div class="row" style="background-color:#eee;margin:0px;padding:5px;border-radius:3px;">
    <div id="div-list" class="col-md-2">
      <div id="devices-list">
       <table id="devices-list-table" class="table table-hover table-bordered table-condensed" >
@@ -181,7 +180,7 @@ function updateMarker(item){
 	
 	//提示信息
   Messenger().post({
-  message: item.SensorId+' [PGA:'+item.PGA+' , SI:'+item.SI+']',
+  message: item.SensorId+' [烈度:'+item.Intensity+' PGA:'+item.PGA+' , SI:'+item.SI+']',
   type: 'error',
   showCloseButton: true
 });

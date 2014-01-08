@@ -13,7 +13,7 @@ type AnalyzeController struct {
 
 //报警信息列表
 func (this *AnalyzeController) Get() {
-	this.Data["title"] = "数据分析"
+	this.Data["title"] = "震情分析"
 	this.Data["author"] = "wangzhigang"
 	this.CheckUser()
 

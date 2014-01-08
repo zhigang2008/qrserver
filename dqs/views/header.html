@@ -17,68 +17,85 @@
 </head>
 <body>
 <div id="wrapper" >
-  	<div class="navbar " role="navigation">
-      <div id="nav-logo" class="container">
-        <div class="navbar-header">
-          <span class="navbar-brand" >
-          	<img class="img-circle"   height="40" src="/static/image/globe.png" alt="LOGO">
-          	<strong>&nbsp;广元市地震烈度检测速报系统</strong>
-          	</span>
-        </div>
+  	<div class="dqs_top" >
+  		<div class="dqs_logo" role="navigation">
+        <img src="/static/image/logo.jpg" width="420" height="101" />
       </div>
-     </div>
-     <div class="sub-navbar navbar-dqs">
-      <div id="nav-menu" class="container">
-      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar">ss</span>
-            <span class="icon-bar">sss</span>
-            <span class="icon-bar">sss</span>
-          </button>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li ><a href="/">系统首页</a></li>
-            {{if hasrole .CurrentUser.Roles "role_admin" "role_device"}}
-            <li class="dropdown">
-            	<a href="#" class="dropdown-toggle" data-toggle="dropdown">设备信息<b class="caret"></b></a>
-            	 <ul class="dropdown-menu">
-            	  	<li><a href="/device">设备列表</a></li>
-            	  	<li class="divider"></li>
-                  <li><a href="/adddevice">添加设备</a></li>
-               </ul>   
-            	</li>
-            {{else}}
-              <li><a href="/device">设备列表</a></li>
-            {{end}}
-            <li><a href="/analyze">震情分析</a></li>
-            <li><a href="/reportlist">速报管理</a></li>
-            <li><a href="/alarm">设备报警</a></li>
-            {{if hasrole .CurrentUser.Roles "role_admin" }}
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">系统管理 <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="/user">用户管理</a></li>
-                <li><a href="/runtimeconfig">运行参数</a></li>
-                <li class="divider"></li>
-                <!--<li class="dropdown-header">高级管理</li>-->
-                <li><a href="/audit">审计日志</a></li>
-                <li><a href="/loglist">运行日志</a></li>
-                <li><a href="/systemconfig">系统设置</a></li>
-              </ul>
-            </li>
-            <li><a href="/help">接口说明</a></li> 
-           {{end}}
-          </ul>
-          {{if .isLogin}}
-           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/userinfo/view/{{.CurrentUser.ObjectId.Hex}}" data-toggle="tooltip"  data-placement="bottom" title="设置用户信息"><small><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{.CurrentUserName}}</small></a></li>
-            <li><a href="/signout" data-toggle="tooltip"  data-placement="bottom" title="注销"><small><span class="glyphicon glyphicon-log-out"></span></small></a></li>
+      <div class="dqs_nav">
+    	   <div class="nav01"><img src="/static/image/navbg.jpg" width="780" height="64" /></div>
+    	   <div class="sub-navbar navbar-dqs">
+           <div id="nav-menu" >
+      	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="icon-bar">ss</span>
+                  <span class="icon-bar">sss</span>
+                  <span class="icon-bar">sss</span>
+                </button>
+             <div class="navbar-collapse collapse">
+             <ul class="nav navbar-nav">
+               <li ><a href="/">系统首页</a></li>
+               {{if hasrole .CurrentUser.Roles "role_admin" "role_device"}}
+               <li class="dropdown">
+               	<a href="#" class="dropdown-toggle" data-toggle="dropdown">设备信息<b class="caret"></b></a>
+               	 <ul class="dropdown-menu">
+               	  	<li><a href="/device">设备列表</a></li>
+               	  	<li class="divider"></li>
+                     <li><a href="/adddevice">添加设备</a></li>
+                  </ul>   
+               	</li>
+               {{else}}
+                 <li><a href="/device">设备列表</a></li>
+               {{end}}
+               <li><a href="/analyze">震情分析</a></li>
+               <li><a href="/reportlist">速报管理</a></li>
+               <li><a href="/alarm">设备报警</a></li>
+               {{if hasrole .CurrentUser.Roles "role_admin" }}
+               <li class="dropdown">
+                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">系统管理 <b class="caret"></b></a>
+                 <ul class="dropdown-menu">
+                   <li><a href="/user">用户管理</a></li>
+                   <li><a href="/runtimeconfig">运行参数</a></li>
+                   <li class="divider"></li>
+                   <!--<li class="dropdown-header">高级管理</li>-->
+                   <li><a href="/audit">审计日志</a></li>
+                   <li><a href="/loglist">运行日志</a></li>
+                   <li><a href="/systemconfig">系统设置</a></li>
+                 </ul>
+               </li>
+               <li><a href="/help">接口说明</a></li> 
+              {{end}}
+             </ul>
+            <!--old user position-->
+           
+             </div><!--/.navbar-collapse -->
+           </div>
+            <div class="pull-right"><img src="/static/image/wei.jpg" width="39" height="37" /></div>
+         </div>
+      </div>
+    </div>
+   
+    <!--space line-->
+    <div class="line">
+    	<div class="col-md-4" style="padding:0;margin:0;">
+    		<img style="float:left" src="/static/image/l01.jpg">
+    		<span id="div-time" class="glyphicon glyphicon-bookmark time">&nbsp;{{.title}}</span>
+    	</div>
+      <div class="col-md-5">&nbsp; </div>
+   	  <div class="col-md-3" style="padding:0;margin:0;">
+      	<div class="col-md-11">
+      		 {{if .isLogin}}
+           <ul class="nav nav-pills navbar-right">
+            <li><a href="/userinfo/view/{{.CurrentUser.ObjectId.Hex}}" data-toggle="tooltip"  data-placement="bottom" title="设置用户信息"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{.CurrentUserName}}</a></li>
+            <li><a href="/signout" data-toggle="tooltip"  data-placement="bottom" title="注销"><span class="glyphicon glyphicon-log-out"></span></a></li>
          </ul>
           {{else}}
-          <ul class="col-md-3 nav navbar-nav navbar-right ">
-          <li id="global-login-show" class="col-md-offset-4">
-          	<a href="#"  data-toggle="popover" title="请登录" data-content="" data-original-title="请在此登录" ><small><span class="glyphicon glyphicon-log-in"></span>&nbsp;&nbsp;登录</small></a>
+          <ul class="nav nav-pills  navbar-right ">
+          <li id="global-login-show" >
+          	<a href="#"  data-toggle="popover" title="请登录" data-content="" data-original-title="请在此登录" ><span class="glyphicon glyphicon-log-in"></span>&nbsp;&nbsp;登录</a>
           </li>
-          <div id="global-login-div" style="display:none">
+          <li>
+          	<a href="/register"  data-toggle="tooltip" data-placement="bottom" title="注册新用户" ><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;注册</a>
+          </li> 
+           <div id="global-login-div" style="display:none">
            <form id="signform" action="/sign" method="post" class="navbar-form ">
              	<div class="form-group">
              		<div class="input-group" >
@@ -104,9 +121,14 @@
             </div>
           </form>
          </div>
+        
         </ul>
-          {{end}}
-        </div><!--/.navbar-collapse -->
+          {{end}}  
+        </div>
+        <div  class="col-md-1 pull-right" style="padding:0;margin:0;">
+      	  <img class="pull-right" src="/static/image/l02.jpg" />
+        </div> 
       </div>
-    </div>
+
+    </div>	   
 {{end}}
