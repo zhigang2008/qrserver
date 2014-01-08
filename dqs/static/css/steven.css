@@ -2,8 +2,10 @@ body {
 	margin:0;
   /*padding-top: 100px;
   padding-bottom: 20px;
+  background: url("../image/bg_line.jpg") repeat-x scroll 0 0 #198BC9;
   */
   background-color: #E6E6E6;
+  
 }
 #wrapper {
     height: auto !important;
