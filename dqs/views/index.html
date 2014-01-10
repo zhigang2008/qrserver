@@ -319,6 +319,20 @@ $(document).ready(function() {
            }
            );
   map.addLayer(basicLayer);
+  demLayer = new OpenLayers.Layer.WMS("地形图",
+          "{{rawURL .gisServiceUrl}}",
+           {
+          	layers: "dqs_dem",
+          	service:"WMS",
+          	version:"1.1.0",
+          	request:"GetMap"
+           },
+           {
+			      singleTile: true,
+						isBaseLayer:true 
+			      }
+           );
+  map.addLayer(demLayer);
   projectTo = map.getProjectionObject();
  
  /*
