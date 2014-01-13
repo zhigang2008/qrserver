@@ -90,23 +90,27 @@ var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
 var projectTo;// = map.getProjectionObject(); //The map projection (Spherical Mercator)
 
 //feature select event
-function createPopup(feature) {
+function createPopup(site) {
 	  closeAllPopup(); 
-	  content='<div class="markerContent"><b>'+feature.attributes.sensorId+'</b><br>'+feature.attributes.siteName+'<br>['+feature.attributes.posLng+','+feature.attributes.posLat+']';
-		if(feature.attributes.initTime){
-			content+='<p class="text-danger">'+feature.attributes.initTime+' PGA:'+feature.attributes.PGA+' SI:'+feature.attributes.SI+'</p>';
-    }
+	  content='<div class="markerContent"><b>'+site.attributes.sensorId+'</b><br>'+site.attributes.siteName+'<br>['+site.attributes.posLng+','+site.attributes.posLat+']';
+		if(site.attributes.initTime){
+			content+='<br><span class="text-danger">时刻:'+site.attributes.initTime+' 烈度:'+site.attributes.Intensity+'</span>';
+			content+='<br><span class="text-danger">PGA:'+site.attributes.PGA+' SI:'+site.attributes.SI+'</span>';
+			if(site.attributes.HasWaveInfo && site.attributes.HasWaveInfo==true){
+			  content+='<br><a target="_blank" href="/waveinfo/'+site.attributes.sensorId+'/'+site.attributes.SeqNo+'"><span class="glyphicon glyphicon-random">&nbsp;波形图</span></a>';
+		  }
+		}
 		content+='</div>';
      
-    feature.popup = new OpenLayers.Popup.FramedCloud("pop",
-          feature.geometry.getBounds().getCenterLonLat(),
+    site.popup = new OpenLayers.Popup.FramedCloud("pop",
+          site.geometry.getBounds().getCenterLonLat(),
           null,
           content,
           null,
           true,
           function() { selector.unselectAll();    	}
       );
-      map.addPopup(feature.popup);
+      map.addPopup(site.popup);
     }
 //feature unselect event
 function destroyPopup(feature) {
@@ -115,6 +119,7 @@ function destroyPopup(feature) {
 }
 //添加观测点
 function addFeature(sid,dname,lng,lat){
+	
   var feature = new OpenLayers.Feature.Vector(
             new OpenLayers.Geometry.Point(lng,lat).transform(epsg4326, projectTo),
             {sensorId:sid,siteName:dname,posLng:lng,posLat:lat} ,
@@ -124,6 +129,7 @@ function addFeature(sid,dname,lng,lat){
   vectorLayer.addFeatures(feature);
   lastlng=lng;
   lastlat=lat;
+ // sites.push(sid);
 }
 //关闭所有的popup
 function closeAllPopup(){
@@ -142,7 +148,11 @@ function showFeature(sid){
 	if(site){
 		content='<div class="markerContent"><b>'+site.attributes.sensorId+'</b><br>'+site.attributes.siteName+'<br>['+site.attributes.posLng+','+site.attributes.posLat+']';
 		if(site.attributes.initTime){
-			content+='<br>初始时刻:'+site.attributes.initTime+' PGA:'+site.attributes.PGA+' SI:'+site.attributes.SI;
+			content+='<br><span class="text-danger">时刻:'+site.attributes.initTime+' 烈度:'+site.attributes.Intensity+'</span>';
+			content+='<br><span class="text-danger">PGA:'+site.attributes.PGA+' SI:'+site.attributes.SI+'</span>';
+			if(site.attributes.HasWaveInfo && site.attributes.HasWaveInfo==true){
+			  content+='<br><a target="_blank" href="/waveinfo/'+site.attributes.sensorId+'/'+site.attributes.SeqNo+'"><span class="glyphicon glyphicon-random">&nbsp;波形图</span></a>';
+		  }
 		}
 		content+='</div>';
 		site.popup = new OpenLayers.Popup.FramedCloud("showpop",
@@ -166,24 +176,43 @@ function resetMarker(sid){
 	marker.attributes.initTime=null;
 	marker.attributes.PGA=null;
 	marker.attributes.SI=null;
+	marker.attributes.Intensity=null;
+	marker.attributes.SeqNo=null;
+	marker.attributes.HasWaveInfo=null;
 	marker.style.externalGraphic="/static/image/marker-blue.png";
 	vectorLayer.drawFeature(marker);
 }
 //更新观测点
 function updateMarker(item){
 	var marker = vectorLayer.getFeatureByFid(item.SensorId);
-	marker.style.externalGraphic="/static/image/star.gif";
-	marker.attributes.initTime=item.InitTime;
-	marker.attributes.PGA=item.PGA;
-	marker.attributes.SI=item.SI;
-	vectorLayer.drawFeature(marker);
-	
-	//提示信息
-  Messenger().post({
-  message: item.SensorId+' [烈度:'+item.Intensity+' PGA:'+item.PGA+' , SI:'+item.SI+']',
-  type: 'error',
-  showCloseButton: true
-});
+	if(marker){
+	  marker.style.externalGraphic="/static/image/star.gif";
+	  marker.attributes.initTime=item.InitTime;
+	  marker.attributes.PGA=item.PGA;
+	  marker.attributes.SI=item.SI;
+	  marker.attributes.Intensity=item.Intensity;
+	  marker.attributes.HasWaveInfo=item.HasWaveInfo;
+	  marker.attributes.SeqNo=item.SeqNo;
+	  vectorLayer.drawFeature(marker);
+	  
+	  //提示信息
+    Messenger().post({
+     message: item.SensorId+' [时刻:'+item.InitTime+' 烈度:'+item.Intensity+']',
+      type: 'error',
+      showCloseButton: true
+     });
+ }else{
+ 	//添加新增的站点
+	 var feature = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point(item.Longitude,item.Longitude.Latitude).transform(epsg4326, projectTo),
+            {sensorId:item.SensorId,siteName:"",posLng:item.Longitude,posLat:item.Latitude} ,
+            {externalGraphic: '/static/image/star.gif', graphicHeight: 25, graphicWidth: 25, graphicXOffset:-12, graphicYOffset:-25  }
+        );
+   feature.fid=item.SensorId;   
+   vectorLayer.addFeatures(feature);
+   vectorLayer.drawFeature(feature);
+   sites.push(item.SensorId);
+ }
 }
 
 //展示事件的等值线
