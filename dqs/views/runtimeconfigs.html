@@ -71,6 +71,13 @@
       <p class="help-block">计算仪器烈度时,根据PGA还是SI进行对照查表</p>
     </div>
   </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="IndexQueryTimeSpan" >主页面数据轮询时间间隔</label>
+    <div class="col-sm-6">
+    	<input id="IndexQueryTimeSpan" type="text" class="form-control input-sm" name="IndexQueryTimeSpan"  placeholder="IndexQueryTimeSpan"  value="{{.IndexQueryTimeSpan}}" disabled />
+      <p class="help-block">在主页面上定时进行报警信息轮询的时间间隔.单位:分钟</p>
+    </div>
+  </div>
   </div>
  </div>
 
@@ -216,6 +223,10 @@ $(document).ready(function(){
 	//表单校验
   $("#form1").validate({
    rules: {
+     IndexQueryTimeSpan: {
+      required: true,
+      digits:true
+    },
      SignalTimeSpan: {
       required: true,
       digits:true

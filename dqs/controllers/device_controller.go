@@ -136,6 +136,13 @@ func (this *DeviceController) Post() {
 		log.Warnf("添加设备-解析参数失败:%s", err.Error())
 	} else {
 		device.SetParams = setParams
+		if wirelessParams.StartDate != "" {
+			sdate, err9 := time.Parse(CommonDateLayout, wirelessParams.StartDate)
+			if err9 == nil {
+				validDate := sdate.AddDate(0, wirelessParams.NetQixian, 0)
+				wirelessParams.ValidDate = validDate
+			}
+		}
 		customParams.WirelessTypeInfo = wirelessParams
 		customParams.WireTypeInfo = wireParams
 

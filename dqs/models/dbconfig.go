@@ -5,6 +5,7 @@ type DatabaseConfig struct {
 	CRC                 bool
 	ReadWaveAfterAlarm  bool            // 是否报警后立即读取波形记录
 	IntensityMapingData string          //使用PGA/SI计算烈度. 默认PGA
+	IndexQueryTimeSpan  int             //首页轮训查询的时间间隔.
 	EventParams         EventParameters //时间控制参数设置
 	FileConfig          FilesConfig     //
 	ReportCfg           ReportParameter

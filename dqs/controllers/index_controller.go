@@ -49,6 +49,12 @@ func (this *MainController) Get() {
 	this.Data["events"] = paginationEvents.Data
 	this.Data["eventPages"] = paginationEvents.PageCount
 
+	queryTimeSpan := RuntimeConfigs.IndexQueryTimeSpan
+	if queryTimeSpan <= 0 {
+		queryTimeSpan = 1
+	}
+	this.Data["queryTimeSpan"] = queryTimeSpan
+
 	usegis := SystemConfigs.UseGis
 	if usegis {
 		this.Data["gisServiceUrl"] = SystemConfigs.GisServiceUrl

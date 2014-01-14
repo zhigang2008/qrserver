@@ -23,6 +23,7 @@ const (
 	defaultConfigCollection      = "runtimeConfigs" //默认配置信息表
 	defaultReportCollection      = "reports"        //默认报表信息表
 	defaultSystemCollection      = "systemConfigs"  //默认配置信息表
+	defaultPaymentCollection     = "payment"        //默认设备欠费记录表
 )
 
 //全局信息
@@ -41,6 +42,7 @@ var (
 	ConfigCollection           string
 	ReportCollection           string
 	SystemCollection           string
+	PaymentCollection          string
 )
 
 //初始化数据库连接
@@ -66,6 +68,7 @@ func Init(host string, port int, dbname, datacol, devicecol, usercol string) (er
 	ConfigCollection = defaultConfigCollection
 	ReportCollection = defaultReportCollection
 	SystemCollection = defaultSystemCollection
+	PaymentCollection = defaultPaymentCollection
 
 	if dbname != "" {
 		DatabaseName = dbname

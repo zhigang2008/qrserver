@@ -76,12 +76,13 @@ type CustomDefineParams struct {
 
 //3G类型的信息
 type WirelessInfo struct {
-	NetOperator string  //3G运营商
-	NetNo       string  //用户号码
-	NetTariff   string  //资费标准
-	NetTraffic  float32 //包月流量
-	StartDate   string  //开卡日期
-	NetQixian   float32 //有效期
+	NetOperator string    //3G运营商
+	NetNo       string    //用户号码
+	NetTariff   string    //资费标准
+	NetTraffic  float32   //包月流量
+	StartDate   string    //开卡日期
+	NetQixian   int       //有效期
+	ValidDate   time.Time //费用有效期
 }
 
 //有线类型信息

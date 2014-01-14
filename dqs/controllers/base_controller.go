@@ -14,10 +14,12 @@ const (
 	PAGE_INDEX       = "/"
 	PAGE_LOGIN       = "/login"
 	CommonTimeLayout = "2006-01-02 15:04:05"
+	CommonDateLayout = "2006-01-02"
 )
 
 var (
-	SystemConfigs models.SystemConfig
+	SystemConfigs  models.SystemConfig
+	RuntimeConfigs models.DatabaseConfig
 )
 
 type BaseController struct {
@@ -130,8 +132,9 @@ func (this *BaseController) AuditLog(cont string, status bool) {
 func InitSystemConfigs() {
 
 	//初始化系统参数
-	newCfg, err0 := dao.GetSystemConfig()
-	if err0 != nil {
+	newSysCfg, err0 := dao.GetSystemConfig()
+	newRuntimeCfg, err1 := dao.GetDBConfig()
+	if err0 != nil || err1 != nil {
 		//滞后再去读取
 		go reInitSysteConfigs()
 		return
@@ -157,18 +160,21 @@ func InitSystemConfigs() {
 			}
 		*/
 	} else {
-		SystemConfigs = newCfg
+		SystemConfigs = newSysCfg
+		RuntimeConfigs = newRuntimeCfg
 	}
 }
 
 //*滞后时间进行读取
 func reInitSysteConfigs() {
 	time.Sleep(2 * time.Second)
-	newCfg2, err2 := dao.GetSystemConfig()
-	if err2 != nil {
+	newCfg3, err3 := dao.GetSystemConfig()
+	newRuntimeCfg4, err4 := dao.GetDBConfig()
+	if err3 != nil || err4 != nil {
 		log.Criticalf("HttpServer未能读取到系统基本配置.请检查数据库数据")
 	} else {
 		log.Info("HttpServer读取系统基本配置成功.")
-		SystemConfigs = newCfg2
+		SystemConfigs = newCfg3
+		RuntimeConfigs = newRuntimeCfg4
 	}
 }

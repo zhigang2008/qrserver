@@ -61,6 +61,8 @@ func (this *RuntimeConfigController) Put() {
 			answer.Msg = "更新运行参数失败:" + err.Error()
 			log.Warnf("更新运行参数失败:%s", err.Error())
 		} else {
+			//更新缓存
+			RuntimeConfigs = dbConfigs
 			answer.Ok = true
 			answer.Msg = "更新运行参数成功"
 			log.Infof("更新运行参数成功")

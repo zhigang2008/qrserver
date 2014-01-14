@@ -64,8 +64,10 @@ func (this *AlarmController) GetRealtimeAlarm() {
 	if err2 != nil {
 		log.Warnf("查询实时报警信息失败:%s", err2.Error())
 	}
-
-	this.Data["json"] = alarmlist
+	var result = make(map[string]interface{})
+	result["count"] = len(alarmlist)
+	result["data"] = alarmlist
+	this.Data["json"] = result
 	this.ServeJson()
 
 }

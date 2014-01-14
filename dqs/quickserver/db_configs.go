@@ -17,6 +17,7 @@ type DatabaseConfig struct {
 	CRC                 bool            //是否进行CRC校验
 	ReadWaveAfterAlarm  bool            //是否在收到警报数据后立即发送波形记录读取命令
 	IntensityMapingData string          //使用PGA/SI计算烈度. 默认PGA
+	IndexQueryTimeSpan  int             //首页轮训查询的时间间隔.
 	EventParams         EventParameters //时间控制参数设置
 	FileConfig          FilesConfig     //
 	ReportCfg           ReportParameter
@@ -136,6 +137,7 @@ func initRuntimeConfigs() {
 			GlobalConfig.CRC = false
 			GlobalConfig.ReadWaveAfterAlarm = true
 			GlobalConfig.IntensityMapingData = "PGA"
+			GlobalConfig.IndexQueryTimeSpan = 1
 			GlobalConfig.EventParams.SignalTimeSpan = 5
 			GlobalConfig.EventParams.ValidEventAlarmCount = 3
 			GlobalConfig.EventParams.NewEventTimeGap = 15

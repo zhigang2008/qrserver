@@ -52,6 +52,7 @@
     </div>
    </div>
    <div id="map" class="col-md-10"  style="height:550px;border:#F6F6F6 solid 1px;"></div>
+   <div id="audioPlayer"></div> 
   </div>
   
  </div>
@@ -72,6 +73,7 @@
 <script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
 <script language="javascript" src="/static/js/messenger/messenger.min.js"></script>
 <script language="javascript" src="/static/js/messenger/messenger-theme-future.js"></script>
+<script language="javascript" src="/static/js/jplayer/jquery.jplayer.min.js"></script>
 <script language="javascript">
 	Messenger.options = {
     extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
@@ -194,25 +196,23 @@ function updateMarker(item){
 	  marker.attributes.HasWaveInfo=item.HasWaveInfo;
 	  marker.attributes.SeqNo=item.SeqNo;
 	  vectorLayer.drawFeature(marker);
-	  
-	  //提示信息
-    Messenger().post({
-     message: item.SensorId+' [时刻:'+item.InitTime+' 烈度:'+item.Intensity+']',
-      type: 'error',
-      showCloseButton: true
-     });
- }else{
- 	//添加新增的站点
+  }else{
+ 	 //添加新增的站点
 	 var feature = new OpenLayers.Feature.Vector(
-            new OpenLayers.Geometry.Point(item.Longitude,item.Longitude.Latitude).transform(epsg4326, projectTo),
+            new OpenLayers.Geometry.Point(item.Longitude,item.Latitude).transform(epsg4326, projectTo),
             {sensorId:item.SensorId,siteName:"",posLng:item.Longitude,posLat:item.Latitude} ,
             {externalGraphic: '/static/image/star.gif', graphicHeight: 25, graphicWidth: 25, graphicXOffset:-12, graphicYOffset:-25  }
         );
    feature.fid=item.SensorId;   
    vectorLayer.addFeatures(feature);
-   vectorLayer.drawFeature(feature);
    sites.push(item.SensorId);
- }
+  }
+ //提示信息
+    Messenger().post({
+     message: item.SensorId+' [时刻:'+item.InitTime+' 烈度:'+item.Intensity+']',
+      type: 'error',
+      showCloseButton: true
+     });
 }
 
 //展示事件的等值线
@@ -265,15 +265,19 @@ function removeWMSLayer(){
 //定时查询信息
 function timeQueryData(){
 	//定时获取报警信息
-	$.getJSON("/realtime_alarm?time=5", function(data){
+	$.getJSON("/realtime_alarm?time={{.queryTimeSpan}}", function(data){
 		//重置所有站点状态
 		$.each(sites,function(i,item){
 			resetMarker(item);
 		});
 		//更新报警信息
-   $.each(data, function(i,item){
+   $.each(data.data, function(i,item){
    	   updateMarker(item);
    });
+   if(data.count >0 ){
+   	//播放报警声
+    $("#audioPlayer").jPlayer("play");
+   }
   });
   
   //查询事件
@@ -396,10 +400,21 @@ $(document).ready(function() {
   
  // map.zoomToMaxExtent();
  map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
+ 
+ //加载背景音乐
+ $("#audioPlayer").jPlayer({
+   ready: function () {
+    $(this).jPlayer("setMedia", {
+     mp3: "/static/media/alarm.mp3"
+    });
+   },
+   swfPath: "/static/js/jplayer",
+   supplied: "mp3,m4a, oga"
+  });
 });
 
 //执行定时查询
-	setInterval("timeQueryData()",60000); 
+	setInterval("timeQueryData()",60000*{{.queryTimeSpan}}); 
 </script>
 
 {{template "footer"}}
