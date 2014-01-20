@@ -32,6 +32,10 @@ func routeConfig() {
 	//设备自定义参数
 	beego.Router("/customparams/update/:id", &controllers.DeviceController{}, "*:UpdateCustomParams")
 
+	//充值管理
+	beego.Router("/payment", &controllers.FeeController{}, "*:GetPayments")
+	beego.Router("/paymenthistory", &controllers.FeeController{}, "*:GetPaymentHistory")
+
 	//震情事件
 	beego.Router("/analyze", &controllers.AnalyzeController{})
 	beego.Router("/eventlist", &controllers.EventController{}, "*:EventPageList")

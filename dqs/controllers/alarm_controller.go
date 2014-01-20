@@ -75,6 +75,8 @@ func (this *AlarmController) GetRealtimeAlarm() {
 //获取波形图数据
 func (this *AlarmController) ShowWaveInfoById() {
 	this.Data["title"] = "波形图"
+	this.CheckUser()
+
 	oid := this.GetString(":objectid")
 
 	//执行查询
@@ -91,6 +93,7 @@ func (this *AlarmController) ShowWaveInfoById() {
 //获取波形图数据
 func (this *AlarmController) ShowWaveInfo() {
 	this.Data["title"] = "波形图"
+	this.CheckUser()
 	sid := this.GetString(":sid")
 	seqno := this.GetString(":seqno")
 
@@ -110,7 +113,6 @@ func (this *AlarmController) GetWaveInfo() {
 
 	sid := this.GetString(":sid")
 	seqno := this.GetString(":seqno")
-
 	//执行查询
 	waveInfo, err2 := dao.GetWaveInfo(sid, seqno)
 	if err2 != nil {
@@ -119,6 +121,6 @@ func (this *AlarmController) GetWaveInfo() {
 
 	this.Data["json"] = waveInfo
 
-	this.TplNames = "wave.html"
+	//this.TplNames = "wave.html"
 	this.ServeJson()
 }

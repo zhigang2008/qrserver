@@ -65,6 +65,9 @@ func StartHttp(workdir string) {
 	//初始化系统参数
 	controllers.InitSystemConfigs()
 
+	//启动定时任务
+	go FeeJob()
+
 	//启动Beego服务
 	beego.Run()
 	select {}

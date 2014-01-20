@@ -11,6 +11,8 @@ import (
 
 //默认数据库信息
 const (
+	dbCommonTimeLayout           = "2006-01-02 15:04:05"
+	dbCommonDateLayout           = "2006-01-02"
 	defaultDatabase              = "dqs"            //默认数据库名称
 	defaultDataCollection        = "data"           //默认数据Collection
 	defaultWaveCollection        = "wavedata"       //默认波形记录Collection

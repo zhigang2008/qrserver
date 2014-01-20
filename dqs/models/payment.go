@@ -6,14 +6,15 @@ import (
 )
 
 type DeviceFee struct {
-	SensorId    string
-	NetOperator string    //3G运营商
-	NetNo       string    //用户号码
-	NetTariff   string    //资费标准
-	NetTraffic  float32   //包月流量
-	StartDate   string    //开卡日期
-	NetQixian   int       //有效期限
-	ValidDate   time.Time //有效期
+	SensorId      string
+	SiteAliasName string
+	NetOperator   string    //3G运营商
+	NetNo         string    //用户号码
+	NetTariff     string    //资费标准
+	NetTraffic    float32   //包月流量
+	StartDate     string    //开卡日期
+	LeftDate      int       //剩余期限
+	ValidDate     time.Time //有效期
 }
 
 type FeeHistory struct {
