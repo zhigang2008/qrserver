@@ -126,15 +126,20 @@ function showFeature(sid){
 
 //定时获取报警信息
 function timeQueryData(){
-	$.getJSON("/realtime_alarm?time=5", function(data){
+	$.getJSON("/realtime_alarm?time={{.queryTimeSpan}}", function(data){
 		//重置所有站点状态
 		$.each(sites,function(i,item){
 			resetMarker(item);
 		});
 		//更新报警信息
-   $.each(data, function(i,item){
+   $.each(data.data, function(i,item){
    	   updateMarker(item.SensorId);
    });
+   if(data.count >0 ){
+   	//播放报警声
+    $("#audioPlayer").jPlayer("play");
+   }
+   
   });
   
   //查询事件
@@ -229,10 +234,31 @@ $(document).ready(function() {
 	{{end}}
 	
 	 mapObj.setFitView();
-});
+
 	
+	//加载付费信息
+ {{if .hasPayment}}
+   Messenger().post({
+     message: '有 {{.paymentCount}} 设备费用即将到期,请尽快续费.&nbsp; <a href="/payment" target="_blank" class="glyphicon glyphicon-th-list"></a>',
+      type: 'info',
+      showCloseButton: true
+     });
+ {{end}}
+ 
+ //加载背景音乐
+ $("#audioPlayer").jPlayer({
+   ready: function () {
+    $(this).jPlayer("setMedia", {
+     mp3: "/static/media/alarm.mp3"
+    });
+   },
+   swfPath: "/static/js/jplayer",
+   supplied: "mp3,m4a, oga"
+  });
+});
+
 	//执行定时查询
-	setInterval("timeQueryData()",60000); 
+	setInterval("timeQueryData()",60000*{{.queryTimeSpan}}); 
 </script>
 
 {{template "footer"}}
