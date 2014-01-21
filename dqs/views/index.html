@@ -401,6 +401,15 @@ $(document).ready(function() {
  // map.zoomToMaxExtent();
  map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
  
+ //加载付费信息
+ {{if .hasPayment}}
+   Messenger().post({
+     message: '有 {{.paymentCount}} 设备费用即将到期,请尽快续费.&nbsp; <a href="/payment" target="_blank" class="glyphicon glyphicon-th-list"></a>',
+      type: 'info',
+      showCloseButton: true
+     });
+ {{end}}
+ 
  //加载背景音乐
  $("#audioPlayer").jPlayer({
    ready: function () {

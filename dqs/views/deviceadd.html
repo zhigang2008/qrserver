@@ -241,13 +241,21 @@
       <input id="StartDate" type="text" class="form-control input-sm" name="StartDate"  placeholder="yyyy-mm-dd"  >
     </div>
   </div>
-   <div class="form-group">
+  <div class="form-group">
+  <label class="col-sm-4 control-label" for="sValidDate">有效日期</label>
+    <div class="col-sm-7">
+      <input id="sValidDate" type="text" class="form-control input-sm" name="sValidDate"  placeholder="yyyy-mm-dd"  >
+    </div>
+  </div>
+  <!--
+  <div class="form-group">
   <label class="col-sm-4 control-label" for="NetQixian">有效期(个月)</label>
     <div class="col-sm-7">
       <input id="NetQixian" type="text" class="form-control input-sm" name="NetQixian"  placeholder="NetQixian" value="12" >
     </div>
   </div>
  </div>
+ -->
   <!--有线网络信息-->
  <div id="div_wire_info"  class="well col-sm-offset-1 col-sm-10" style="display:none">
   <div class="form-group">
@@ -379,8 +387,8 @@
     NetTraffic: {
       number: true
     },
-    NetQixian: {
-      digits: true
+    sValidDate: {
+      dateISO: true
     },
     IPAddress: {
       ipv4: true
@@ -406,6 +414,9 @@
       dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
     },
     StartDate: {
+      dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
+    },
+    sValidDate: {
       dateISO: "请输入YYYY-MM-DD格式的日期,如2013-01-28"
     }
   }

@@ -35,6 +35,8 @@ func routeConfig() {
 	//充值管理
 	beego.Router("/payment", &controllers.FeeController{}, "*:GetPayments")
 	beego.Router("/paymenthistory", &controllers.FeeController{}, "*:GetPaymentHistory")
+	beego.Router("/payment/recharge", &controllers.FeeController{}, "*:Recharge")
+	//beego.Router("/payment/refresh", &controllers.FeeController{}, "*:RefreshAfterRecharge")
 
 	//震情事件
 	beego.Router("/analyze", &controllers.AnalyzeController{})

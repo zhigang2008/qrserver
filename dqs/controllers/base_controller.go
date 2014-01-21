@@ -82,6 +82,33 @@ func (this *BaseController) AuthRoles(roles ...string) {
 
 }
 
+//验证角色
+func (this *BaseController) IsAuthRoles(roles ...string) bool {
+	check := false
+
+	if beego.SessionOn {
+		u, ok := this.GetSession(CURRENTUSER).(models.User)
+		if ok {
+			for _, cr := range u.Roles {
+				for _, r := range roles {
+					if cr == r {
+						check = true
+						break
+					}
+				}
+			}
+
+		}
+	}
+
+	if check == false {
+		return false
+	} else {
+		return true
+	}
+
+}
+
 //验证是否登录
 func (this *BaseController) Authentication() {
 	check := false

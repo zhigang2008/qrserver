@@ -136,13 +136,22 @@ func (this *DeviceController) Post() {
 		log.Warnf("添加设备-解析参数失败:%s", err.Error())
 	} else {
 		device.SetParams = setParams
-		if wirelessParams.StartDate != "" {
+
+		sValidDate := this.GetString("sValidDate")
+		if sValidDate != "" {
+			validDate, err9 := time.Parse(CommonDateLayout, sValidDate)
+			if err9 == nil {
+				wirelessParams.ValidDate = validDate
+			}
+		}
+		/*if wirelessParams.StartDate != "" {
 			sdate, err9 := time.Parse(CommonDateLayout, wirelessParams.StartDate)
 			if err9 == nil {
 				validDate := sdate.AddDate(0, wirelessParams.NetQixian, 0)
 				wirelessParams.ValidDate = validDate
 			}
 		}
+		*/
 		customParams.WirelessTypeInfo = wirelessParams
 		customParams.WireTypeInfo = wireParams
 
@@ -297,6 +306,14 @@ func (this *DeviceController) UpdateCustomParams() {
 			answer.Msg = "读取失败:" + err.Error()
 			log.Warnf("更新设备额外参数-参数解析失败[%s]:%s", sid, err.Error())
 		} else {
+
+			sValidDate := this.GetString("sValidDate")
+			if sValidDate != "" {
+				validDate, err9 := time.Parse(CommonDateLayout, sValidDate)
+				if err9 == nil {
+					wirelessParams.ValidDate = validDate
+				}
+			}
 			//执行保存操作
 			device := models.DeviceInfo{}
 			device.SensorId = sid

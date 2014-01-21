@@ -66,5 +66,16 @@ func (this *MainController) Get() {
 		this.TplNames = "index-nogis.html"
 	}
 
+	hasPayment := false
+	//续费通知
+	if this.IsAuthRoles("role_admin", "role_device") {
+		paymentCount := dao.GetPaymentCount()
+		if paymentCount > 0 {
+			this.Data["paymentCount"] = paymentCount
+			hasPayment = true
+		}
+	}
+	this.Data["hasPayment"] = hasPayment
+
 	this.Render()
 }

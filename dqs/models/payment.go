@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-type DeviceFee struct {
+//待充值记录
+type DevicePayment struct {
 	SensorId      string
 	SiteAliasName string
 	NetOperator   string    //3G运营商
@@ -17,10 +18,14 @@ type DeviceFee struct {
 	ValidDate     time.Time //有效期
 }
 
-type FeeHistory struct {
-	SensorId  string
-	UserName  string    //操作用户
-	NetNo     string    //用户号码
-	AddQixian int       //有效期限
-	ValidData time.Time //有效期
+//充值历史记录
+type PaymentHistory struct {
+	SensorId    string
+	UserId      string    //操作用户ID
+	UserName    string    //操作用户
+	NetOperator string    //3G运营商
+	NetNo       string    //用户号码
+	AddQixian   int       //添加的期限
+	ValidDate   time.Time //有效期
+	OperateTime time.Time //操作时间
 }

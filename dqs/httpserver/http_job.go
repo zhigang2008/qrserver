@@ -3,7 +3,8 @@ package httpserver
 import (
 	"dqs/dao"
 	"dqs/models"
-	"fmt"
+	log "github.com/cihub/seelog"
+	//"fmt"
 	"time"
 )
 
@@ -13,7 +14,7 @@ func FeeJob() {
 	for {
 		select {
 		case <-timer.C:
-			fmt.Println("job begin")
+			log.Info("[付费信息查询]定时任务启动....")
 			go doJob()
 
 		}
@@ -29,27 +30,28 @@ func doJob() {
 		dao.ClearPaymentInfo()
 
 		for _, v := range devices {
-			validDate := v.CustomParams.WirelessTypeInfo.ValidDate
-			if validDate.IsZero() == false {
-				leftHours := validDate.Sub(curTime).Hours()
-				if leftHours < 30*24 {
-					payment := new(models.DeviceFee)
-					payment.SensorId = v.SensorId
-					payment.SiteAliasName = v.CustomParams.SiteAliasName
-					payment.NetOperator = v.CustomParams.WirelessTypeInfo.NetOperator
-					payment.NetNo = v.CustomParams.WirelessTypeInfo.NetNo
-					payment.NetTariff = v.CustomParams.WirelessTypeInfo.NetTariff
-					payment.NetTraffic = v.CustomParams.WirelessTypeInfo.NetTraffic
-					payment.StartDate = v.CustomParams.WirelessTypeInfo.StartDate
-					payment.ValidDate = v.CustomParams.WirelessTypeInfo.ValidDate
-					payment.LeftDate = int(leftHours / 24)
+			if v.CustomParams.NetType == "3G" {
+				validDate := v.CustomParams.WirelessTypeInfo.ValidDate
+				if validDate.IsZero() == false {
+					leftHours := validDate.Sub(curTime).Hours()
+					if leftHours < 30*24 {
+						payment := new(models.DevicePayment)
+						payment.SensorId = v.SensorId
+						payment.SiteAliasName = v.CustomParams.SiteAliasName
+						payment.NetOperator = v.CustomParams.WirelessTypeInfo.NetOperator
+						payment.NetNo = v.CustomParams.WirelessTypeInfo.NetNo
+						payment.NetTariff = v.CustomParams.WirelessTypeInfo.NetTariff
+						payment.NetTraffic = v.CustomParams.WirelessTypeInfo.NetTraffic
+						payment.StartDate = v.CustomParams.WirelessTypeInfo.StartDate
+						payment.ValidDate = v.CustomParams.WirelessTypeInfo.ValidDate
+						payment.LeftDate = int(leftHours / 24)
 
-					dao.AddPayment(payment)
-
+						dao.AddPayment(payment)
+					}
 				}
 			}
 		}
 	} else {
-		fmt.Println(err.Error())
+		log.Warnf("[付费信息查询]定时任务执行失败:%s", err.Error())
 	}
 }
