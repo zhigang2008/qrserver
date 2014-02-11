@@ -362,11 +362,17 @@ $(document).ready(function() {
   //projectTo = map.getProjectionObject();     
   
   {{if .GoogleMap}}
-  var googlePhysical=new OpenLayers.Layer.Google("Google 地形图",{type: google.maps.MapTypeId.TERRAIN} );
+  
+  var googlePhysical=new OpenLayers.Layer.Google("Google 地形图",{type: google.maps.MapTypeId.TERRAIN});
   var googleStreets=new OpenLayers.Layer.Google("Google 城区图");
   //var googleHybird=new OpenLayers.Layer.Google("Google Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
   var googleSatellite=new OpenLayers.Layer.Google("Google 卫星图",{type: google.maps.MapTypeId.SATELLITE});
   map.addLayers([googleStreets,googlePhysical,googleSatellite]);
+  
+  var bounds = new OpenLayers.Bounds({{rawJS .mapExtend}});
+  bounds.transform(epsg4326, projectTo);
+  map.maxExtent=bounds;
+  map.restrictedExtent=bounds;
   {{end}}
    
  //基础地图

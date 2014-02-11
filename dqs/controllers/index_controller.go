@@ -55,6 +55,7 @@ func (this *MainController) Get() {
 	}
 	this.Data["queryTimeSpan"] = queryTimeSpan
 	this.Data["GoogleMap"] = !SystemConfigs.DisableGoogleMap
+	this.Data["mapExtend"] = SystemConfigs.GisImageCfg.BBOX
 
 	usegis := SystemConfigs.UseGis
 	if usegis {
