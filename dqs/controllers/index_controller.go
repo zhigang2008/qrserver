@@ -54,6 +54,7 @@ func (this *MainController) Get() {
 		queryTimeSpan = 1
 	}
 	this.Data["queryTimeSpan"] = queryTimeSpan
+	this.Data["GoogleMap"] = !SystemConfigs.DisableGoogleMap
 
 	usegis := SystemConfigs.UseGis
 	if usegis {

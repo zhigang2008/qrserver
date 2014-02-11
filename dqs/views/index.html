@@ -68,7 +68,9 @@
      ];
 </script>
 -->
+{{if .GoogleMap}}
 <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
+{{end}}
 <script language="javascript" src="/static/js/bootstrap-paginator.min.js"></script>
 <script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
 <script language="javascript" src="/static/js/messenger/messenger.min.js"></script>
@@ -238,7 +240,8 @@ function showEvent(sid){
 			//layers: '{{.gisBasicLayer}}',
 			TRANSPARENT: true,
 			STYLES: '',
-			//crs:'EPSG:900913',
+			//CRS:'EPSG:4326',
+			TARGETCRS:'EPSG:900913',
 			format: 'image/png',
 			//VALUE_COLUMN:"AREA",
 			SIMPLIFY_METHOD: 1,
@@ -259,6 +262,8 @@ function showEvent(sid){
 			ratio: 1} 
 	);
  map.addLayer(wmsLayer);
+ //map.raiseLayer(vecLyr, map.layers.length);
+ map.setLayerIndex(wmsLayer, 9999);
  });
 }
 //移除等值线图层
@@ -354,10 +359,18 @@ $(document).ready(function() {
           //maxScale: 10000         
          }
         );
-        
   //projectTo = map.getProjectionObject();     
   
-  basicLayer = new OpenLayers.Layer.WMS("基础地图",
+  {{if .GoogleMap}}
+  var googlePhysical=new OpenLayers.Layer.Google("Google 地形图",{type: google.maps.MapTypeId.TERRAIN} );
+  var googleStreets=new OpenLayers.Layer.Google("Google 城区图");
+  //var googleHybird=new OpenLayers.Layer.Google("Google Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
+  var googleSatellite=new OpenLayers.Layer.Google("Google 卫星图",{type: google.maps.MapTypeId.SATELLITE});
+  map.addLayers([googleStreets,googlePhysical,googleSatellite]);
+  {{end}}
+   
+ //基础地图
+ basicLayer = new OpenLayers.Layer.WMS("基础地图",
           "{{rawURL .gisServiceUrl}}",
            {
           	layers: "{{.gisBasicLayer}}",
@@ -371,7 +384,8 @@ $(document).ready(function() {
 						isBaseLayer:true 
 			      }
            );
-  demLayer = new OpenLayers.Layer.WMS("基础地形图",
+  map.addLayer(basicLayer);      
+ /* demLayer = new OpenLayers.Layer.WMS("基础地形图",
           "{{rawURL .gisServiceUrl}}",
            {
           	layers: "dqs_dem",
@@ -385,15 +399,8 @@ $(document).ready(function() {
 						isBaseLayer:true 
 			      }
            );
- 
-  var googlePhysical=new OpenLayers.Layer.Google("Google 地形图",{type: google.maps.MapTypeId.TERRAIN} );
-  var googleStreets=new OpenLayers.Layer.Google("Google 城区图");
-  //var googleHybird=new OpenLayers.Layer.Google("Google Hybrid", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
-  var googleSatellite=new OpenLayers.Layer.Google("Google 卫星图",{type: google.maps.MapTypeId.SATELLITE});
-  
-  map.addLayers([googleStreets,googlePhysical,googleSatellite,demLayer,basicLayer]);
- 
- 
+   */        
+   
   //feature 图层          
   vectorLayer = new OpenLayers.Layer.Vector("观测点");
   //加载设备列表

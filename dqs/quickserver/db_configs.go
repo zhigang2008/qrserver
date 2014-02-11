@@ -53,6 +53,7 @@ type ReportParameter struct {
 //系统配置数据
 type SystemConfig struct {
 	UserDefaultPassword string
+	DisableGoogleMap    bool
 	UseGis              bool
 	GisServiceUrl       string
 	GisServiceParams    string
@@ -216,6 +217,7 @@ func InitSystemConfigs() {
 			log.Warnf("系统将自动初始化系统基础配置")
 			SystemConfigs = SystemConfig{}
 			SystemConfigs.UserDefaultPassword = "12345678"
+			SystemConfigs.DisableGoogleMap = false
 			SystemConfigs.UseGis = true
 			SystemConfigs.GisServiceUrl = "http://localhost:8080/geoserver/dqs/wms"
 			SystemConfigs.GisServiceParams = ""
