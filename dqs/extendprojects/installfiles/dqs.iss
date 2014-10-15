@@ -69,16 +69,16 @@ Source: "D:\mongodb\README"; DestDir: "{app}\database"; Flags: ignoreversion; Co
 Source: "D:\mongodb\THIRD-PARTY-NOTICES"; DestDir: "{app}\database"; Flags: ignoreversion; Components: database
 
 [Icons]
-Name: "{group}\{#MyAppName}管理器"; Filename: "{app}\{#MyServerMgrApp}"; WorkingDir: "{app}"; IconFilename: "{app}\{#MyServerMgrApp}"; IconIndex: 0
+;Name: "{group}\{#MyAppName}管理器"; Filename: "{app}\{#MyServerMgrApp}"; WorkingDir: "{app}"; IconFilename: "{app}\{#MyServerMgrApp}"; IconIndex: 0
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyServerMgrApp}"; WorkingDir: "{app}"; IconFilename: "{app}\{#MyServerMgrApp}"; IconIndex: 0;  Tasks: desktopicon
+;Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyServerMgrApp}"; WorkingDir: "{app}"; IconFilename: "{app}\{#MyServerMgrApp}"; IconIndex: 0;  Tasks: desktopicon
 
 [Run]
 ;Filename: "{app}\server\{#MyAppExeName}"; Parameters: "start"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 ;Filename: "{app}\server\{#MyAppExeName}"; Parameters: "install"; WorkingDir: "{app}\server"; Flags: postinstall runascurrentuser shellexec skipifdoesntexist; Description: "安装主程序的系统服务"; Components: main
 ;Filename: "{app}\database\bin\mongod.exe"; Parameters: "--install --serviceName MongoDB --serviceDisplayName ""DQS MongoDB"" --dbpath ""{app}\data"" --dbpath ""{app}\logs\mongodb.log"" --directoryperdb"; WorkingDir: "{app}\database\bin"; Flags: postinstall shellexec skipifdoesntexist; Description: "DQS速报平台 mongodb的服务"; Components: database
 Filename: "{app}\changelog.txt"; WorkingDir: "{app}"; Flags: nowait postinstall shellexec skipifdoesntexist unchecked; Description: "查看程序变更信息"
-Filename: "{app}\ServerMgr.exe"; WorkingDir: "{app}"; Flags: nowait shellexec postinstall skipifdoesntexist; Description: "运行{#MyAppName}管理器"
+;Filename: "{app}\ServerMgr.exe"; WorkingDir: "{app}"; Flags: nowait shellexec postinstall skipifdoesntexist; Description: "运行{#MyAppName}管理器"
 
 [Components]
 Name: "main"; Description: "主程序(必选)"; Types: compact custom full; Flags: fixed
