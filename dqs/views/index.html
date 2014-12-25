@@ -73,6 +73,7 @@
 {{end}}
 <script language="javascript" src="/static/js/bootstrap-paginator.min.js"></script>
 <script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
+<script language="javascript" src="/static/js/openlayers/lib/gaode.js"></script>
 <script language="javascript" src="/static/js/messenger/messenger.min.js"></script>
 <script language="javascript" src="/static/js/messenger/messenger-theme-future.js"></script>
 <script language="javascript" src="/static/js/jplayer/jquery.jplayer.min.js"></script>
@@ -374,6 +375,16 @@ $(document).ready(function() {
   map.maxExtent=bounds;
   map.restrictedExtent=bounds;
   {{end}}
+  
+  //高德地图
+var gaodelayer = new OpenLayers.Layer.GaodeCache("高德地图", 
+               [ "http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7",
+                "http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7",
+                "http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7",
+                "http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7"
+                ]
+                );  
+ map.addLayer(gaodelayer);
    
  //基础地图
  basicLayer = new OpenLayers.Layer.WMS("基础地图",
@@ -410,7 +421,7 @@ $(document).ready(function() {
   //feature 图层          
   vectorLayer = new OpenLayers.Layer.Vector("观测点");
   //加载设备列表
-	{{range $i,$v:=.devices}} 
+	{{range $i,$v:=.allDevices}} 
 		  addFeature({{.SensorId}},{{.SetParams.SiteName}},{{.SetParams.Longitude}},{{.SetParams.Latitude}});
 		  sites.push("{{.SensorId}}");
 	{{end}}
