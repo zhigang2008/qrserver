@@ -49,7 +49,7 @@ func (this *MainController) Get() {
 	this.Data["events"] = paginationEvents.Data
 	this.Data["eventPages"] = paginationEvents.PageCount
 
-	allDevices, err := dao.GetAllValidDevices()
+	allDevices, err := dao.GetAllDevices()
 	if err != nil {
 		log.Warnf("查询所有设备信息失败:%s", err.Error())
 	}
