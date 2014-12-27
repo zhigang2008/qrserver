@@ -55,7 +55,7 @@ func (this *AlarmController) Get() {
 //实时报警信息列表
 func (this *AlarmController) GetRealtimeAlarm() {
 
-	timestep, err := this.GetInt("time")
+	timestep, err := this.GetInt64("time")
 	if err != nil {
 		timestep = 5
 	}

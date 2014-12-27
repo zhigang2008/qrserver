@@ -73,7 +73,14 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="col-sm-3 control-label" for="GisServiceUrl" >GIS服务的基本地址</label>
+    <label class="col-sm-3 control-label" for="GisInnerServiceUrl" >GIS服务的基本地址(内部,局域网地址)</label>
+    <div class="col-sm-6">
+    	<input id="GisInnerServiceUrl" type="text" class="form-control input-sm" name="GisInnerServiceUrl"  placeholder="GisInnerServiceUrl"  value="{{.GisInnerServiceUrl}}" disabled />
+      <p class="help-block">提供GIS服务器的内部服务地址,局域网内供应用服务器调用.(如在本机上:http://127.0.0.1:8080/geoserver/dqs/wms)</p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-3 control-label" for="GisServiceUrl" >GIS服务的基本地址(互联网)</label>
     <div class="col-sm-6">
     	<input id="GisServiceUrl" type="text" class="form-control input-sm" name="GisServiceUrl"  placeholder="GisServiceUrl"  value="{{.GisServiceUrl}}" disabled />
       <p class="help-block">提供GIS服务器的基本地址.(如:http://10.15.36.88:8080/geoserver/dqs/wms)</p>

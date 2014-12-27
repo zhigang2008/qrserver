@@ -22,6 +22,7 @@
 
 {{template "scripts"}}
 <script language="javascript" src="/static/js/openlayers/lib/OpenLayers.js"></script>
+<script language="javascript" src="/static/js/openlayers/lib/gaode.js"></script>
 <script language="javascript">
 var map, basicLayer, vectorLayer,selector;
 var sites=[];
@@ -31,7 +32,8 @@ var lastlng,lastlat;
 var zoomSize=10;
  
 var epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
-var projectTo;// = map.getProjectionObject(); //The map projection (Spherical Mercator)
+var projectTo =new OpenLayers.Projection('EPSG:900913');
+var restrictedRegion=new OpenLayers.Bounds(1000000.0,3400000,1260000,4400000.0);
 
 //feature select event
 function createPopup(feature) {
@@ -140,19 +142,39 @@ function queryAlarm(){
   //初始化加载
 $(document).ready(function() {
 	//OpenLayers.Lang.setCode("zh-CN");
-  map = new OpenLayers.Map('map');
-  basicLayer = new OpenLayers.Layer.WMS("基础地图",
+    map = new OpenLayers.Map('map',
+         {
+         	projection: projectTo,//投影规则  
+          displayProjection: epsg4326//,
+          //numZoomLevels: 15,
+          //maxScale: 10000         
+         }
+        );
+    //高德地图
+var gaodelayer = new OpenLayers.Layer.GaodeCache("高德地图", 
+               [ "http://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7",
+                "http://webrd02.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7",
+                "http://webrd03.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7",
+                "http://webrd04.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7"
+                ]
+                );  
+ map.addLayer(gaodelayer);
+ 
+ basicLayer = new OpenLayers.Layer.WMS("基础地图",
           "{{rawURL .gisServiceUrl}}",
-          {
+           {
           	layers: "{{.gisBasicLayer}}",
           	service:"WMS",
           	version:"1.1.0",
+          	//crs:'EPSG:900913',
           	request:"GetMap"
-          }
-          );
+           },
+           {
+			      singleTile: true,
+						isBaseLayer:true 
+			      }
+           );
   map.addLayer(basicLayer);
-  
-  projectTo = map.getProjectionObject();
  
   //feature 图层          
   vectorLayer = new OpenLayers.Layer.Vector("观测点");
@@ -168,13 +190,13 @@ $(document).ready(function() {
   map.addControl(selector);
   selector.activate();
   
-  //map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
+  map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
   //map.addControl(new OpenLayers.Control.PanZoom());
   map.addControl(new OpenLayers.Control.ScaleLine());
-  map.addControl(new OpenLayers.Control.OverviewMap());
+  //map.addControl(new OpenLayers.Control.OverviewMap());
   
  // map.zoomToMaxExtent();
- map.setCenter(new OpenLayers.LonLat(lastlng, lastlat), zoomSize);
+  map.setCenter(new OpenLayers.LonLat(lastlng, lastlat).transform(epsg4326,projectTo), zoomSize);
 });
 
 //执行定时查询

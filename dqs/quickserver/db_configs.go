@@ -55,6 +55,7 @@ type SystemConfig struct {
 	UserDefaultPassword string
 	DisableGoogleMap    bool
 	UseGis              bool
+	GisInnerServiceUrl  string
 	GisServiceUrl       string
 	GisServiceParams    string
 	GisLayerBasic       string
@@ -219,11 +220,11 @@ func InitSystemConfigs() {
 			SystemConfigs.UserDefaultPassword = "12345678"
 			SystemConfigs.DisableGoogleMap = false
 			SystemConfigs.UseGis = true
-			SystemConfigs.GisServiceUrl = "http://localhost:8080/geoserver/dqs/wms"
+			SystemConfigs.GisInnerServiceUrl = "http://127.0.0.1:8080/geoserver/dqs/wms"
+			SystemConfigs.GisServiceUrl = "http://127.0.0.1:8080/geoserver/dqs/wms"
 			SystemConfigs.GisServiceParams = ""
 			SystemConfigs.GisLayerBasic = "dqs_layers"
 			SystemConfigs.GisLayerChina = "china_layer"
-
 			giscfg := GisImageConfig{}
 			giscfg.Format = "image/png"
 			giscfg.SRS = "EPSG:4326"

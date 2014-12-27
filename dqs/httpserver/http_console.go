@@ -76,5 +76,5 @@ func StartHttp(workdir string) {
 //关闭http的数据库连接
 func Close() {
 	dao.Close()
-	beego.CloseSelf()
+	//beego.CloseSelf()
 }

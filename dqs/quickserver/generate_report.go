@@ -146,7 +146,7 @@ func generateReportMap(reportid string, valstr string, simplesize int) string {
 	v.Add("DATA_ARRAY", valstr)
 	v.Add("SIMPLIFY_SIZE", fmt.Sprintf("%d", simplesize))
 
-	r, err := http.PostForm(SystemConfigs.GisServiceUrl, v)
+	r, err := http.PostForm(SystemConfigs.GisInnerServiceUrl, v)
 	if err != nil {
 		log.Errorf("生成图片调用远程GIS接口出错:%s\n", err.Error())
 		return ErrorImage

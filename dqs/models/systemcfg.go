@@ -5,6 +5,7 @@ type SystemConfig struct {
 	UserDefaultPassword string
 	DisableGoogleMap    bool
 	UseGis              bool
+	GisInnerServiceUrl  string
 	GisServiceUrl       string
 	GisServiceParams    string
 	GisLayerBasic       string
