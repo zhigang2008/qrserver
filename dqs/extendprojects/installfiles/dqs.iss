@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "地震烈度监测速报系统"
-#define MyAppVersion "2.0"
+#define MyAppVersion "2.5"
 #define MyAppPublisher "地壳应力研究所"
 #define MyAppURL "http://www.eq-icd.cn"
 #define MyAppExeName "dqs.exe"
