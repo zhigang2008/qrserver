@@ -27,13 +27,17 @@ DefaultDirName={pf}\dqs
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 InfoBeforeFile=readme.txt
-OutputBaseFilename=setup
+OutputBaseFilename=setup-{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 ShowLanguageDialog=auto
 AppMutex=dqs_server_instance
 SetupIconFile=F:\go_workspace\src\dqs\extendprojects\installfiles\ico\ico_128X128.ico
 VersionInfoVersion={#MyAppVersion}
+VersionInfoCompany=地壳应力研究所
+VersionInfoDescription={#MyAppName}安装程序
+VersionInfoCopyright=地壳应力研究所
+VersionInfoProductName={#MyAppName}
 VersionInfoProductVersion={#MyAppVersion}
 ArchitecturesInstallIn64BitMode=x64
 
@@ -76,7 +80,7 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 [Run]
 ;Filename: "{app}\server\{#MyAppExeName}"; Parameters: "start"; Flags: nowait postinstall skipifsilent; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"
 ;Filename: "{app}\server\{#MyAppExeName}"; Parameters: "install"; WorkingDir: "{app}\server"; Flags: postinstall runascurrentuser shellexec skipifdoesntexist; Description: "安装主程序的系统服务"; Components: main
-;Filename: "{app}\database\bin\mongod.exe"; Parameters: "--install --serviceName MongoDB --serviceDisplayName ""DQS MongoDB"" --dbpath ""{app}\data"" --dbpath ""{app}\logs\mongodb.log"" --directoryperdb"; WorkingDir: "{app}\database\bin"; Flags: postinstall shellexec skipifdoesntexist; Description: "DQS速报平台 mongodb的服务"; Components: database
+;Filename: "{app}\database\bin\mongod.exe"; Parameters: "--install --serviceName MongoDB --serviceDisplayName ""DQS MongoDB"" --dbpath ""{app}\data"" --logpath ""{app}\logs\mongodb.log"" --directoryperdb"; WorkingDir: "{app}\database\bin"; Flags: postinstall shellexec skipifdoesntexist; Description: "DQS速报平台 mongodb的服务"; Components: database
 Filename: "{app}\changelog.txt"; WorkingDir: "{app}"; Flags: nowait postinstall shellexec skipifdoesntexist unchecked; Description: "查看程序变更信息"
 ;Filename: "{app}\ServerMgr.exe"; WorkingDir: "{app}"; Flags: nowait shellexec postinstall skipifdoesntexist; Description: "运行{#MyAppName}管理器"
 
