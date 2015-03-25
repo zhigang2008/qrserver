@@ -105,7 +105,7 @@ func generateReportSummary(event *Event) (ReportSummary, string, int) {
 
 	alarmSumary := ""
 	for k, v := range cs {
-		alarmSumary += fmt.Sprintf("%d级-%d; ", k, v)
+		alarmSumary += fmt.Sprintf("%d度-%d; ", k, v)
 
 	}
 	sumary.Brief = alarmSumary

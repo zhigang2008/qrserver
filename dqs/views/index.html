@@ -101,7 +101,7 @@ function createPopup(site) {
 	  closeAllPopup(); 
 	  content='<div class="markerContent"><b>'+site.attributes.sensorId+'</b><br>'+site.attributes.siteName+'<br>['+site.attributes.posLng+','+site.attributes.posLat+']';
 		if(site.attributes.initTime){
-			content+='<br><span class="text-danger">时刻:'+site.attributes.initTime+' 烈度:'+site.attributes.Intensity+'</span>';
+			content+='<br><span class="text-danger">时刻:'+site.attributes.initTime+' 仪器烈度:'+site.attributes.Intensity+'</span>';
 			content+='<br><span class="text-danger">PGA:'+site.attributes.PGA+' SI:'+site.attributes.SI+'</span>';
 			if(site.attributes.HasWaveInfo && site.attributes.HasWaveInfo==true){
 			  content+='<br><a target="_blank" href="/waveinfo/'+site.attributes.sensorId+'/'+site.attributes.SeqNo+'"><span class="glyphicon glyphicon-random">&nbsp;波形图</span></a>';

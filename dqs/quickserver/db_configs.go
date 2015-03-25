@@ -274,6 +274,13 @@ func getMappingIntensityByPGA(pga float32) int {
 	lowValue := 0
 	dataArray := GlobalDataMapping.PGAMap
 	size := len(dataArray)
+	//如果数据未找到,重新初始化数据
+	if size <= 0 {
+		initDataMapping()
+		dataArray = GlobalDataMapping.PGAMap
+		size = len(dataArray)
+	}
+
 	if size > 0 {
 		lowValue = dataArray[0].Intensity
 
@@ -293,6 +300,12 @@ func getMappingIntensityBySI(si float32) int {
 	lowValue := 0
 	dataArray := GlobalDataMapping.SIMap
 	size := len(dataArray)
+	//如果数据未找到,重新初始化数据
+	if size <= 0 {
+		initDataMapping()
+		dataArray = GlobalDataMapping.SIMap
+		size = len(dataArray)
+	}
 	if size > 0 {
 		lowValue = dataArray[0].Intensity
 

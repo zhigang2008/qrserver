@@ -123,7 +123,7 @@ func EventList(n int) (*[]models.Event, error) {
 
 	events := []models.Event{}
 
-	err := c.Find(bson.M{}).Sort("-eventtime").Limit(n).All(&events)
+	err := c.Find(bson.M{}).Sort("-createtime").Limit(n).All(&events)
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +204,7 @@ func EventPageList(p *util.Pagination) error {
 	}
 
 	//查询总数
-	query := c.Find(&m).Sort("-eventtime")
+	query := c.Find(&m).Sort("-createtime")
 	count, err := query.Count()
 	if err != nil {
 		return err
