@@ -99,7 +99,30 @@ var restrictedRegion=new OpenLayers.Bounds(1000000.0,3400000,1260000,4400000.0);
 //feature select event
 function createPopup(site) {
 	  closeAllPopup(); 
-	  content='<div class="markerContent"><b>'+site.attributes.sensorId+'</b><br>'+site.attributes.siteName+'<br>['+site.attributes.posLng+','+site.attributes.posLat+']';
+          
+	  content='<div class="markerContent"><b>'+site.attributes.sensorId+'</b><br>'+site.attributes.siteName;
+		if(site.attributes.extendParams.SiteAliasName){
+			content+='('+site.attributes.extendParams.SiteAliasName+')';
+		}
+   content+='<br>['+site.attributes.posLng+','+site.attributes.posLat+']';
+   
+	  var siteType=site.attributes.extendParams.SiteType;
+   if(siteType){
+      	if(siteType=="0"){
+      		content+='<br>场地类型:土壤';
+      	}else if(siteType=="1"){
+      		content+='<br>场地类型:软岩石';
+      	}else{
+      		content+='<br>场地类型:硬岩石';
+      	}
+   }
+   var accType=site.attributes.extendParams.Accelerometer;
+   if(accType&&accType=="0"){
+     content+='<br>加速度计型号:MEMS';
+   }else{
+   	 content+='<br>加速度计型号:力平衡';
+   }
+   
 		if(site.attributes.initTime){
 			content+='<br><span class="text-danger">时刻:'+site.attributes.initTime+' 仪器烈度:'+site.attributes.Intensity+'</span>';
 			content+='<br><span class="text-danger">PGA:'+site.attributes.PGA+' SI:'+site.attributes.SI+'</span>';
@@ -125,11 +148,11 @@ function destroyPopup(feature) {
       feature.popup = null;
 }
 //添加观测点
-function addFeature(sid,dname,lng,lat){
+function addFeature(sid,dname,lng,lat,sendExtendParams){
 	
   var feature = new OpenLayers.Feature.Vector(
             new OpenLayers.Geometry.Point(lng,lat).transform(epsg4326, projectTo),
-            {sensorId:sid,siteName:dname,posLng:lng,posLat:lat} ,
+            {sensorId:sid,siteName:dname,posLng:lng,posLat:lat,extendParams:sendExtendParams} ,
             {externalGraphic: '/static/image/marker-blue.png', graphicHeight: 25, graphicWidth: 25, graphicXOffset:-12, graphicYOffset:-25  }
         );
   feature.fid=sid;   
@@ -153,8 +176,30 @@ function showFeature(sid){
 	closeAllPopup();
 	var site=vectorLayer.getFeatureByFid(sid);
 	if(site){
-		content='<div class="markerContent"><b>'+site.attributes.sensorId+'</b><br>'+site.attributes.siteName+'<br>['+site.attributes.posLng+','+site.attributes.posLat+']';
-		if(site.attributes.initTime){
+		content='<div class="markerContent"><b>'+site.attributes.sensorId+'</b><br>'+site.attributes.siteName;
+		if(site.attributes.extendParams.SiteAliasName){
+			content+='('+site.attributes.extendParams.SiteAliasName+')';
+		}
+   content+='<br>['+site.attributes.posLng+','+site.attributes.posLat+']';
+   //
+   var siteType=site.attributes.extendParams.SiteType;
+   if(siteType){
+      	if(siteType=="0"){
+      		content+='<br>场地类型:土壤';
+      	}else if(siteType=="1"){
+      		content+='<br>场地类型:软岩石';
+      	}else{
+      		content+='<br>场地类型:硬岩石';
+      	}
+   }
+   var accType=site.attributes.extendParams.Accelerometer;
+   if(accType&&accType=="0"){
+     content+='<br>加速度计型号:MEMS';
+   }else{
+   	 content+='<br>加速度计型号:力平衡';
+   }
+
+	 if(site.attributes.initTime){
 			content+='<br><span class="text-danger">时刻:'+site.attributes.initTime+' 烈度:'+site.attributes.Intensity+'</span>';
 			content+='<br><span class="text-danger">PGA:'+site.attributes.PGA+' SI:'+site.attributes.SI+'</span>';
 			if(site.attributes.HasWaveInfo && site.attributes.HasWaveInfo==true){
@@ -422,7 +467,7 @@ var gaodelayer = new OpenLayers.Layer.GaodeCache("高德地图",
   vectorLayer = new OpenLayers.Layer.Vector("观测点");
   //加载设备列表
 	{{range $i,$v:=.allDevices}} 
-		  addFeature({{.SensorId}},{{.SetParams.SiteName}},{{.SetParams.Longitude}},{{.SetParams.Latitude}});
+		  addFeature({{.SensorId}},{{.SetParams.SiteName}},{{.SetParams.Longitude}},{{.SetParams.Latitude}},{SiteType:{{.SetParams.SiteType}},ObserveObject:{{.SetParams.ObserveObject}},Accelerometer:{{.SetParams.Accelerometer}},Direction:{{.SetParams.Direction}},SiteAliasName:{{.CustomParams.SiteAliasName}}});
 		  sites.push("{{.SensorId}}");
 	{{end}}
 	map.addLayer(vectorLayer);
