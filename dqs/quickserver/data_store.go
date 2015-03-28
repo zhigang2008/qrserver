@@ -605,3 +605,16 @@ func (dm *DataManager) UpdateReportSendStatus(report *Report) (err error) {
 	}
 	return nil
 }
+
+//查找设备
+func (dm *DataManager) GetDeviceById(sensorId string) (device DeviceInfo, err error) {
+	c := dm.session.DB(dm.databaseName).C(dm.deviceCollection)
+	devicetemp := DeviceInfo{}
+	//先查找设备
+	err = c.Find(bson.M{"sensorid": sensorId}).One(&devicetemp)
+	if err != nil {
+		return devicetemp, err
+	}
+
+	return devicetemp, nil
+}

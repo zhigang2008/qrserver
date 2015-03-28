@@ -15,7 +15,9 @@
         	<li>地震数据: {{if .Event.IsConfirm}}{{.Summary.QuakeInfo}}{{else}}-{{end}}</li>
        </ul>
       </div>
-      <img src="/output/reports/{{.ImageFile}}" data-src="/output/reports/{{.ImageFile}}" alt="..." align="center" width="98%" >
+      <a href="/eventline/{{.EventId}}">
+      	<img src="/output/reports/{{.ImageFile}}" data-src="/output/reports/{{.ImageFile}}" alt="..." class="img-responsive center-block" width="98%" >
+      </a>
       <!--管理功能-->
   	{{if hasrole $curUser.Roles "role_admin" "role_report"}}
   	<div style="margin-top:5px;">
@@ -47,7 +49,7 @@
 <!--历史记录-->   
 <div class="container">
   <div class="panel panel-default">
-  <div class="panel-heading">以往速报列表</div>
+  <div class="panel-heading">以往速报列表 <span class="pull-right"><a href="/reportmore" class="btn btn-info btn-sm" role="button">查看更多</a></span></div>
   <div class="panel-body">
    <ul class="list-group">
    	{{range .oldReports}}

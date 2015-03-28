@@ -9,7 +9,7 @@
  <div class="panel panel-default">
   <!-- Default panel contents -->
  <div class="panel-heading">
- 	<span >仪器观测事件记录</span>
+ 	<span>速报列表</span>
  </div>
   <div class="panel-body" style="padding:2px">
   	<div class="pull-right">
@@ -43,12 +43,12 @@
 	<thead>
 		<tr>
 			<th>序号</th>
-			<!--<th>事件ID</th>-->
-			<th>震情时间</th>
+			<th>生成时间</th>
 			<th>报警数</th>
-			<th>最高仪器烈度</th>
-			<th>记录时间</th>
-		  <th>已确认</th>
+			<th>关键信息</th>
+			<th>是否有效</th>
+			<th>发送状态</th>
+		  <th>已发送数量</th>
       <th>操作</th>
     </tr>
   </thead>
@@ -56,13 +56,16 @@
 		{{range $i,$v:=.Data}}
 	 	<tr>
 	 		<td>{{seqno $i $pagesize $curpage}}</td>
-	 		<!--<td>{{.EventId}}</td>-->
-	 		<td>{{dateformat .EventTime "2006-01-02 15:04:05"}}</td>
-	 		<td>{{.AlarmCount}}</td>
-	 		<td>{{.MaxLevel}}</td>
-	 		<td>{{dateformat .CreateTime "2006-01-02 15:04:05"}}</td>
-	 		<td>{{if .IsConfirm}}<span class="glyphicon glyphicon-ok text-info"></span>{{else}}<span class="glyphicon glyphicon-minus text-muted"></span>{{end}}</td>
-	 		<td><a href="/eventline/{{.EventId}}" data-toggle="tooltip" data-placement="bottom" title="查看等值线"><span class="glyphicon glyphicon-certificate"></span></a></td>
+	 		<td>{{dateformat .GenerateTime "2006-01-02 15:04:05"}}</td>
+	 		<td>{{.Summary.AlarmCount}}</td>
+	 		<td>{{.Summary.Brief}}</td>
+	 		<td>{{if .Valid}}<span class="glyphicon glyphicon-ok text-info"></span>{{else}}<span class="glyphicon glyphicon-minus text-muted"></span>{{end}}</td>
+	 		<td>{{if .Sended}}<span class="glyphicon glyphicon-ok text-info"></span>{{else}}<span class="glyphicon glyphicon-minus text-muted"></span>{{end}}</td>
+	 		<td>{{.SendNumber}}</td>
+	 		<td>
+	 			<a href="/report/{{.ReportId}}" data-toggle="tooltip" data-placement="bottom" title="查看速报"><span class="glyphicon glyphicon glyphicon-list-alt"></span></a>
+	 			&nbsp;<a href="/eventline/{{.EventId}}" data-toggle="tooltip" data-placement="bottom" title="查看等值线"><span class="glyphicon glyphicon-certificate"></span></a>
+	 		</td>
 	 	</tr>
    {{end}}
  </tbody> 
@@ -72,11 +75,11 @@
    <span >{{.CurrentPage}} / {{.PageCount}} 页  [共 {{.Count}} 记录] </span>
    <span class="pull-right">
    	<ul class="pagination" style="margin:1px;padding-top:0px;">
-      <li><a href="{{"/eventlist?page=1&pagesize="|html}}{{.PageSize}}{{purl $params }}">&laquo;</a></li>
+      <li><a href="{{"/reportmore?page=1&pagesize="|html}}{{.PageSize}}{{purl $params }}">&laquo;</a></li>
       {{range .NavPages}}
-        <li {{if compare . $curpage}} class="active" {{end}} ><a href="{{"/eventlist?page="|html}}{{.}}{{"&pagesize="|html}}{{$pagesize}}{{purl $params}}">{{.}}</a></li>
+        <li {{if compare . $curpage}} class="active" {{end}} ><a href="{{"/reportmore?page="|html}}{{.}}{{"&pagesize="|html}}{{$pagesize}}{{purl $params}}">{{.}}</a></li>
        {{end}}
-      <li><a href="{{"/eventlist?page="|html}}{{.PageCount}}{{"&pagesize="|html}}{{.PageSize}}{{purl $params}}">&raquo;</a></li>
+      <li><a href="{{"/reportmore?page="|html}}{{.PageCount}}{{"&pagesize="|html}}{{.PageSize}}{{purl $params}}">&raquo;</a></li>
      </ul>
    </span>
   </div>

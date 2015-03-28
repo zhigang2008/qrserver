@@ -176,3 +176,55 @@ func (this *ReportController) ReSend() {
 	this.Data["json"] = &answer
 	this.ServeJson()
 }
+
+//速报列表
+func (this *ReportController) ReportPageList() {
+	this.Data["title"] = "速报列表"
+	this.Data["author"] = "wangzhigang"
+	//权限检查
+	//this.AuthRoles("role_admin")
+	this.CheckUser()
+
+	pagination := util.Pagination{}
+	page, err := this.GetInt("page")
+	if err != nil {
+		pagination.CurrentPage = 1
+	} else {
+		pagination.CurrentPage = int(page)
+	}
+	pagesize, err2 := this.GetInt("pagesize")
+	if err2 != nil {
+		pagination.PageSize = 10
+	} else {
+		pagination.PageSize = int(pagesize)
+	}
+
+	//查询参数
+
+	eventid := this.GetString("eventid")
+	if eventid != "" {
+		pagination.AddParams("eventid", eventid)
+	}
+	begintime := this.GetString("begintime")
+	if begintime != "" {
+		pagination.AddParams("begintime", begintime)
+	} else {
+		now := time.Now()
+		pagination.AddParams("begintime", now.Format(dao.EventTimeLayout))
+	}
+	endtime := this.GetString("endtime")
+	if endtime != "" {
+		pagination.AddParams("endtime", endtime)
+	}
+
+	//执行查询
+	err = dao.ReportPageList(&pagination)
+	if err != nil {
+		log.Warnf("查询震情事件列表失败:%s", err.Error())
+	}
+	pagination.Compute()
+
+	this.Data["pagedata"] = pagination
+	this.TplNames = "reportmore.html"
+	this.Render()
+}

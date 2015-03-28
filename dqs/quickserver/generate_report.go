@@ -79,6 +79,8 @@ func generateReportSummary(event *Event) (ReportSummary, string, int) {
 
 	valStr := ""
 	dataSize := 0
+	maxLevel := 0
+	maxPointAlarm := AlarmInfo{}
 
 	cs := make(map[int]int)
 	alarms, err := server.dataManager.GetAlarmsByEvent(event)
@@ -86,11 +88,17 @@ func generateReportSummary(event *Event) (ReportSummary, string, int) {
 		dataSize = len(*alarms)
 		for k, v := range *alarms {
 			i := v.Intensity
+
 			val, ok := cs[i]
 			if ok {
 				cs[i] = val + 1
 			} else {
 				cs[i] = 1
+			}
+			//判断最高地点
+			if i > maxLevel {
+				maxLevel = i
+				maxPointAlarm = v
 			}
 			//构造value string
 			if k < (dataSize - 1) {
@@ -108,6 +116,10 @@ func generateReportSummary(event *Event) (ReportSummary, string, int) {
 		alarmSumary += fmt.Sprintf("%d度-%d; ", k, v)
 
 	}
+	//添加详细信息
+	device, _ := server.dataManager.GetDeviceById(maxPointAlarm.SensorId)
+	alarmSumary += fmt.Sprintf("\n最强仪器烈度(%d),来自%s-%s,经纬度[%f,%f]", maxLevel, device.SensorId, device.SetParams.SiteName, maxPointAlarm.Longitude, maxPointAlarm.Latitude)
+
 	sumary.Brief = alarmSumary
 
 	//实际地震信息
@@ -138,7 +150,7 @@ func generateReportMap(reportid string, valstr string, simplesize int) string {
 
 	v.Add("INTERPOLATION_STRATEGY", "2")
 	v.Add("INTERVALS[]", "0,1,2,3,4,5,6,7,8,9,10,11,12")
-	v.Add("INTERVALS_COLORS[]", "0xffffff00,0xff8633cc,0xffad33cc,0xffdd33cc,0xffe233cc,0xfff533cc,0xf3ff33cc,0x9fff33cc,0x72ff33cc,0x33f33dcc,0x33d35dcc,0x3340f0cc,0xff3333cc")
+	v.Add("INTERVALS_COLORS[]", "0xffffff01,0xe9ffd255,0xe9ffd299,0xe9ffd2aa,0xe9ffd2bb,0xe9ffd2cc,0xe9ffbeff,0xa3ff73ff,0x98e600ff,0xffcc00ff,0xff6600ff,0xa80000ff,0x343434ff")
 	v.Add("RADIUS", "50")
 	v.Add("RENDERER_TYPE", "2")
 	v.Add("SIMPLIFY_METHOD", "1")

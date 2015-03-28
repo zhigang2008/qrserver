@@ -119,11 +119,15 @@ func ReportPageList(p *util.Pagination) error {
 	//构造查询参数
 	m := bson.M{}
 	reportid := p.QueryParams["reportid"]
+	eventid := p.QueryParams["eventid"]
 	begintime := p.QueryParams["begintime"]
 	endtime := p.QueryParams["endtime"]
 
 	if reportid != nil {
 		m["reportid"] = reportid
+	}
+	if eventid != nil {
+		m["eventid"] = eventid
 	}
 
 	timeparam := bson.M{}

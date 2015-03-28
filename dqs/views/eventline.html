@@ -12,10 +12,15 @@
      </div> 
    </div>
    <div id="map" class="col-md-10"  style="height:550px;border:#F6F6F6 solid 1px;"></div>
+   <div id="div-sample" class="col-md-1">
+     <div style="height:400px;"></div>
+     <div>图例:</div>
+   	 <img src="/static/image/level_sample.jpg" class="img-responsive">
+   </div>
+   
   </div>
-  
  </div>
- 
+
 </div>
 
 {{template "scripts"}}
@@ -63,8 +68,8 @@ $(document).ready(function() {
 			SIMPLIFY_SIZE:{{.dataSize}},
 			DATA_ARRAY:"{{.dataArray}}",
 			'INTERVALS[]':"0,1,2,3,4,5,6,7,8,9,10,11,12",
-			'INTERVALS_COLORS[]':"0xffffff10,0xff8633cc,0xffad33cc,0xffdd33cc,0xffe233cc,0xd1ffcecc,0xe0feb4cc,0xfade9fcc,0xfeb161cc,0xfd7d4ecc,0xff6160cc,0xc10003cc,0x900000cc",
-			RENDERER_TYPE:2,
+			'INTERVALS_COLORS[]':"0xffffff01,0xe9ffd255,0xe9ffd299,0xe9ffd2aa,0xe9ffd2bb,0xe9ffd2cc,0xe9ffbeff,0xa3ff73ff,0x98e600ff,0xffcc00ff,0xff6600ff,0xa80000ff,0x343434ff",
+      RENDERER_TYPE:2,
 			INTERPOLATION_STRATEGY:2,
 			RADIUS:50,
 			SERVICE:"AMS"
@@ -81,7 +86,7 @@ $(document).ready(function() {
   //map.addControl(new OpenLayers.Control.LayerSwitcher({'ascending':false}));
   //map.addControl(new OpenLayers.Control.PanZoom());
   map.addControl(new OpenLayers.Control.ScaleLine());
-  //map.addControl(new OpenLayers.Control.OverviewMap());
+  map.addControl(new OpenLayers.Control.OverviewMap());
   //map.addControl(new OpenLayers.Control.EditingToolbar(vectorLayer));
   map.addControl(new OpenLayers.Control.MousePosition());
   
