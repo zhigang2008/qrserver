@@ -50,6 +50,7 @@ func routeConfig() {
 	beego.Router("/quakelocation/:id", &controllers.EventController{}, "*:QuakeLocation")
 	//速报管理
 	beego.Router("/reportlist", &controllers.ReportController{}, "*:Get")
+	beego.Router("/reportmore", &controllers.ReportController{}, "*:ReportPageList")
 	beego.Router("/report/:id", &controllers.ReportController{}, "*:GetReport")
 	beego.Router("/reportinvalid/:id", &controllers.ReportController{}, "*:SetInvalid")
 	beego.Router("/reportverify/:id", &controllers.ReportController{}, "*:SetVerify")
