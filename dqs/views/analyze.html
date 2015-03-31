@@ -1,4 +1,4 @@
-﻿{{template "header" .}}
+{{template "header" .}}
  
 
  <div class="container">
@@ -43,10 +43,13 @@
        <thead>
 		   <tr>
 			   <th>发生时间</th>
-			    <th>震中</th>
+			   <th>震中</th>
 			   <th>震级</th>
-		     <th>接收时间</th>
-		     <th>定位</th>
+			   <th>深度</th>
+			   <th>地点</th>
+			   <th>台网</th>
+		       <th>接收时间</th>
+		       <th>定位</th>
 		   </tr>
 	     </thead>
 	     <tbody>
@@ -55,6 +58,9 @@
 	 		    <td>{{dateformat .Time "2006-01-02 15:04:05"}}</td>
 	 		     <td>[{{.Longitude}},{{.Latitude}}]</td>
 	 		     <td>{{.Level}}</td>
+				 <td>{{.DEPTH}}</td>
+				 <td>{{.CNAME}}[{{.CODE}}]</td>
+				 <td>{{.LOCATION_CNAME}}</td>
 	 		     <td>{{dateformat .ReceiveTime "2006-01-02 15:04:05"}}</td>
 	 		     <td><a href="/quakelocation/{{.Id}}" data-toggle="tooltip" data-placement="bottom" title="定位"><span class="glyphicon glyphicon-map-marker"></span></a></td>
 	     	</tr>

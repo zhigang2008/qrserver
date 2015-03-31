@@ -1,4 +1,4 @@
-﻿{{template "header" .}}
+{{template "header" .}}
  
  {{$curUser := .CurrentUser}}
  {{with .pagedata}}
@@ -52,6 +52,9 @@
 			<th>地震时间</th>
 			<th>位置</th>
 			<th>震级</th>
+			<th>深度</th>
+			<th>地点</th>
+			<th>台网</th>
 			<th>记录时间</th>
     </tr>
   </thead>
@@ -62,6 +65,9 @@
 	 		<td>{{dateformat .Time "2006-01-02 15:04:05"}}</td>
 	 		<td>[{{.Longitude}},{{.Latitude}}]</td>
 	 		<td>{{.Level}}</td>
+			<td>{{.DEPTH}}</td>
+			<td>{{.CNAME}}[{{.CODE}}]</td>
+			<td>{{.LOCATION_CNAME}}</td>
 	 		<td>{{dateformat .ReceiveTime "2006-01-02 15:04:05"}}</td>
 	 	</tr>
    {{end}}

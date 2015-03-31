@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+const (
+	EarthQuakeTimeLayout = "20060102150405.000" //地震时间格式
+)
+
 type EventController struct {
 	BaseController
 }
@@ -370,7 +374,12 @@ func (this *EventController) AddEventSignal() {
 	eventSignal.Longitude = earthQuake.Longitude
 	eventSignal.Latitude = earthQuake.Latitude
 	eventSignal.Level = earthQuake.Level
-	tm, errt := time.Parse(CommonTimeLayout, earthQuake.Time)
+	eventSignal.EventId = earthQuake.EVENT_ID
+	eventSignal.CODE = earthQuake.CODE
+	eventSignal.CNAME = earthQuake.CNAME
+	eventSignal.DEPTH = earthQuake.DEPTH
+	eventSignal.LOCATION_CNAME = earthQuake.LOCATION_CNAME
+	tm, errt := time.Parse(EarthQuakeTimeLayout, earthQuake.Time)
 	if errt != nil {
 		eventSignal.Time = time.Now()
 	}
@@ -383,6 +392,7 @@ func (this *EventController) AddEventSignal() {
 		this.writeResponse(false, err.Error())
 		return
 	}
+
 	log.Infof("成功接收了地震事件%s [%f,%f] %d级", earthQuake.Time, earthQuake.Longitude, earthQuake.Latitude, earthQuake.Level)
 	this.writeResponse(true, "success")
 	return
@@ -399,3 +409,14 @@ func (this *EventController) writeResponse(ok bool, msg string) {
 		reswriter.Write(cont)
 	}
 }
+
+//回送数据
+/*
+func (this *EventController) FeedbackData(eventSignal *EventSignal) {
+
+	cont, err := xml.Marshal(fb)
+	if err == nil {
+		reswriter.Write(cont)
+	}
+}
+*/
