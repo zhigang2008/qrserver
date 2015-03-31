@@ -24,7 +24,7 @@ type EventSignal struct {
 	Time           time.Time //震情时间
 	Longitude      float32   //震中位置
 	Latitude       float32
-	Level          int       //震级
+	Level          float32   //震级
 	ReceiveTime    time.Time //信号接收时间
 	EventId        string    //地震事件Id
 	CODE           string    //台网编号
@@ -41,7 +41,7 @@ type EarthQuake struct {
 	Time           string   `xml:"O_TIME"` //震情时间
 	Longitude      float32  `xml:"LON"`    //震中位置
 	Latitude       float32  `xml:"LAT"`
-	Level          int      `xml:"M"` //震级
+	Level          float32  `xml:"M"` //震级
 	CODE           string   `xml:"CODE"`
 	CNAME          string   `xml:"CNAME"`
 	DEPTH          float32  `xml:"DEPTH"`
