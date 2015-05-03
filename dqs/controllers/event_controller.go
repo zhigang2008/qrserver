@@ -6,8 +6,10 @@ import (
 	"dqs/util"
 	"encoding/xml"
 	//"github.com/astaxie/beego"
+	"bytes"
 	log "github.com/cihub/seelog"
 	"io/ioutil"
+	"net/http"
 	"time"
 )
 
@@ -395,6 +397,9 @@ func (this *EventController) AddEventSignal() {
 
 	log.Infof("成功接收了地震事件%s [%f,%f] %d级", earthQuake.Time, earthQuake.Longitude, earthQuake.Latitude, earthQuake.Level)
 	this.writeResponse(true, "success")
+
+	//提供回送数据
+	//go FeedbackData(eventSignal)
 	return
 }
 
@@ -410,13 +415,29 @@ func (this *EventController) writeResponse(ok bool, msg string) {
 	}
 }
 
-//回送数据
-/*
-func (this *EventController) FeedbackData(eventSignal *EventSignal) {
+//回送数据，调用川局服务器接口
+func (this *EventController) FeedbackData(eventSignal *models.EventSignal) {
 
-	cont, err := xml.Marshal(fb)
-	if err == nil {
-		reswriter.Write(cont)
+	alarmList := models.AlarmDataList{}
+	body, err := xml.Marshal(alarmList)
+	if err != nil {
+		return
+	}
+
+	client := &http.Client{}
+	reqest, _ := http.NewRequest("POST", "http://218.6.242.153/Service.asmx", bytes.NewBuffer(body))
+
+	reqest.Header.Set("Accept", "application/xml;q=0.9,*/*;q=0.8")
+	reqest.Header.Set("Accept-Charset", "utf-8;q=0.7,*;q=0.3")
+	reqest.Header.Set("Accept-Encoding", "gzip,deflate,sdch")
+	reqest.Header.Set("Accept-Language", "zh-CN,zh;q=0.8")
+	reqest.Header.Set("Cache-Control", "max-age=0")
+	reqest.Header.Set("Connection", "keep-alive")
+
+	response, _ := client.Do(reqest)
+	if response.StatusCode == 200 {
+		body, _ := ioutil.ReadAll(response.Body)
+		bodystr := string(body)
+		log.Info(bodystr)
 	}
 }
-*/

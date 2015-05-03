@@ -13,6 +13,7 @@ type SystemConfig struct {
 	GisImageCfg         GisImageConfig
 	MmsCfg              MMSConfig
 	MailCfg             MailConfig
+	QuakeReportCfg      QuakeReportConfig
 }
 
 //gis图片设置
@@ -40,4 +41,11 @@ type MailConfig struct {
 	NeedAuth     bool
 	MailUser     string
 	MailPassword string
+}
+
+//地震报送控制数据
+type QuakeReportConfig struct {
+	ServiceURL string
+	SleepTime  int
+	TimeSpan   int
 }

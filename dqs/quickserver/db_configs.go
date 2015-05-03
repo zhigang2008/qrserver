@@ -63,6 +63,7 @@ type SystemConfig struct {
 	GisImageCfg         GisImageConfig
 	MmsCfg              MMSConfig
 	MailCfg             MailConfig
+	QuakeReportCfg      QuakeReportConfig //地震数据回送配置
 }
 
 //gis图片设置
@@ -244,6 +245,12 @@ func InitSystemConfigs() {
 			mailcfg := MailConfig{}
 			mailcfg.MailPort = "25"
 			SystemConfigs.MailCfg = mailcfg
+
+			QuakeCfg := QuakeReportConfig{}
+			QuakeCfg.ServiceURL = ""
+			QuakeCfg.SleepTime = 5
+			QuakeCfg.TimeSpan = 15
+			SystemConfigs.QuakeReportCfg = QuakeCfg
 
 			err2 := server.dataManager.AddSystemConfig(&SystemConfigs)
 			if err2 != nil {

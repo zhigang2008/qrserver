@@ -379,3 +379,10 @@ type ReportConfig struct {
 	ReportMail  bool //接收邮件速报
 	ReportPhone bool //接收短信速报
 }
+
+//地震报送控制数据
+type QuakeReportConfig struct {
+	ServiceURL string
+	SleepTime  int
+	TimeSpan   int
+}
