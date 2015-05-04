@@ -2,7 +2,6 @@ package models
 
 import (
 	//"labix.org/v2/mgo/bson"
-	"encoding/xml"
 	"time"
 )
 
@@ -47,11 +46,4 @@ type WaveInfo struct {
 	Y_data   [6000]int16
 	Z_data   [6000]int16
 	LUD      time.Time //最后更新时间
-}
-
-//回送的报警数据
-type AlarmDataList struct {
-	XMLName xml.Name `xml:"DataList"`
-	EventId string
-	Alarms  []AlarmInfo `xml:"Data"`
 }

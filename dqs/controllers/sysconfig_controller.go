@@ -38,21 +38,24 @@ func (this *SysConfigController) Put() {
 	sysConfigs := models.SystemConfig{}
 	gisImagecfg := models.GisImageConfig{}
 	mms := models.MMSConfig{}
-	mailcfg:=models.MailConfig{}
+	mailcfg := models.MailConfig{}
+	quakecfg := models.QuakeReportConfig{}
 
 	err0 := this.ParseForm(&sysConfigs)
 	err1 := this.ParseForm(&gisImagecfg)
 	err2 := this.ParseForm(&mms)
 	err3 := this.ParseForm(&mailcfg)
+	err4 := this.ParseForm(&quakecfg)
 
-	if err0 != nil || err1 != nil || err2 != nil || err3 != nil{
+	if err0 != nil || err1 != nil || err2 != nil || err3 != nil || err4 != nil {
 		answer.Ok = false
 		answer.Msg = "数据传递失败"
 		log.Warnf("更新系统配置-解析参数失败")
 	} else {
 		sysConfigs.GisImageCfg = gisImagecfg
 		sysConfigs.MmsCfg = mms
-		sysConfigs.MailCfg=mailcfg
+		sysConfigs.MailCfg = mailcfg
+		sysConfigs.QuakeReportCfg = quakecfg
 
 		err := dao.UpdateSystemConfig(&sysConfigs)
 		if err != nil {

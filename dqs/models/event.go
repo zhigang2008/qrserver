@@ -27,6 +27,7 @@ type EventSignal struct {
 	Level          float32   //震级
 	ReceiveTime    time.Time //信号接收时间
 	EventId        string    //地震事件Id
+	EventSeq       string    //地震事件序列
 	CODE           string    //台网编号
 	CNAME          string    //台网名称
 	DEPTH          float32   //深度
@@ -38,6 +39,7 @@ type EventSignal struct {
 type EarthQuake struct {
 	XMLName        xml.Name `xml:"ROOT"`
 	EVENT_ID       string   `xml:"EVENT_ID"`
+	EventSeq       string   `xml:"EVENT_SEQ"`
 	Time           string   `xml:"O_TIME"` //震情时间
 	Longitude      float32  `xml:"LON"`    //震中位置
 	Latitude       float32  `xml:"LAT"`
@@ -53,4 +55,29 @@ type Feedback struct {
 	XMLName xml.Name `xml:"xml"`
 	Ok      bool     `xml:"ok"`
 	Message string   `xml:"message"`
+}
+
+//回送的报警数据
+type AlarmDataList struct {
+	XMLName xml.Name `xml:"DataList"`
+	EventId string
+	Alarms  []AlarmInfo `xml:"Data"`
+}
+
+//调用外部借口返回结果
+type ResultInfo struct {
+	XMLName xml.Name `xml:"Envelope"`
+	Body    struct {
+		Fault struct {
+			Code struct {
+				Value string
+			}
+			Reason struct {
+				Text string
+			}
+		}
+		LDdatainputResponse struct {
+			LDdatainputResult string
+		}
+	}
 }

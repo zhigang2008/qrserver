@@ -383,6 +383,6 @@ type ReportConfig struct {
 //地震报送控制数据
 type QuakeReportConfig struct {
 	ServiceURL string
-	SleepTime  int
-	TimeSpan   int
+	SleepTime  int64
+	TimeSpan   int64
 }

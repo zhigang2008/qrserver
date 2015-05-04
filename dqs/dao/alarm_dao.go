@@ -152,3 +152,29 @@ func GetWaveInfo(SensorId string, SeqNo string) (models.WaveInfo, error) {
 	}
 	return wave, nil
 }
+
+//获取地震事件数据
+//实时报警信息列表
+func FetchQuakeAlarms(quaketime time.Time, timestep int64) ([]models.AlarmInfo, error) {
+	c := GetSession().DB(DatabaseName).C(DataCollection)
+	alarms := []models.AlarmInfo{}
+
+	//构造查询参数
+	m := bson.M{}
+
+	timeparam := bson.M{}
+
+	duration := time.Duration(timestep) * time.Minute
+	btime := quaketime.Add(-duration)
+	timeparam["$gte"] = btime
+	etime := quaketime.Add(duration)
+	timeparam["$lte"] = etime
+	m["createtime"] = timeparam
+
+	//查找数据
+	err := c.Find(&m).All(&alarms)
+	if err != nil {
+		return alarms, err
+	}
+	return alarms, nil
+}

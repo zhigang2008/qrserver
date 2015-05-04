@@ -248,8 +248,8 @@ func InitSystemConfigs() {
 
 			QuakeCfg := QuakeReportConfig{}
 			QuakeCfg.ServiceURL = ""
-			QuakeCfg.SleepTime = 5
-			QuakeCfg.TimeSpan = 15
+			QuakeCfg.SleepTime = 2
+			QuakeCfg.TimeSpan = 5
 			SystemConfigs.QuakeReportCfg = QuakeCfg
 
 			err2 := server.dataManager.AddSystemConfig(&SystemConfigs)

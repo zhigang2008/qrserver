@@ -6,10 +6,12 @@ import (
 	"dqs/util"
 	"encoding/xml"
 	//"github.com/astaxie/beego"
-	"bytes"
+	//"bytes"
+	"fmt"
 	log "github.com/cihub/seelog"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -377,6 +379,7 @@ func (this *EventController) AddEventSignal() {
 	eventSignal.Latitude = earthQuake.Latitude
 	eventSignal.Level = earthQuake.Level
 	eventSignal.EventId = earthQuake.EVENT_ID
+	eventSignal.EventSeq = earthQuake.EventSeq
 	eventSignal.CODE = earthQuake.CODE
 	eventSignal.CNAME = earthQuake.CNAME
 	eventSignal.DEPTH = earthQuake.DEPTH
@@ -399,7 +402,7 @@ func (this *EventController) AddEventSignal() {
 	this.writeResponse(true, "success")
 
 	//提供回送数据
-	//go FeedbackData(eventSignal)
+	go FeedbackData(eventSignal)
 	return
 }
 
@@ -416,28 +419,77 @@ func (this *EventController) writeResponse(ok bool, msg string) {
 }
 
 //回送数据，调用川局服务器接口
-func (this *EventController) FeedbackData(eventSignal *models.EventSignal) {
+func FeedbackData(eventSignal *models.EventSignal) {
 
-	alarmList := models.AlarmDataList{}
-	body, err := xml.Marshal(alarmList)
+	var sleepTime = SystemConfigs.QuakeReportCfg.SleepTime
+	var timeSpan = SystemConfigs.QuakeReportCfg.TimeSpan
+	var serviceUrl = strings.TrimSpace(SystemConfigs.QuakeReportCfg.ServiceURL)
+	if serviceUrl == "" {
+		return
+	}
+	if sleepTime == 0 {
+		sleepTime = 5
+	}
+	if timeSpan == 0 {
+		timeSpan = 5
+	}
+	time.Sleep(time.Minute * time.Duration(sleepTime))
+
+	alarmList, err1 := dao.FetchQuakeAlarms(eventSignal.Time, SystemConfigs.QuakeReportCfg.TimeSpan)
+	if err1 != nil {
+		return
+	}
+
+	dataBody, err := xml.Marshal(alarmList)
 	if err != nil {
 		return
 	}
 
-	client := &http.Client{}
-	reqest, _ := http.NewRequest("POST", "http://218.6.242.153/Service.asmx", bytes.NewBuffer(body))
+	datastr := `<?xml version="1.0" encoding="utf-8"?>
+  <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+    <LDdatainput xmlns="http://tempuri.org/">
+      <dzid>%s</dzid>
+      <dzxl>%s</dzxl>
+      <xml>%s</xml>
+    </LDdatainput>
+   </soap:Body>
+  </soap:Envelope>`
 
-	reqest.Header.Set("Accept", "application/xml;q=0.9,*/*;q=0.8")
-	reqest.Header.Set("Accept-Charset", "utf-8;q=0.7,*;q=0.3")
-	reqest.Header.Set("Accept-Encoding", "gzip,deflate,sdch")
-	reqest.Header.Set("Accept-Language", "zh-CN,zh;q=0.8")
-	reqest.Header.Set("Cache-Control", "max-age=0")
-	reqest.Header.Set("Connection", "keep-alive")
+	dzxh := eventSignal.EventSeq
+	if dzxh == "" {
+		dzxh = "001"
+	}
+	sendStr := fmt.Sprintf(datastr, eventSignal.EventId, dzxh, dataBody)
+	log.Info(sendStr)
+	client := &http.Client{}
+	reqest, _ := http.NewRequest("POST", serviceUrl, strings.NewReader(sendStr))
+
+	reqest.Header.Add("Content-Type", "text/xml; charset=utf-8")
+	reqest.Header.Add("SOAPAction", "http://tempuri.org/LDdatainput")
 
 	response, _ := client.Do(reqest)
 	if response.StatusCode == 200 {
 		body, _ := ioutil.ReadAll(response.Body)
+
+		result := models.ResultInfo{}
+		err := xml.Unmarshal(body, &result)
+		if err == nil {
+			if result.Body.LDdatainputResponse.LDdatainputResult == "0" {
+				log.Info("回送数据接口调用成功")
+			}
+		}
 		bodystr := string(body)
 		log.Info(bodystr)
+	} else {
+		log.Error(response.StatusCode)
+		body, _ := ioutil.ReadAll(response.Body)
+		result := models.ResultInfo{}
+		err := xml.Unmarshal(body, &result)
+		if err == nil {
+			log.Error(result.Body.Fault.Reason)
+		}
+		bodystr := string(body)
+		log.Error(bodystr)
 	}
 }
