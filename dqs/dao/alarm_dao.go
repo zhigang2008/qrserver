@@ -169,7 +169,7 @@ func FetchQuakeAlarms(quaketime time.Time, timestep int64) ([]models.AlarmInfo, 
 	timeparam["$gte"] = btime
 	etime := quaketime.Add(duration)
 	timeparam["$lte"] = etime
-	m["createtime"] = timeparam
+	m["initrealtime"] = timeparam
 
 	//查找数据
 	err := c.Find(&m).All(&alarms)

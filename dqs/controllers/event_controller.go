@@ -23,6 +23,18 @@ type EventController struct {
 	BaseController
 }
 
+var Local *time.Location
+
+func init() {
+	l, err := time.LoadLocation("Local")
+	if err == nil {
+		Local = l
+		fmt.Println(Local)
+	} else {
+		fmt.Println("init:" + err.Error())
+	}
+}
+
 //事件列表
 func (this *EventController) EventPageList() {
 	this.Data["title"] = "仪器观测事件"
@@ -384,7 +396,7 @@ func (this *EventController) AddEventSignal() {
 	eventSignal.CNAME = earthQuake.CNAME
 	eventSignal.DEPTH = earthQuake.DEPTH
 	eventSignal.LOCATION_CNAME = earthQuake.LOCATION_CNAME
-	tm, errt := time.Parse(EarthQuakeTimeLayout, earthQuake.Time)
+	tm, errt := time.ParseInLocation(EarthQuakeTimeLayout, earthQuake.Time, Local)
 	if errt != nil {
 		eventSignal.Time = time.Now()
 	}
@@ -398,7 +410,7 @@ func (this *EventController) AddEventSignal() {
 		return
 	}
 
-	log.Infof("成功接收了地震事件%s [%f,%f] %d级", earthQuake.Time, earthQuake.Longitude, earthQuake.Latitude, earthQuake.Level)
+	log.Infof("成功接收了地震事件%s [%f,%f] %f级", earthQuake.Time, earthQuake.Longitude, earthQuake.Latitude, earthQuake.Level)
 	this.writeResponse(true, "success")
 
 	//提供回送数据
@@ -427,23 +439,37 @@ func FeedbackData(eventSignal *models.EventSignal) {
 	if serviceUrl == "" {
 		return
 	}
-	if sleepTime == 0 {
+	if sleepTime < 0 {
 		sleepTime = 5
 	}
+
 	if timeSpan == 0 {
 		timeSpan = 5
 	}
-	time.Sleep(time.Minute * time.Duration(sleepTime))
-
+	if time.Now().Sub(eventSignal.Time) < time.Minute*time.Duration(sleepTime) {
+		log.Infof("当前时刻与事件时间较近,延时%d分钟报送数据", sleepTime)
+		time.Sleep(time.Minute * time.Duration(sleepTime))
+	}
 	alarmList, err1 := dao.FetchQuakeAlarms(eventSignal.Time, SystemConfigs.QuakeReportCfg.TimeSpan)
-	if err1 != nil {
+	if err1 != nil || alarmList == nil {
+		log.Error("获取报警数据失败：停止发送")
 		return
 	}
 
-	dataBody, err := xml.Marshal(alarmList)
+	var quakeDataList models.AlarmDataList = models.AlarmDataList{}
+	quakeDataList.EventId = eventSignal.EventId
+	quakeDataList.Alarms = alarmList
+
+	dataBody, err := xml.Marshal(quakeDataList)
 	if err != nil {
+		log.Errorf("数据解析错误：%s", err.Error())
 		return
 	}
+	/*if strings.TrimSpace(string(dataBody)) == "" {
+		log.Warn("空数据，停止报送")
+		return
+	}
+	*/
 
 	datastr := `<?xml version="1.0" encoding="utf-8"?>
   <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
