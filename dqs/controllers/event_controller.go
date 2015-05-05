@@ -11,6 +11,7 @@ import (
 	log "github.com/cihub/seelog"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -465,6 +466,7 @@ func FeedbackData(eventSignal *models.EventSignal) {
 		log.Errorf("数据解析错误：%s", err.Error())
 		return
 	}
+	encodeData := url.QueryEscape(string(dataBody))
 	/*if strings.TrimSpace(string(dataBody)) == "" {
 		log.Warn("空数据，停止报送")
 		return
@@ -486,7 +488,7 @@ func FeedbackData(eventSignal *models.EventSignal) {
 	if dzxh == "" {
 		dzxh = "001"
 	}
-	sendStr := fmt.Sprintf(datastr, eventSignal.EventId, dzxh, dataBody)
+	sendStr := fmt.Sprintf(datastr, eventSignal.EventId, dzxh, encodeData)
 	log.Info(sendStr)
 	client := &http.Client{}
 	reqest, _ := http.NewRequest("POST", serviceUrl, strings.NewReader(sendStr))
