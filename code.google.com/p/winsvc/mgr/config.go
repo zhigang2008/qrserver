@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// +build windows
+
 package mgr
 
 import (
@@ -12,7 +14,7 @@ import (
 
 const (
 	// Service start types
-	StartManual    = winapi.SERVICE_DEMAND_START // the service must be started manually 
+	StartManual    = winapi.SERVICE_DEMAND_START // the service must be started manually
 	StartAutomatic = winapi.SERVICE_AUTO_START   // the service will start by itself whenever the computer reboots
 	StartDisabled  = winapi.SERVICE_DISABLED     // the service cannot be started
 

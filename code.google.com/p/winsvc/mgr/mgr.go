@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// +build windows
+
 // Package mgr can be used to manage Windows service programs.
 // It can be used to install and remove them. It can also start,
 // stop, pause and so on. It can query current service state.
@@ -24,7 +26,7 @@ func Connect() (*Mgr, error) {
 	return ConnectRemote("")
 }
 
-// ConnectRemote establishes a connection to the 
+// ConnectRemote establishes a connection to the
 // service control manager on computer named host.
 func ConnectRemote(host string) (*Mgr, error) {
 	var s *uint16
